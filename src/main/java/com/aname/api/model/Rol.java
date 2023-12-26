@@ -23,8 +23,8 @@ public class Rol implements GrantedAuthority{
 	@Column(name = "rol_id")
 	private Integer id;
 
-	@Column(name = "rol_nombre")
-	private String nombre;
+	@Column(name = "rol_codigo")
+	private String codigo;
 
 	@Column(name = "rol_descripcion")
 	private String descripcion;
@@ -41,13 +41,6 @@ public class Rol implements GrantedAuthority{
 		this.id = id;
 	}
 
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
 
 	public String getDescripcion() {
 		return descripcion;
@@ -59,7 +52,23 @@ public class Rol implements GrantedAuthority{
 
 	@Override
 	public String getAuthority() {
-		return this.nombre;
+		return this.codigo;
+	}
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public List<Usuario> getUsuarios() {
+		return usuarios;
+	}
+
+	public void setUsuarios(List<Usuario> usuarios) {
+		this.usuarios = usuarios;
 	}
 
 }

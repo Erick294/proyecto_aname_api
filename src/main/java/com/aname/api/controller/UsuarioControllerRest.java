@@ -1,29 +1,23 @@
 package com.aname.api.controller;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aname.api.model.Rol;
 import com.aname.api.model.Usuario;
-import com.aname.api.security.JwtTokenUtil;
+import com.aname.api.service.IRolService;
 import com.aname.api.service.IUsuarioService;
-import com.aname.api.service.to.UsuarioLoginDTO;
-import com.aname.api.service.to.UsuarioLoginResponseDTO;
+import com.aname.api.service.to.UsuarioRegistroDTO;
 
 @RestController
 @CrossOrigin
@@ -32,35 +26,39 @@ public class UsuarioControllerRest {
 	
 	@Autowired
 	private IUsuarioService usuarioServicio;
-
-	@Autowired
-	private AuthenticationManager authenticationManager;
-
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
 	
+	@Autowired
+	private IRolService rolService;
 
-	@PostMapping(path = "/login")
-	public ResponseEntity<?> iniciarSesion(@RequestBody UsuarioLoginDTO loginDTO) {
+
+	
+	@PostMapping()
+	public ResponseEntity<?> registrarUsuario(@RequestBody UsuarioRegistroDTO registroDTO) {
+		System.out.println(registroDTO.getEmail());
 		try {
-			Authentication authentication = this.authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
-			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-			String token = jwtTokenUtil.generateToken(userDetails);
-			Usuario usuario = this.usuarioServicio.buscarPorEmail(loginDTO.getEmail());
-			Collection<Rol> roles = usuario.getRoles();
-			List<String> nombresRoles = new ArrayList<String>();
-
-			for (Rol rol : roles) {
-				nombresRoles.add(rol.getNombre());
+			if (usuarioServicio.existeNombreUsuario(registroDTO.getEmail())) {
+				return ResponseEntity.badRequest().body("Ya existe un usuario con el mismo nombre de usuario.");
 			}
-
-			UsuarioLoginResponseDTO responseDTO = new UsuarioLoginResponseDTO(token, usuario.getId(),
-					usuario.getEmail(), nombresRoles, usuario.getEstado());
-			return ResponseEntity.ok(responseDTO);
-		} catch (BadCredentialsException e) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario o contraseña incorrectos");
+			Usuario usuario = usuarioServicio.guardar(registroDTO);
+			return ResponseEntity.ok(usuario);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al registrar usuario: " + e.getMessage());
 		}
 	}
+	
+	
+	@GetMapping(path = "/roles", produces = { MediaType.APPLICATION_JSON_VALUE })
+	//@PreAuthorize("hasRole('ADMIN')")
+	public List<String> getPerfiles() {
+		return this.rolService.buscarTodosRol();
+	}
+	
+	@GetMapping(path = "/rolesprueba", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public List<String> getPerfilesPrueba() {
+		return this.rolService.buscarTodosRol();
+	}
+	
+	
 
 }

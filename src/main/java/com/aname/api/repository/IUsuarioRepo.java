@@ -1,11 +1,22 @@
 package com.aname.api.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
 import com.aname.api.model.Usuario;
 
-public interface IUsuarioRepo extends JpaRepository<Usuario, Long>{
-
-	Usuario findByEmail(String email);
+public interface IUsuarioRepo {
 	
+	void insertarUsuario(Usuario usuario);
+
+	Usuario buscarUsuario(Integer id);
+
+	List<Usuario> buscarTodosUsuario();
+
+	void actualizarUsuario(Usuario usuario);
+
+	void eliminarUsuario(Integer id);
+
+	Usuario buscarUsuarioPorNombreUsuario(String nombreUsuario);
+
+
 }

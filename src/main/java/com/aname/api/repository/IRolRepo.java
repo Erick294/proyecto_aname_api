@@ -8,14 +8,14 @@ public interface IRolRepo {
 	
 	void insertarRol(Rol rol);
 
+	Rol buscarRol(Integer id);
+
 	List<Rol> buscarTodosRol();
 
-	void actualizarRol(Rol rol);
+	void actualizarRol(Rol perfil);
 
 	void eliminarRol(Integer id);
 	
-	Rol buscarRolNombre(String nombre);
+	Rol buscarRolCodigo(String codigo);
 
-	Rol buscarRol(Integer id);
-	
 }
