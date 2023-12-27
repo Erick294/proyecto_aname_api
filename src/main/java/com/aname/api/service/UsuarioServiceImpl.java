@@ -20,6 +20,8 @@ import com.aname.api.model.Usuario;
 import com.aname.api.repository.IUsuarioRepo;
 import com.aname.api.service.to.UsuarioRegistroDTO;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class UsuarioServiceImpl implements IUsuarioService {
 
@@ -32,7 +34,8 @@ public class UsuarioServiceImpl implements IUsuarioService {
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 	@Override
-	public Usuario guardar(UsuarioRegistroDTO registroDTO) {
+	@Transactional
+	public UsuarioRegistroDTO guardar(UsuarioRegistroDTO registroDTO) {
 
 		Rol perfil = this.rolService.buscarRolCodigo(registroDTO.getRol());
 
@@ -44,10 +47,25 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		usuario.setEstado(registroDTO.getEstado());
 
 		this.usuarioRepo.insertarUsuario(usuario);
+		
+		UsuarioRegistroDTO usuarioDTO = new UsuarioRegistroDTO();
+		usuarioDTO.setApellidos(usuario.getApellidos());
+		usuarioDTO.setNombres(usuario.getNombres());
+		usuarioDTO.setEmail(usuario.getEmail());
+		usuarioDTO.setCiudad(usuario.getCiudad());
+		usuarioDTO.setDireccion(usuario.getDireccion());
+		usuarioDTO.setFechaNacimiento(usuario.getFechaNacimiento());
+		usuarioDTO.setSexo(usuario.getSexo());
+		usuarioDTO.setEstado(usuario.getEstado());
+		usuarioDTO.setId(usuario.getId());
+		usuarioDTO.setPassword(usuario.getPassword());
 
-		Usuario u = this.usuarioRepo.buscarUsuarioPorNombreUsuario(registroDTO.getEmail());
+		if (!usuario.getRoles().isEmpty()) {
+			usuarioDTO.setRol(usuario.getRoles().stream().findFirst().get().getCodigo());
+		}
+		
 
-		return u;
+		return usuarioDTO;
 	}
 
 	@Override

@@ -48,7 +48,7 @@ public class RolServiceImpl implements IRolService {
 
 	@Override
 	public Rol buscarRolCodigo(String codigo) {
-		return this.buscarRolCodigo(codigo);
+		return this.rolRepo.buscarRolCodigo(codigo);
 	}
 	
 	

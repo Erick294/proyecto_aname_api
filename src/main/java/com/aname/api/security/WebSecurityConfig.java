@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.aname.api.service.IUsuarioService;
 
@@ -37,7 +38,7 @@ public class WebSecurityConfig {
 
 		return httpSecurity.csrf(config -> config.disable()).authorizeHttpRequests(auth -> {
 			auth.requestMatchers("/login").permitAll();
-			auth.requestMatchers("/usuario/roles/**").hasAuthority("ADMIN");
+			auth.requestMatchers("/usuario/**").permitAll();
 			auth.anyRequest().authenticated();
 		}).sessionManagement(session -> {
 			session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);

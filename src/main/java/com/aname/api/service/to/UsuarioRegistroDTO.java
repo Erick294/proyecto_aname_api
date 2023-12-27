@@ -15,6 +15,24 @@ public class UsuarioRegistroDTO {
 	private String sexo;
 	private LocalDateTime fechaNacimiento;
 	private String ciudad;
+	
+	
+
+	public UsuarioRegistroDTO(Integer id, String nombres, String apellidos, String email, String password, String rol,
+			Boolean estado, String direccion, String sexo, LocalDateTime fechaNacimiento, String ciudad) {
+		super();
+		this.id = id;
+		this.nombres = nombres;
+		this.apellidos = apellidos;
+		this.email = email;
+		this.password = password;
+		this.rol = rol;
+		this.estado = estado;
+		this.direccion = direccion;
+		this.sexo = sexo;
+		this.fechaNacimiento = fechaNacimiento;
+		this.ciudad = ciudad;
+	}
 
 	public UsuarioRegistroDTO() {
 		super();

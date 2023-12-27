@@ -9,7 +9,7 @@ import com.aname.api.service.to.UsuarioRegistroDTO;
 
 public interface IUsuarioService extends UserDetailsService{
 	
-	Usuario guardar(UsuarioRegistroDTO registroDTO);
+	UsuarioRegistroDTO guardar(UsuarioRegistroDTO registroDTO);
 	
 	void insertarUsuario(Usuario usuario);
 	

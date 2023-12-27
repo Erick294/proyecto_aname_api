@@ -30,8 +30,6 @@ public class UsuarioControllerRest {
 	@Autowired
 	private IRolService rolService;
 
-
-	
 	@PostMapping()
 	public ResponseEntity<?> registrarUsuario(@RequestBody UsuarioRegistroDTO registroDTO) {
 		System.out.println(registroDTO.getEmail());
@@ -39,7 +37,7 @@ public class UsuarioControllerRest {
 			if (usuarioServicio.existeNombreUsuario(registroDTO.getEmail())) {
 				return ResponseEntity.badRequest().body("Ya existe un usuario con el mismo nombre de usuario.");
 			}
-			Usuario usuario = usuarioServicio.guardar(registroDTO);
+			UsuarioRegistroDTO usuario = usuarioServicio.guardar(registroDTO);
 			return ResponseEntity.ok(usuario);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -49,16 +47,9 @@ public class UsuarioControllerRest {
 	
 	
 	@GetMapping(path = "/roles", produces = { MediaType.APPLICATION_JSON_VALUE })
-	//@PreAuthorize("hasRole('ADMIN')")
 	public List<String> getPerfiles() {
 		return this.rolService.buscarTodosRol();
 	}
-	
-	@GetMapping(path = "/rolesprueba", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public List<String> getPerfilesPrueba() {
-		return this.rolService.buscarTodosRol();
-	}
-	
-	
 
+	
 }
