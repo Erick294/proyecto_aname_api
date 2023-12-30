@@ -2,6 +2,7 @@ package com.aname.api.model;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -52,6 +54,9 @@ public class Usuario {
 	@Column(name = "usua_fecha_nacimiento")
 	private LocalDateTime fechaNacimiento;
 
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+	private List<DocumentoUsuarios> documentos;
+
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Collection<Rol> roles;
 
@@ -59,10 +64,10 @@ public class Usuario {
 		super();
 	}
 
-	public Usuario(String apellidos, String nombres, String email, String password, Boolean estado,
-			String direccion, String ciudad, String sexo, LocalDateTime fechaNacimiento, Collection<Rol> roles) {
+	public Usuario(String apellidos, String nombres, String email, String password, Boolean estado, String direccion,
+			String ciudad, String sexo, LocalDateTime fechaNacimiento, Collection<Rol> roles) {
 		super();
-	
+
 		this.apellidos = apellidos;
 		this.nombres = nombres;
 		this.email = email;
@@ -73,6 +78,14 @@ public class Usuario {
 		this.sexo = sexo;
 		this.fechaNacimiento = fechaNacimiento;
 		this.roles = roles;
+	}
+
+	public List<DocumentoUsuarios> getDocumentos() {
+		return documentos;
+	}
+
+	public void setDocumentos(List<DocumentoUsuarios> documentos) {
+		this.documentos = documentos;
 	}
 
 	public Integer getId() {

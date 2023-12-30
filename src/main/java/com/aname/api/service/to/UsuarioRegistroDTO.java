@@ -15,7 +15,9 @@ public class UsuarioRegistroDTO {
 	private String sexo;
 	private LocalDateTime fechaNacimiento;
 	private String ciudad;
-	
+	private DocResponseDTO documentoIdentidad;
+	private DocResponseDTO fotografia;
+
 	
 
 	public UsuarioRegistroDTO(Integer id, String nombres, String apellidos, String email, String password, String rol,
@@ -33,6 +35,42 @@ public class UsuarioRegistroDTO {
 		this.fechaNacimiento = fechaNacimiento;
 		this.ciudad = ciudad;
 	}
+
+	
+
+
+
+	public DocResponseDTO getDocumentoIdentidad() {
+		return documentoIdentidad;
+	}
+
+
+
+
+
+	public void setDocumentoIdentidad(DocResponseDTO documentoIdentidad) {
+		this.documentoIdentidad = documentoIdentidad;
+	}
+
+
+
+
+
+	public DocResponseDTO getFotografia() {
+		return fotografia;
+	}
+
+
+
+
+
+	public void setFotografia(DocResponseDTO fotografia) {
+		this.fotografia = fotografia;
+	}
+
+
+
+
 
 	public UsuarioRegistroDTO() {
 		super();

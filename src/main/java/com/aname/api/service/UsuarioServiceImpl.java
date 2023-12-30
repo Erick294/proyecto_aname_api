@@ -15,9 +15,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.aname.api.model.DocumentoUsuarios;
 import com.aname.api.model.Rol;
 import com.aname.api.model.Usuario;
+import com.aname.api.repository.IDocumentosRepo;
 import com.aname.api.repository.IUsuarioRepo;
+import com.aname.api.service.to.DocResponseDTO;
 import com.aname.api.service.to.UsuarioRegistroDTO;
 
 import jakarta.transaction.Transactional;
@@ -30,6 +33,9 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
 	@Autowired
 	private IRolService rolService;
+	
+	@Autowired 
+	private IDocumentosRepo documentosRepo;
 
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -45,7 +51,27 @@ public class UsuarioServiceImpl implements IUsuarioService {
 				Arrays.asList(perfil));
 
 		usuario.setEstado(registroDTO.getEstado());
-
+		
+		DocumentoUsuarios docI = new DocumentoUsuarios();
+		DocResponseDTO docIR = registroDTO.getDocumentoIdentidad();
+		docI.setExtension(docIR.getExtension());
+		docI.setLink(docIR.getLink());
+		docI.setNombre(docIR.getNombre());
+		docI.setUsuario(usuario);
+		
+		DocumentoUsuarios docF = new DocumentoUsuarios();
+		DocResponseDTO docFR = registroDTO.getFotografia();
+		docF.setExtension(docFR.getExtension());
+		docF.setLink(docFR.getLink());
+		docF.setNombre(docFR.getNombre());
+		docF.setUsuario(usuario);
+		
+		//doc.setUsuario(usuario);
+		List<DocumentoUsuarios> documentos = new ArrayList<DocumentoUsuarios>();
+		documentos.add(docF);
+		documentos.add(docI);
+		
+		usuario.setDocumentos(documentos);
 		this.usuarioRepo.insertarUsuario(usuario);
 		
 		UsuarioRegistroDTO usuarioDTO = new UsuarioRegistroDTO();
