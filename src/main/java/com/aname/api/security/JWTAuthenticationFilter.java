@@ -77,15 +77,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 		Map<String, Object> httpResponse = new HashMap<>();
 		Usuario usuario = this.usuarioService.buscarUsuarioPorEmail(user.getUsername());
-		List<String> nombresRoles = new ArrayList<String>();
-		Collection<Rol> roles = usuario.getRoles();
+		Rol rol = usuario.getRol();
+		String nombreRol = rol.getCodigo();
 
-		for (Rol rol : roles) {
-			nombresRoles.add(rol.getCodigo());
-		}
 
 		UsuarioLoginResponseDTO userResponse = new UsuarioLoginResponseDTO(token, usuario.getId(), usuario.getEmail(),
-				nombresRoles, usuario.getEstado());
+				nombreRol, usuario.getEstado());
 
 		httpResponse.put("Usuario", userResponse);
 		

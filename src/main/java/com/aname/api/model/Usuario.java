@@ -11,19 +11,21 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "usuario", uniqueConstraints = @UniqueConstraint(columnNames = "usua_email"))
+@Table(name = "usuarios", uniqueConstraints = @UniqueConstraint(columnNames = "usua_email"))
 public class Usuario {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_usuario")
-	@SequenceGenerator(name = "seq_usuario", sequenceName = "seq_usuario", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuarios_usua_id_seq")
+	@SequenceGenerator(name = "usuarios_usua_id_seq", sequenceName = "usuarios_usua_id_seq", allocationSize = 1)
 	@Column(name = "usua_id")
 	private Integer id;
 
@@ -36,7 +38,7 @@ public class Usuario {
 	@Column(name = "usua_email")
 	private String email;
 
-	@Column(name = "usua_password")
+	@Column(name = "usua_contrasenia")
 	private String password;
 
 	@Column(name = "usua_estado")
@@ -57,15 +59,16 @@ public class Usuario {
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
 	private List<DocumentoUsuarios> documentos;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Collection<Rol> roles;
+	@ManyToOne
+	@JoinColumn(name = "role_id")
+	private Rol rol;
 
 	public Usuario() {
 		super();
 	}
 
 	public Usuario(String apellidos, String nombres, String email, String password, Boolean estado, String direccion,
-			String ciudad, String sexo, LocalDateTime fechaNacimiento, Collection<Rol> roles) {
+			String ciudad, String sexo, LocalDateTime fechaNacimiento, Rol rol) {
 		super();
 
 		this.apellidos = apellidos;
@@ -77,7 +80,7 @@ public class Usuario {
 		this.ciudad = ciudad;
 		this.sexo = sexo;
 		this.fechaNacimiento = fechaNacimiento;
-		this.roles = roles;
+		this.rol = rol;
 	}
 
 	public List<DocumentoUsuarios> getDocumentos() {
@@ -168,12 +171,14 @@ public class Usuario {
 		this.fechaNacimiento = fechaNacimiento;
 	}
 
-	public Collection<Rol> getRoles() {
-		return roles;
+	public Rol getRol() {
+		return rol;
 	}
 
-	public void setRoles(Collection<Rol> roles) {
-		this.roles = roles;
+	public void setRol(Rol rol) {
+		this.rol = rol;
 	}
+
+
 
 }

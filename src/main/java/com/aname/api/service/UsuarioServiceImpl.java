@@ -1,10 +1,9 @@
 package com.aname.api.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import com.aname.api.model.DocumentoUsuarios;
 import com.aname.api.model.Rol;
 import com.aname.api.model.Usuario;
-import com.aname.api.repository.IDocumentosRepo;
 import com.aname.api.repository.IUsuarioRepo;
 import com.aname.api.service.to.DocResponseDTO;
 import com.aname.api.service.to.UsuarioRegistroDTO;
@@ -33,9 +31,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
 	@Autowired
 	private IRolService rolService;
-	
-	@Autowired 
-	private IDocumentosRepo documentosRepo;
+
 
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -48,7 +44,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		Usuario usuario = new Usuario(registroDTO.getApellidos(), registroDTO.getNombres(), registroDTO.getEmail(),
 				passwordEncoder.encode(registroDTO.getPassword()), registroDTO.getEstado(), registroDTO.getDireccion(),
 				registroDTO.getCiudad(), registroDTO.getSexo(), registroDTO.getFechaNacimiento(),
-				Arrays.asList(perfil));
+				perfil);
 
 		usuario.setEstado(registroDTO.getEstado());
 		
@@ -85,10 +81,13 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		usuarioDTO.setEstado(usuario.getEstado());
 		usuarioDTO.setId(usuario.getId());
 		usuarioDTO.setPassword(usuario.getPassword());
-
-		if (!usuario.getRoles().isEmpty()) {
-			usuarioDTO.setRol(usuario.getRoles().stream().findFirst().get().getCodigo());
-		}
+		usuarioDTO.setRol(usuario.getRol().getCodigo());
+		usuarioDTO.setFotografia(docFR);
+		usuarioDTO.setDocumentoIdentidad(docIR);
+//
+//		if (!usuario.getRoles().isEmpty()) {
+//			usuarioDTO.setRol(usuario.getRoles().stream().findFirst().get().getCodigo());
+//		}
 		
 
 		return usuarioDTO;
@@ -129,9 +128,8 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		usuario.setNombres(registroDTO.getNombres());
 		usuario.setEmail(registroDTO.getEmail());
 		usuario.setPassword(passwordEncoder.encode(registroDTO.getPassword()));
-		Collection<Rol> roles = new ArrayList<Rol>();
-		roles.add(perfil);
-		usuario.setRoles(roles);
+		
+		usuario.setRol(perfil);
 		usuario.setEstado(registroDTO.getEstado());
 		usuario.setFechaNacimiento(registroDTO.getFechaNacimiento());
 		usuario.setSexo(registroDTO.getSexo());
@@ -162,10 +160,11 @@ public class UsuarioServiceImpl implements IUsuarioService {
 			usuarioDTO.setFechaNacimiento(usuario.getFechaNacimiento());
 			usuarioDTO.setSexo(usuario.getSexo());
 			usuarioDTO.setEstado(usuario.getEstado());
+			usuarioDTO.setRol(usuario.getRol().getCodigo());
 
-			if (!usuario.getRoles().isEmpty()) {
-				usuarioDTO.setRol(usuario.getRoles().stream().findFirst().get().getCodigo());
-			}
+//			if (!usuario.getRoles().isEmpty()) {
+//				usuarioDTO.setRol(usuario.getRoles().stream().findFirst().get().getCodigo());
+//			}
 			usuariosDTO.add(usuarioDTO);
 		}
 
@@ -187,12 +186,17 @@ public class UsuarioServiceImpl implements IUsuarioService {
 			throw new UsernameNotFoundException("Usuario o password inválidos");
 
 		}
-		return new User(usuario.getEmail(), usuario.getPassword(), mapearAutoridadesRoles(usuario.getRoles()));
+		return new User(usuario.getEmail(), usuario.getPassword(), mapearAutoridadesRoles(usuario.getRol()));
 	}
 	
 	
-	private Collection<? extends GrantedAuthority> mapearAutoridadesRoles(Collection<Rol> roles) {
-		return roles.stream().map(role -> new SimpleGrantedAuthority(role.getCodigo())).collect(Collectors.toList());
+	private Collection<? extends GrantedAuthority> mapearAutoridadesRoles(Rol rol) {
+	    // Crear una SimpleGrantedAuthority con el código del rol
+	    SimpleGrantedAuthority authority = new SimpleGrantedAuthority(rol.getCodigo());
+
+	    // Devolver una lista con la única autoridad
+	    return Collections.singletonList(authority);
 	}
+
 
 }

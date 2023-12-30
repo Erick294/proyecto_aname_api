@@ -4,33 +4,34 @@ import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "rol")
+@Table(name = "roles")
 public class Rol implements GrantedAuthority{
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_rol")
-	@SequenceGenerator(name = "seq_rol", sequenceName = "seq_rol", allocationSize = 1)
-	@Column(name = "rol_id")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roles_role_id_seq")
+	@SequenceGenerator(name = "roles_role_id_seq", sequenceName = "roles_role_id_seq", allocationSize = 1)
+	@Column(name = "role_id")
 	private Integer id;
 
-	@Column(name = "rol_codigo")
+	@Column(name = "role_codigo")
 	private String codigo;
 
-	@Column(name = "rol_descripcion")
+	@Column(name = "role_descripcion")
 	private String descripcion;
 	
 
-	@ManyToMany(mappedBy = "roles")
+	@OneToMany(mappedBy = "rol", cascade = CascadeType.ALL)
 	private List<Usuario> usuarios;
 
 	public Integer getId() {

@@ -14,13 +14,13 @@ public class UsuarioLoginResponseDTO extends RepresentationModel<UsuarioLoginRes
 	private Integer id;
 	private String email;
 	private Boolean estado;
-	private List<String> roles;
+	private String rol;
 
-	public UsuarioLoginResponseDTO(String token, Integer id, String email, List<String> roles, Boolean estado) {
+	public UsuarioLoginResponseDTO(String token, Integer id, String email, String rol, Boolean estado) {
 		this.token = token;
 		this.id = id;
 		this.email = email;
-		this.roles = roles;
+		this.rol = rol;
 		this.estado=estado;
 	}
 
@@ -56,12 +56,12 @@ public class UsuarioLoginResponseDTO extends RepresentationModel<UsuarioLoginRes
 		this.email = email;
 	}
 
-	public List<String> getRoles() {
-		return roles;
+	public String getRol() {
+		return rol;
 	}
 
-	public void setRoles(List<String> roles) {
-		this.roles = roles;
+	public void setRol(String rol) {
+		this.rol = rol;
 	}
 
 	public Boolean getEstado() {
