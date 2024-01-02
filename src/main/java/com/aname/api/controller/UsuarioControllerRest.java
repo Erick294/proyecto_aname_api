@@ -63,7 +63,7 @@ public class UsuarioControllerRest {
 		return this.rolService.buscarTodosRol();
 	}
 
-	@PostMapping("/enviarSimple")
+	@PostMapping("/email/enviarSimple")
     public ResponseEntity<?> enviarSimpleEmail(@RequestBody EmailDTO emailDTO){
 
         System.out.println("Mensaje Recibido " + emailDTO);
@@ -77,7 +77,7 @@ public class UsuarioControllerRest {
     }
 
 
-    @PostMapping("/enviarArchivo")
+    @PostMapping("/email/enviarArchivo")
     public ResponseEntity<?> enviarEmailArchivo(@ModelAttribute EmailFileDTO emailFileDTO){
 
         try {
