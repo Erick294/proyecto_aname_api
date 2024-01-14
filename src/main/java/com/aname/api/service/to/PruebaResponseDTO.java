@@ -7,17 +7,19 @@ import org.springframework.hateoas.RepresentationModel;
 import lombok.Data;
 
 @Data
-public class DocResponseDTO extends RepresentationModel<DocResponseDTO> implements Serializable{
-
-	/**
+public class PruebaResponseDTO extends RepresentationModel<PruebaResponseDTO> implements Serializable{/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	private Integer id;
+	
 	private String nombre;
-	private String username;
-	private String link;
-	private String extension;
+	
+	private Integer intentos;
+	
+	private String tipo; 
+	
 	
 
 }

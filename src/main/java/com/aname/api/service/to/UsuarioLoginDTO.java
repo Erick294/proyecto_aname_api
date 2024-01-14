@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import org.springframework.hateoas.RepresentationModel;
 
+import lombok.Data;
+
+@Data
 public class UsuarioLoginDTO extends RepresentationModel<UsuarioLoginDTO> implements Serializable{
     
     /**
@@ -20,21 +23,5 @@ public class UsuarioLoginDTO extends RepresentationModel<UsuarioLoginDTO> implem
         this.password = password;
     }
 
-    // Getters and setters
     
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

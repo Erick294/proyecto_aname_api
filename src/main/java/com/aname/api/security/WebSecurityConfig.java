@@ -39,6 +39,7 @@ public class WebSecurityConfig {
 			auth.requestMatchers("/login").permitAll();
 			auth.requestMatchers("/usuario/**").permitAll();
 			auth.requestMatchers("/files/**").permitAll();
+			auth.requestMatchers("/campeonato/**").hasAnyAuthority("ORG", "JUN", "ADM");
 			auth.anyRequest().authenticated();
 		}).sessionManagement(session -> {
 			session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
