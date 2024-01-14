@@ -51,6 +51,18 @@ public class CampeonatoControllerRest {
 	}
 	
 	
+	@GetMapping()
+	public ResponseEntity<?> obtenerListaCampeonatos() {
+		try {
+			
+			return ResponseEntity.ok(this.campeonatoService.listarCampeonatos());
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al buscar campeonatos: " + e.getMessage());
+		}
+	}
+	
+	
 	
 
 }

@@ -29,6 +29,21 @@ public class CampeonatoServiceImpl implements ICampeonatoService{
 		
 	}
 	
+	@Override
+	public List<CampeonatoReqDTO> listarCampeonatos() {
+		List<Campeonato> campeonatos = this.campeonatoRepo.buscarTodosCampeonato();
+		
+		List<CampeonatoReqDTO> campsR = new ArrayList<CampeonatoReqDTO>();
+		
+		for(Campeonato c :campeonatos) {
+			CampeonatoReqDTO campeonato = this.convertirACampeonatoReqDTO(c);
+			campsR.add(campeonato);
+		}
+		
+		return campsR;
+		
+	}
+	
 	
 	
 	private Campeonato convertirCampeonatoReqDTO(CampeonatoReqDTO campeonato) {
@@ -41,15 +56,45 @@ public class CampeonatoServiceImpl implements ICampeonatoService{
 		c.setInscripcionFin(campeonato.getInscripcionFin());
 		c.setInscripcionInicio(campeonato.getInscripcionInicio());
 		
-		List<Prueba> pruebas = new ArrayList<Prueba>();
-		
-		for(Integer p : campeonato.getPruebas()) {
-			Prueba pr= this.pruebaService.buscarPrueba(p);
-			this.pruebaService.actualizarPrueba(pr);
-			pruebas.add(pr);
+		if(campeonato.getPruebas()!=null && !campeonato.getPruebas().isEmpty()) {
+			List<Prueba> pruebas = new ArrayList<Prueba>();
+			
+			for(Integer p : campeonato.getPruebas()) {
+				Prueba pr= this.pruebaService.buscarPrueba(p);
+				this.pruebaService.actualizarPrueba(pr);
+				pruebas.add(pr);
+			}
+			
+			c.setPruebas(pruebas);
 		}
 		
-		c.setPruebas(pruebas);
+		
+		return c;
+		
+	}
+	
+	private CampeonatoReqDTO convertirACampeonatoReqDTO(Campeonato campeonato) {
+		CampeonatoReqDTO c =new CampeonatoReqDTO();
+		c.setFechaFin(campeonato.getFechaFin());
+		c.setFechaInicio(campeonato.getFechaInicio());
+		c.setNombre(campeonato.getNombre());
+		c.setOrganizador(campeonato.getOrganizador());
+		c.setSede(campeonato.getSede());
+		c.setInscripcionFin(campeonato.getInscripcionFin());
+		c.setInscripcionInicio(campeonato.getInscripcionInicio());
+		
+		if(campeonato.getPruebas()!=null && !campeonato.getPruebas().isEmpty()) {
+			List<Integer> pruebas = new ArrayList<Integer>();
+			
+			for(Prueba p : campeonato.getPruebas()) {
+				Integer id = p.getId();
+				pruebas.add(id);
+			}
+			
+			c.setPruebas(pruebas);
+		}
+		
+		
 		return c;
 		
 	}
