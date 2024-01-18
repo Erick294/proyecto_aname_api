@@ -1,0 +1,8 @@
+azure:
+  storage:
+    container:
+      name: 
+        anamefiles
+    connection:
+      #string: DefaultEndpointsProtocol=https;AccountName=testaname;AccountKey=ynnrnSuLoHcROgcLmsmhuLOaOBDLLCLLw4yCPbHaSWVjA5b2jL8vUGC80VMSiSRx/WJWKXiCT7Or+AStH7AqOQ==;BlobEndpoint=https://testaname.blob.core.windows.net/;QueueEndpoint=https://testaname.queue.core.windows.net/;TableEndpoint=https://testaname.table.core.windows.net/;FileEndpoint=https://testaname.file.core.windows.net/;
+      string: DefaultEndpointsProtocol=https;AccountName=anamefiles;AccountKey=XMvb9VFKqVkbPKLJutJN3yF3hTwZc2r1eArqMlPHXE5F61dBYngpaN3+KOm44Za8JXXaUu/qcUut+AStDGcplg==;EndpointSuffix=core.windows.net
