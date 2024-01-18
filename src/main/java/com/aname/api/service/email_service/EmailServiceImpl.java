@@ -15,7 +15,7 @@ import jakarta.mail.internet.MimeMessage;
 @Service
 public class EmailServiceImpl implements IEmailService{
 
-    private final String emailUser = "noreplyaname@gmail.com";
+    private final String emailUser = "beowulfblackman@gmail.com";
 
     @Autowired
     private JavaMailSender mailSender;
