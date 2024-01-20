@@ -93,6 +93,41 @@ public class CompetidorControllerRest {
 		}
 	}
 
+	@GetMapping("/inscritos/usuario/{email}")
+	public ResponseEntity<?> listaCompetidoresInscritosUser(@PathVariable String email) {
+		try {
+
+			return ResponseEntity.ok(this.competidorServiceImpl.listaCompetidoresInscritosPorUsuario(email));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al obtener competidores: " + e.getMessage());
+		}
+	}
+
+	@GetMapping("/inscritos/campeonato/{idCampeonato}")
+	public ResponseEntity<?> listaCompetidoresInscritosCampeonato(@PathVariable Integer idCampeonato) {
+		try {
+
+			return ResponseEntity.ok(this.competidorServiceImpl.listaCompetidoresInscritosPorCampeonato(idCampeonato));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al obtener competidores: " + e.getMessage());
+		}
+	}
+
+	@GetMapping("/inscritos/campeonato/{idCampeonato}/usuario/{email}")
+	public ResponseEntity<?> listaCompetidoresInscritosUserCampeonato(@PathVariable Integer idCampeonato,
+			@PathVariable String email) {
+		try {
+
+
+			return ResponseEntity.ok(this.competidorServiceImpl.listaCompetidoresInscritosPorCampeonatoUser(email, idCampeonato));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al obtener competidores: " + e.getMessage());
+		}
+	}
+
 	@PutMapping("/confirmarInscripcion/{id}")
 	public ResponseEntity<?> confirmarIncripcion(@PathVariable Integer id) {
 		try {
@@ -105,7 +140,7 @@ public class CompetidorControllerRest {
 					.body("Error al confirmar inscripcion: " + e.getMessage());
 		}
 	}
-	
+
 	@PutMapping("/negarInscripcion/{id}")
 	public ResponseEntity<?> negarInscripcion(@PathVariable Integer id) {
 		try {

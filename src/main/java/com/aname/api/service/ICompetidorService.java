@@ -28,4 +28,10 @@ public interface ICompetidorService {
 
 	void negarInscripcionCompetidor(Integer id);
 
+	List<CompetidorResTO> listaCompetidoresInscritosPorUsuario(String email);
+
+	List<CompetidorResTO> listaCompetidoresInscritosPorCampeonato(Integer idCampeonato);
+
+	List<CompetidorResTO> listaCompetidoresInscritosPorCampeonatoUser(String email, Integer idCampeonato);
+
 }

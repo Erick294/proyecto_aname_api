@@ -129,6 +129,78 @@ public class CompetidorServiceImpl implements ICompetidorService {
 	}
 	
 	@Override
+	public List<CompetidorResTO> listaCompetidoresInscritosPorUsuario(String email) {
+
+		List<Competidor> competidores = this.competidorRepo.buscarCompetidoresInscritosPorUsuario(email);
+		List<CompetidorResTO> comps = new ArrayList<CompetidorResTO>();
+
+		if (competidores != null && !competidores.isEmpty()) {
+			for (Competidor c : competidores) {
+				CompetidorResTO com = new CompetidorResTO();
+				com.setApellidos(c.getUsuario().getApellidos());
+				com.setEmail(c.getUsuario().getEmail());
+				com.setFechaInscripcion(c.getFechaInscripcion());
+				com.setNombres(c.getUsuario().getNombres());
+				com.setId(c.getId());
+				com.setNombreCampeonato(c.getCampeonatos().get(c.getCampeonatos().size()-1).getNombre());
+				com.setIdCampeonato(c.getCampeonatos().get(c.getCampeonatos().size()-1).getId());
+				comps.add(com);
+				
+			}
+		}
+		
+		return comps;
+	}
+	
+	@Override
+	public List<CompetidorResTO> listaCompetidoresInscritosPorCampeonato(Integer idCampeonato) {
+
+		List<Competidor> competidores = this.competidorRepo.buscarCompetidoresInscritosPorCampeonato(idCampeonato);
+		List<CompetidorResTO> comps = new ArrayList<CompetidorResTO>();
+
+		if (competidores != null && !competidores.isEmpty()) {
+			for (Competidor c : competidores) {
+				CompetidorResTO com = new CompetidorResTO();
+				com.setApellidos(c.getUsuario().getApellidos());
+				com.setEmail(c.getUsuario().getEmail());
+				com.setFechaInscripcion(c.getFechaInscripcion());
+				com.setNombres(c.getUsuario().getNombres());
+				com.setId(c.getId());
+				com.setNombreCampeonato(c.getCampeonatos().get(c.getCampeonatos().size()-1).getNombre());
+				com.setIdCampeonato(c.getCampeonatos().get(c.getCampeonatos().size()-1).getId());
+				comps.add(com);
+				
+			}
+		}
+		
+		return comps;
+	}
+	
+	@Override
+	public List<CompetidorResTO> listaCompetidoresInscritosPorCampeonatoUser(String email, Integer idCampeonato) {
+
+		List<Competidor> competidores = this.competidorRepo.buscarCompetidorresInscritosPorUserYCamp(email, idCampeonato);
+		List<CompetidorResTO> comps = new ArrayList<CompetidorResTO>();
+
+		if (competidores != null && !competidores.isEmpty()) {
+			for (Competidor c : competidores) {
+				CompetidorResTO com = new CompetidorResTO();
+				com.setApellidos(c.getUsuario().getApellidos());
+				com.setEmail(c.getUsuario().getEmail());
+				com.setFechaInscripcion(c.getFechaInscripcion());
+				com.setNombres(c.getUsuario().getNombres());
+				com.setId(c.getId());
+				com.setNombreCampeonato(c.getCampeonatos().get(c.getCampeonatos().size()-1).getNombre());
+				com.setIdCampeonato(c.getCampeonatos().get(c.getCampeonatos().size()-1).getId());
+				comps.add(com);
+				
+			}
+		}
+		
+		return comps;
+	}
+	
+	@Override
 	public void confirmarInscripcionCompetidor(Integer id) {
 		Competidor c = this.competidorRepo.buscarCompetidor(id);
 		c.setEstadoParticipacion("Confirmado");
