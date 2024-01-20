@@ -3,6 +3,7 @@ package com.aname.api.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -32,20 +33,14 @@ public class AzureBlobService {
 	public DocResponseDTO upload(MultipartFile multipartFile, String contenedor, String email) throws IOException {
 		String username = extractUsernameFromEmail(email);
 
-		// nombre del contenedor al que se subirá el documento o foto
-		// String containerName = "fotos";
-		String containerName = contenedor;
-		// String containerName = "pagos";
-		// String containerName = "consentimientos";
 
-		// Obtener el nombre original del archivo
+		String containerName = contenedor;
+	
 		String originalFileName = multipartFile.getOriginalFilename();
 
-		// Obtener la extensión del archivo
 		String fileExtension = originalFileName.substring(originalFileName.lastIndexOf('.'));
 
-		// Generar un nombre único que incluya la extensión del archivo
-		String uniqueFileName = containerName + "_" + username + "_" + UUID.randomUUID() + fileExtension;
+		String uniqueFileName = containerName + "_" + username + "_" + LocalDateTime.now() + fileExtension;
 
 		BlobClient blob = blobServiceClient.getBlobContainerClient(containerName).getBlobClient(uniqueFileName);
 

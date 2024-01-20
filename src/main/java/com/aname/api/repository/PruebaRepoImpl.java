@@ -34,6 +34,30 @@ public class PruebaRepoImpl implements IPruebaRepo {
 		TypedQuery<Prueba> myQuery = this.entityManager.createQuery("SELECT p FROM Prueba p", Prueba.class);
 		return myQuery.getResultList();
 	}
+	
+	@Override
+	public List<Prueba> buscarPruebasPorCampeonato(Integer idCampeonato) {
+	    TypedQuery<Prueba> myQuery = this.entityManager.createQuery(
+	        "SELECT p FROM Prueba p JOIN p.campeonatos c WHERE c.id = :idCampeonato", Prueba.class);
+
+	    myQuery.setParameter("idCampeonato", idCampeonato);
+
+	    return myQuery.getResultList();
+	}
+	
+	@Override
+	public List<Prueba> buscarPruebasPorCampeonatoYCategoria(Integer idCampeonato, Integer idCategoria) {
+	    TypedQuery<Prueba> myQuery = this.entityManager.createQuery(
+	        "SELECT p FROM Prueba p JOIN p.campeonatos c JOIN p.categorias cat " +
+	        "WHERE c.id = :idCampeonato AND cat.id = :idCategoria", Prueba.class);
+
+	    myQuery.setParameter("idCampeonato", idCampeonato);
+	    myQuery.setParameter("idCategoria", idCategoria);
+
+	    return myQuery.getResultList();
+	}
+
+
 
 	@Override
 	public void actualizarPrueba(Prueba prueba) {

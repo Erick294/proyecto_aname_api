@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -32,7 +33,7 @@ public class AsociacionDeportiva {
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(
-	        name = "asociaciones_deportivas_usuarios",
+	        name = "usuarios_asociaciones_deportivas",
 	        joinColumns = @JoinColumn(name = "asde_id"),
 	        inverseJoinColumns = @JoinColumn(name = "usua_id")
 	    )
@@ -45,5 +46,9 @@ public class AsociacionDeportiva {
 	        inverseJoinColumns = @JoinColumn(name = "camp_id")
 	    )
 	private List<Campeonato> campeonatos;
+    
+    
+    @OneToMany(mappedBy = "asociacionDeportiva", cascade = CascadeType.ALL)
+	private List<Competidor> competidores;
     
 }

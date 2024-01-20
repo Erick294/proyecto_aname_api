@@ -1,6 +1,7 @@
 package com.aname.api.service.to;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class CampeonatoReqDTO extends RepresentationModel<CampeonatoReqDTO> impl
 	*/
 	private static final long serialVersionUID = 1L;
 
+	private Integer id;
 	private String nombre;
 	private String organizador;
 	private String sede;
@@ -23,5 +25,10 @@ public class CampeonatoReqDTO extends RepresentationModel<CampeonatoReqDTO> impl
 	private LocalDateTime inscripcionInicio;
 	private LocalDateTime inscripcionFin;
 	private List<Integer> pruebas;
+	private BigDecimal costoSocio;
+	private BigDecimal costoNoSocio;
+	private BigDecimal costoPruebaAdicional;
+	private String cuentaBancaria;
+
 
 }

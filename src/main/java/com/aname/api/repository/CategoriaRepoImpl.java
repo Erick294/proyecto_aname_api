@@ -13,14 +13,14 @@ import jakarta.transaction.Transactional;
 
 @Repository
 @Transactional
-public class CategoriaRepoImpl implements ICategoriaRepo{
-    
-    @PersistenceContext
+public class CategoriaRepoImpl implements ICategoriaRepo {
+
+	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Override
 	public void insertarCategoria(Categoria categoria) {
-		System.out.println("JPA REPO");
+		// System.out.println("JPA REPO");
 		this.entityManager.persist(categoria);
 	}
 
@@ -31,7 +31,7 @@ public class CategoriaRepoImpl implements ICategoriaRepo{
 
 	@Override
 	public List<Categoria> buscarTodosCategoria() {
-		
+
 		TypedQuery<Categoria> myQuery = this.entityManager.createQuery("SELECT c FROM Categoria c", Categoria.class);
 		return myQuery.getResultList();
 	}
@@ -46,5 +46,18 @@ public class CategoriaRepoImpl implements ICategoriaRepo{
 		Categoria c = this.entityManager.getReference(Categoria.class, id);
 		this.entityManager.remove(c);
 	}
+
+	@Override
+	public Categoria obtenerCategoriaPorEdadYGenero(Integer edad, String genero) {
+	    TypedQuery<Categoria> myQuery = this.entityManager.createQuery(
+	        "SELECT c FROM Categoria c WHERE :edad BETWEEN c.edadMinima AND c.edadMaxima AND c.genero = :genero", Categoria.class);
+
+	    myQuery.setParameter("edad", edad);
+	    myQuery.setParameter("genero", genero);
+
+	    
+	    return myQuery.getSingleResult();
+	}
+
 
 }

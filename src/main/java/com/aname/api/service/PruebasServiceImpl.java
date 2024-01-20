@@ -28,6 +28,32 @@ public class PruebasServiceImpl implements IPruebaService {
 
 		return lista;
 	}
+	
+	@Override
+	public List<PruebaResponseDTO> listarPruebasPorCampeonato(Integer idCampeonato) {
+		List<Prueba> pruebas = this.pruebaRepo.buscarPruebasPorCampeonato(idCampeonato);
+		List<PruebaResponseDTO> lista = new ArrayList<PruebaResponseDTO>();
+
+		for (Prueba p : pruebas) {
+			this.convertirPruebaResponseDTO(p);
+			lista.add(this.convertirPruebaResponseDTO(p));
+		}
+
+		return lista;
+	}
+	
+	@Override
+	public List<PruebaResponseDTO> listarPruebasPorCampeonatoYCategoria(Integer idCampeonato, Integer idCategoria) {
+		List<Prueba> pruebas = this.pruebaRepo.buscarPruebasPorCampeonatoYCategoria(idCampeonato, idCategoria);
+		List<PruebaResponseDTO> lista = new ArrayList<PruebaResponseDTO>();
+
+		for (Prueba p : pruebas) {
+			this.convertirPruebaResponseDTO(p);
+			lista.add(this.convertirPruebaResponseDTO(p));
+		}
+
+		return lista;
+	}
 
 	@Override
 	public void actualizarPrueba(Prueba prueba) {

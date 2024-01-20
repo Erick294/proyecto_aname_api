@@ -2,12 +2,14 @@ package com.aname.api.model;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -34,5 +36,14 @@ public class Prueba {
 	
 	@ManyToMany(mappedBy = "pruebas")
 	private List<Campeonato> campeonatos;
+	
+	@ManyToMany(mappedBy = "pruebas")
+	private List<Competidor> competidores;
+	
+	@ManyToMany(mappedBy = "pruebas")
+	private List<Categoria> categorias;
+	
+	@OneToMany(mappedBy = "prueba", cascade = CascadeType.ALL)
+	private List<Resultado> resultados;
 
 }

@@ -15,6 +15,8 @@ public interface ICampeonatoRepo {
 	void actualizarCampeonato(Campeonato campeonato);
 
 	void eliminarCampeonato(Integer id);
+
+	List<Campeonato> buscarCampeonatosDisponibles();
 	
 
 }

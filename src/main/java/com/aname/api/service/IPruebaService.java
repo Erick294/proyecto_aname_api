@@ -16,6 +16,10 @@ public interface IPruebaService {
 	void actualizarPrueba(Prueba prueba);
 
 	Prueba buscarPrueba(Integer S);
+
+	List<PruebaResponseDTO> listarPruebasPorCampeonato(Integer idCampeonato);
+
+	List<PruebaResponseDTO> listarPruebasPorCampeonatoYCategoria(Integer idCampeonato, Integer idCategoria);
 	
 
 }

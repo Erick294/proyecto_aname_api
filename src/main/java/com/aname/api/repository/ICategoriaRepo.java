@@ -15,4 +15,6 @@ public interface ICategoriaRepo {
 	void actualizarCategoria(Categoria categoria);
 
 	void eliminarCategoria(Integer id);
+
+	Categoria obtenerCategoriaPorEdadYGenero(Integer edad, String genero);
 }

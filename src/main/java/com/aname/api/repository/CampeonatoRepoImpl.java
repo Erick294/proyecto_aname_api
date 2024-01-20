@@ -1,5 +1,7 @@
 package com.aname.api.repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -14,7 +16,7 @@ import jakarta.transaction.Transactional;
 @Repository
 @Transactional
 public class CampeonatoRepoImpl implements ICampeonatoRepo {
-	
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -31,7 +33,7 @@ public class CampeonatoRepoImpl implements ICampeonatoRepo {
 
 	@Override
 	public List<Campeonato> buscarTodosCampeonato() {
-		
+
 		TypedQuery<Campeonato> myQuery = this.entityManager.createQuery("SELECT c FROM Campeonato c", Campeonato.class);
 		return myQuery.getResultList();
 	}
@@ -45,6 +47,15 @@ public class CampeonatoRepoImpl implements ICampeonatoRepo {
 	public void eliminarCampeonato(Integer id) {
 		Campeonato c = this.entityManager.getReference(Campeonato.class, id);
 		this.entityManager.remove(c);
+	}
+
+	@Override
+	public List<Campeonato> buscarCampeonatosDisponibles() {
+
+		TypedQuery<Campeonato> myQuery = this.entityManager
+				.createQuery("SELECT c FROM Campeonato c WHERE c.inscripcionFin > :fechaActual", Campeonato.class);
+		myQuery.setParameter("fechaActual", LocalDateTime.now());
+		return myQuery.getResultList();
 	}
 
 }

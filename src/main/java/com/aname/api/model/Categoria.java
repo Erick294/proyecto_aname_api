@@ -35,6 +35,9 @@ public class Categoria {
 
     @Column(name = "cate_edad_maxima")
 	private Integer edadMaxima;
+    
+    @Column(name = "cate_genero")
+    private String genero;
 
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
