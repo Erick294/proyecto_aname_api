@@ -5,7 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,7 +55,7 @@ public class CompetidorControllerRest {
 	@PostMapping("/inscripcionInicial")
 	public ResponseEntity<?> inscripcionInicial(@RequestBody CompetidorReqTO competidor) {
 		try {
-			
+
 			this.competidorServiceImpl.registroInicialCompetidor(competidor);
 
 			return ResponseEntity.ok("Registro de competidor exitoso");
@@ -62,11 +64,11 @@ public class CompetidorControllerRest {
 					.body("Error al registrar competidor: " + e.getMessage());
 		}
 	}
-	
+
 	@PostMapping("/inscripcionCompleta")
 	public ResponseEntity<?> inscripcionCompleta(@RequestBody InscripcionDocsReq inscripcion) {
 		try {
-			
+
 			this.competidorServiceImpl.inscripcionCompleta(inscripcion);
 
 			return ResponseEntity.ok("Competidor inscrito, por favor espere a la verificación de los documentos");
@@ -75,7 +77,46 @@ public class CompetidorControllerRest {
 					.body("Error al inscribir competidor: " + e.getMessage());
 		}
 	}
+
+	// PATHS PARA ADM,JUN,
+	// ORG--------------------------------------------------------------------------------
+	@GetMapping("/inscritos")
+	public ResponseEntity<?> listaCompetidoresInscritos() {
+		try {
+
+			this.competidorServiceImpl.listaCompetidoresInscritos();
+
+			return ResponseEntity.ok(this.competidorServiceImpl.listaCompetidoresInscritos());
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al obtener competidores: " + e.getMessage());
+		}
+	}
+
+	@PutMapping("/confirmarInscripcion/{id}")
+	public ResponseEntity<?> confirmarIncripcion(@PathVariable Integer id) {
+		try {
+
+			this.competidorServiceImpl.confirmarInscripcionCompetidor(id);
+
+			return ResponseEntity.ok("Inscripcion confirmada");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al confirmar inscripcion: " + e.getMessage());
+		}
+	}
 	
-	
+	@PutMapping("/negarInscripcion/{id}")
+	public ResponseEntity<?> negarInscripcion(@PathVariable Integer id) {
+		try {
+
+			this.competidorServiceImpl.negarInscripcionCompetidor(id);
+
+			return ResponseEntity.ok("Inscripcion negada");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al negar inscripcion: " + e.getMessage());
+		}
+	}
 
 }

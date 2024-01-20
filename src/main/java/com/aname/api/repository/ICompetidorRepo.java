@@ -18,6 +18,9 @@ public interface ICompetidorRepo {
 
 	Competidor buscarCompetidorPorUserYCamp(String email, Integer idCampeonato);
 
+
+	List<Competidor> buscarCompetidoresInscritos();
+
 	
 
 }

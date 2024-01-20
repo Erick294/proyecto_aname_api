@@ -24,6 +24,7 @@ import com.aname.api.repository.ICompetidorRepo;
 import com.aname.api.repository.IPrecioInscripcionRepo;
 import com.aname.api.service.to.CategoriaTO;
 import com.aname.api.service.to.CompetidorReqTO;
+import com.aname.api.service.to.CompetidorResTO;
 import com.aname.api.service.to.FichaInscripcionCampTO;
 import com.aname.api.service.to.InscripcionDocsReq;
 import com.aname.api.service.to.PreciosInscripcionCalcTO;
@@ -79,28 +80,67 @@ public class CompetidorServiceImpl implements ICompetidorService {
 	@Override
 	public void inscripcionCompleta(InscripcionDocsReq i) {
 		Competidor comp = this.competidorRepo.buscarCompetidorPorUserYCamp(i.getEmail(), i.getIdCampeonato());
-		
+
 		comp.setEstadoParticipacion("Inscrito");
-		
+
 		DocumentoCompetidores pago = new DocumentoCompetidores();
 		pago.setExtension(i.getComprobantePago().getExtension());
 		pago.setLink(i.getComprobantePago().getLink());
 		pago.setNombre(i.getComprobantePago().getNombre());
 		pago.setCompetidor(comp);
-		
+
 		DocumentoCompetidores ficha = new DocumentoCompetidores();
 		ficha.setExtension(i.getFichaInscripcion().getExtension());
 		ficha.setLink(i.getFichaInscripcion().getLink());
 		ficha.setNombre(i.getFichaInscripcion().getNombre());
 		ficha.setCompetidor(comp);
-		
+
 		List<DocumentoCompetidores> documentos = comp.getDocumentos();
 		documentos.add(pago);
 		documentos.add(ficha);
-		
+
 		comp.setDocumentos(documentos);
-		
+
 		this.competidorRepo.actualizarCompetidor(comp);
+	}
+
+	@Override
+	public List<CompetidorResTO> listaCompetidoresInscritos() {
+
+		List<Competidor> competidores = this.competidorRepo.buscarCompetidoresInscritos();
+		List<CompetidorResTO> comps = new ArrayList<CompetidorResTO>();
+
+		if (competidores != null && !competidores.isEmpty()) {
+			for (Competidor c : competidores) {
+				CompetidorResTO com = new CompetidorResTO();
+				com.setApellidos(c.getUsuario().getApellidos());
+				com.setEmail(c.getUsuario().getEmail());
+				com.setFechaInscripcion(c.getFechaInscripcion());
+				com.setNombres(c.getUsuario().getNombres());
+				com.setId(c.getId());
+				com.setNombreCampeonato(c.getCampeonatos().get(c.getCampeonatos().size()-1).getNombre());
+				com.setIdCampeonato(c.getCampeonatos().get(c.getCampeonatos().size()-1).getId());
+				comps.add(com);
+				
+			}
+		}
+		
+		return comps;
+	}
+	
+	@Override
+	public void confirmarInscripcionCompetidor(Integer id) {
+		Competidor c = this.competidorRepo.buscarCompetidor(id);
+		c.setEstadoParticipacion("Confirmado");
+		this.competidorRepo.actualizarCompetidor(c);
+	}
+	
+	@Override
+	public void negarInscripcionCompetidor(Integer id) {
+		Competidor c = this.competidorRepo.buscarCompetidor(id);
+		c.setEstadoParticipacion("Negado");
+		//c.setCampeonatos(null);
+		this.competidorRepo.actualizarCompetidor(c);
 	}
 
 	@Override

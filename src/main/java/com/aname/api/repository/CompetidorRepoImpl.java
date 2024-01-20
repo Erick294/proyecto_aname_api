@@ -51,6 +51,18 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 	    return myQuery.getResultList().get(0);
 	}
 
+	
+	@Override
+	public List<Competidor> buscarCompetidoresInscritos() {
+	    TypedQuery<Competidor> myQuery = this.entityManager.createQuery(
+	        "SELECT c FROM Competidor c WHERE c.estadoParticipacion=:estado",
+	        Competidor.class
+	    );
+
+	    myQuery.setParameter("estado", "Inscrito");
+
+	    return myQuery.getResultList();
+	}
 
 
 	@Override
