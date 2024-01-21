@@ -1,11 +1,11 @@
 package com.aname.api.repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
 import com.aname.api.model.Competidor;
+import com.aname.api.model.DocumentoCompetidores;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -70,13 +70,13 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 
 		return myQuery.getResultList();
 	}
-	
 
 	@Override
 	public List<Competidor> buscarCompetidorresInscritosPorUserYCamp(String email, Integer idCampeonato) {
-		TypedQuery<Competidor> myQuery = this.entityManager
-				.createQuery("SELECT c FROM Competidor c JOIN c.usuario u JOIN c.campeonatos ca "
-						+ "WHERE c.estadoParticipacion=:estado AND u.email = :email AND ca.id = :idCampeonato", Competidor.class);
+		TypedQuery<Competidor> myQuery = this.entityManager.createQuery(
+				"SELECT c FROM Competidor c JOIN c.usuario u JOIN c.campeonatos ca "
+						+ "WHERE c.estadoParticipacion=:estado AND u.email = :email AND ca.id = :idCampeonato",
+				Competidor.class);
 
 		myQuery.setParameter("email", email);
 		myQuery.setParameter("idCampeonato", idCampeonato);
@@ -90,6 +90,18 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 		TypedQuery<Competidor> myQuery = this.entityManager.createQuery(
 				"SELECT c FROM Competidor c JOIN c.usuario u WHERE c.estadoParticipacion=:estado AND u.email = :email",
 				Competidor.class);
+
+		myQuery.setParameter("estado", "Inscrito");
+		myQuery.setParameter("email", email);
+
+		return myQuery.getResultList();
+	}
+
+	@Override
+	public List<DocumentoCompetidores> buscarDocsCompetidoresInscritosPorUsuario(String email) {
+		TypedQuery<DocumentoCompetidores> myQuery = this.entityManager.createQuery(
+				"SELECT d FROM DocumentoCompetidores d JOIN d.competidor c JOIN c.usuario u WHERE c.estadoParticipacion = :estado AND u.email = :email",
+				DocumentoCompetidores.class);
 
 		myQuery.setParameter("estado", "Inscrito");
 		myQuery.setParameter("email", email);

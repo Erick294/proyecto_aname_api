@@ -5,15 +5,19 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.aname.api.model.DocumentoCompetidores;
+import com.aname.api.repository.ICompetidorRepo;
 import com.aname.api.service.to.DocResponseDTO;
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.storage.blob.BlobClient;
@@ -30,17 +34,32 @@ public class AzureBlobService {
 	@Autowired
 	BlobContainerClient blobContainerClient;
 
-	public DocResponseDTO upload(MultipartFile multipartFile, String contenedor, String email) throws IOException {
+	@Autowired
+	private ICompetidorRepo competidorRepo;
+
+	private String tokenSAS = "?sv=2022-11-02&ss=bfqt&srt=co&sp=rwdlacupiytfx&se="
+			+ "2024-08-09T06:22:34Z&st=2024-01-18T22:22:34Z&spr=https,http&sig="
+			+ "Vr7noWuMd19NdAnTqqBau2%2BeOFKaWgliGA2ZxGHVT3w%3D";
+
+	public DocResponseDTO upload(MultipartFile multipartFile, String contenedor, String email) throws Exception {
 		String username = extractUsernameFromEmail(email);
-
-
 		String containerName = contenedor;
-	
-		String originalFileName = multipartFile.getOriginalFilename();
 
-		String fileExtension = originalFileName.substring(originalFileName.lastIndexOf('.'));
+		// Establecer límites de tamaño según el tipo de contenido
 
-		String uniqueFileName = containerName + "_" + username + "_" + LocalDateTime.now() + fileExtension;
+
+		String originalFileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+		String fileExtension = StringUtils.getFilenameExtension(originalFileName);
+
+		// Verificar el tipo de archivo permitido según el contenedor
+		if ((contenedor.equals("fotografia") && !isImageFileAllowed(fileExtension))) {
+		    throw new Exception("Solo se permiten archivos de imagen con extensiones jpg, jpeg, png para el contenedor de fotografía.");
+		} else if (!contenedor.equals("fotografia") && !isPdfFile(fileExtension)) {
+		    throw new Exception("Solo se permiten archivos PDF para el contenedor especificado.");
+		}
+
+
+		String uniqueFileName = containerName + "_" + username + "_" + LocalDateTime.now() + "." +fileExtension;
 
 		BlobClient blob = blobServiceClient.getBlobContainerClient(containerName).getBlobClient(uniqueFileName);
 
@@ -53,6 +72,32 @@ public class AzureBlobService {
 		doc.setUsername(email);
 
 		return doc;
+	}
+
+	private boolean isImageFileAllowed(String fileExtension) {
+		List<String> allowedExtensions = Arrays.asList("jpg", "jpeg", "png");
+		return allowedExtensions.contains(fileExtension.toLowerCase());
+	}
+
+	private boolean isPdfFile(String fileExtension) {
+		return fileExtension.toLowerCase().equals("pdf");
+	}
+
+	public List<DocResponseDTO> listarDocumentosCompetidor(String email) {
+		List<DocumentoCompetidores> docs = this.competidorRepo.buscarDocsCompetidoresInscritosPorUsuario(email);
+		List<DocResponseDTO> listaDocs = new ArrayList<DocResponseDTO>();
+
+		for (DocumentoCompetidores d : docs) {
+			DocResponseDTO doc = new DocResponseDTO();
+			doc.setExtension(d.getExtension());
+			doc.setLink(d.getLink() + tokenSAS);
+			doc.setNombre(d.getNombre());
+			doc.setUsername(email);
+			listaDocs.add(doc);
+
+		}
+
+		return listaDocs;
 	}
 
 	public byte[] getFile(String fileName) throws URISyntaxException {

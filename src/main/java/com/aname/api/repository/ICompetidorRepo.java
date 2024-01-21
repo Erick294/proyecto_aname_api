@@ -3,6 +3,7 @@ package com.aname.api.repository;
 import java.util.List;
 
 import com.aname.api.model.Competidor;
+import com.aname.api.model.DocumentoCompetidores;
 
 public interface ICompetidorRepo {
 	
@@ -25,6 +26,8 @@ public interface ICompetidorRepo {
 	List<Competidor> buscarCompetidoresInscritosPorCampeonato(Integer idCampeonato);
 
 	List<Competidor> buscarCompetidorresInscritosPorUserYCamp(String email, Integer idCampeonato);
+
+	List<DocumentoCompetidores> buscarDocsCompetidoresInscritosPorUsuario(String email);
 
 	
 
