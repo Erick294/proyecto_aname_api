@@ -27,7 +27,15 @@ public interface ICompetidorRepo {
 
 	List<Competidor> buscarCompetidorresInscritosPorUserYCamp(String email, Integer idCampeonato);
 
-	List<DocumentoCompetidores> buscarDocsCompetidoresInscritosPorUsuario(String email);
+	List<DocumentoCompetidores> buscarDocsCompetidoresInscritosPorUsuario(Integer idCompetidor, String email);
+
+	List<DocumentoCompetidores> buscarDocsCompetidoresInscritosPorCampeonatoYUsers(Integer idCampeonato,
+			Integer idCompetidor, String email);
+
+	List<DocumentoCompetidores> buscarDocsCompetidoresInscritosPorCampeonato(Integer idCampeonato,
+			Integer idCompetidor);
+
+	List<DocumentoCompetidores> buscarDocsCompetidoresInscritos(Integer idCompetidor);
 
 	
 

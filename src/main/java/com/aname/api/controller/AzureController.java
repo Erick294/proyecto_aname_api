@@ -53,15 +53,6 @@ public class AzureController {
 		return String.format("%.2f MB", sizeInKb);
 	}
 
-	@GetMapping("/competidor/{email}")
-	public ResponseEntity<?> obtenerDoscCompetidorPorEmail(@PathVariable String email) {
-		try {
-
-			return ResponseEntity.ok(this.azureBlobAdapter.listarDocumentosCompetidor(email));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener documentos");
-		}
-	}
 
 	@DeleteMapping
 	public ResponseEntity<Boolean> delete(@RequestParam String fileName) {

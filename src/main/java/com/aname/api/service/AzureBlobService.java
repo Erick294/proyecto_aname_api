@@ -83,16 +83,14 @@ public class AzureBlobService {
 		return fileExtension.toLowerCase().equals("pdf");
 	}
 
-	public List<DocResponseDTO> listarDocumentosCompetidor(String email) {
-		List<DocumentoCompetidores> docs = this.competidorRepo.buscarDocsCompetidoresInscritosPorUsuario(email);
+	public List<DocResponseDTO> listarDocumentosCompetidor(List<DocumentoCompetidores> docs) {
 		List<DocResponseDTO> listaDocs = new ArrayList<DocResponseDTO>();
-
 		for (DocumentoCompetidores d : docs) {
 			DocResponseDTO doc = new DocResponseDTO();
 			doc.setExtension(d.getExtension());
 			doc.setLink(d.getLink() + tokenSAS);
 			doc.setNombre(d.getNombre());
-			doc.setUsername(email);
+			doc.setUsername(d.getCompetidor().getUsuario().getEmail());
 			listaDocs.add(doc);
 
 		}

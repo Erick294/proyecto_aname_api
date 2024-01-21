@@ -1,6 +1,7 @@
 package com.aname.api.service.to;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.hateoas.RepresentationModel;
 
@@ -16,4 +17,5 @@ public class CompetidorResTO extends RepresentationModel<CompetidorResTO> {
 	private LocalDateTime fechaInscripcion;
 	private String nombreCampeonato;
 	private Integer idCampeonato;
+	private List<DocResponseDTO> documentos;
 }
