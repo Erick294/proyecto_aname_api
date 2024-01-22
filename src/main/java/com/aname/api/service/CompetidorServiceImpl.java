@@ -131,6 +131,25 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 	}
 
+	@Override
+	public CompetidorReqTO buscarCompetidorUsuario(String email){
+		Competidor competidor = this.competidorRepo.buscarCompetidorPorUsuario(email);
+		CompetidorReqTO c = new CompetidorReqTO();
+		c.setEmail(competidor.getUsuario().getEmail());
+		c.setIdAsociacionDeportiva(competidor.getAsociacionDeportiva().getId());
+		//c.setIdCampeonato(competidor.ge);
+		List<Prueba> pruebas = competidor.getPruebas();
+		List<Integer> idsP = new ArrayList<Integer>();
+
+		for(Prueba p : pruebas){
+			Integer n = p.getId();
+			idsP.add(n);
+		}
+		c.setPruebas(idsP);
+		return c;
+
+	}
+
 	// Lista competidores
 	// inscritos-----------------------------------------------------------------
 

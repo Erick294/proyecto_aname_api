@@ -49,6 +49,17 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 		return myQuery.getResultList().get(0);
 	}
 
+	@Override
+	public Competidor buscarCompetidorPorUsuario(String email) {
+		TypedQuery<Competidor> myQuery = this.entityManager
+				.createQuery("SELECT c FROM Competidor c JOIN c.usuario u"
+						+ "WHERE u.email = :email ", Competidor.class);
+
+		myQuery.setParameter("email", email);
+
+		return myQuery.getResultList().get(0);
+	}
+
 	// Todos los competidores inscritos
 	@Override
 	public List<Competidor> buscarCompetidoresInscritos() {

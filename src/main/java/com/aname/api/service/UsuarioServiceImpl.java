@@ -32,7 +32,6 @@ public class UsuarioServiceImpl implements IUsuarioService {
 	@Autowired
 	private IRolService rolService;
 
-
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 	@Override
@@ -47,29 +46,35 @@ public class UsuarioServiceImpl implements IUsuarioService {
 				perfil);
 
 		usuario.setEstado(registroDTO.getEstado());
-		
+
 		DocumentoUsuarios docI = new DocumentoUsuarios();
-		DocResponseDTO docIR = registroDTO.getDocumentoIdentidad();
-		docI.setExtension(docIR.getExtension());
-		docI.setLink(docIR.getLink());
-		docI.setNombre(docIR.getNombre());
-		docI.setUsuario(usuario);
 		
 		DocumentoUsuarios docF = new DocumentoUsuarios();
 		DocResponseDTO docFR = registroDTO.getFotografia();
-		docF.setExtension(docFR.getExtension());
-		docF.setLink(docFR.getLink());
-		docF.setNombre(docFR.getNombre());
-		docF.setUsuario(usuario);
-		
-		//doc.setUsuario(usuario);
 		List<DocumentoUsuarios> documentos = new ArrayList<DocumentoUsuarios>();
-		documentos.add(docF);
-		documentos.add(docI);
-		
+
+		if (docFR != null) {
+			docF.setExtension(docFR.getExtension());
+			docF.setLink(docFR.getLink());
+			docF.setNombre(docFR.getNombre());
+			docF.setUsuario(usuario);
+			documentos.add(docF);
+		}
+
+		DocResponseDTO docIR = registroDTO.getDocumentoIdentidad();
+		if (docIR != null){
+			docI.setExtension(docIR.getExtension());
+			docI.setLink(docIR.getLink());
+			docI.setNombre(docIR.getNombre());
+			docI.setUsuario(usuario);
+			documentos.add(docI);
+		}
+		// doc.setUsuario(usuario);
+	
+
 		usuario.setDocumentos(documentos);
 		this.usuarioRepo.insertarUsuario(usuario);
-		
+
 		UsuarioRegistroDTO usuarioDTO = new UsuarioRegistroDTO();
 		usuarioDTO.setApellidos(usuario.getApellidos());
 		usuarioDTO.setNombres(usuario.getNombres());
@@ -84,11 +89,10 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		usuarioDTO.setRol(usuario.getRol().getCodigo());
 		usuarioDTO.setFotografia(docFR);
 		usuarioDTO.setDocumentoIdentidad(docIR);
-//
-//		if (!usuario.getRoles().isEmpty()) {
-//			usuarioDTO.setRol(usuario.getRoles().stream().findFirst().get().getCodigo());
-//		}
-		
+		//
+		// if (!usuario.getRoles().isEmpty()) {
+		// usuarioDTO.setRol(usuario.getRoles().stream().findFirst().get().getCodigo());
+		// }
 
 		return usuarioDTO;
 	}
@@ -128,7 +132,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		usuario.setNombres(registroDTO.getNombres());
 		usuario.setEmail(registroDTO.getEmail());
 		usuario.setPassword(passwordEncoder.encode(registroDTO.getPassword()));
-		
+
 		usuario.setRol(perfil);
 		usuario.setEstado(registroDTO.getEstado());
 		usuario.setFechaNacimiento(registroDTO.getFechaNacimiento());
@@ -162,9 +166,9 @@ public class UsuarioServiceImpl implements IUsuarioService {
 			usuarioDTO.setEstado(usuario.getEstado());
 			usuarioDTO.setRol(usuario.getRol().getCodigo());
 
-//			if (!usuario.getRoles().isEmpty()) {
-//				usuarioDTO.setRol(usuario.getRoles().stream().findFirst().get().getCodigo());
-//			}
+			// if (!usuario.getRoles().isEmpty()) {
+			// usuarioDTO.setRol(usuario.getRoles().stream().findFirst().get().getCodigo());
+			// }
 			usuariosDTO.add(usuarioDTO);
 		}
 
@@ -190,15 +194,13 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		}
 		return new User(usuario.getEmail(), usuario.getPassword(), mapearAutoridadesRoles(usuario.getRol()));
 	}
-	
-	
+
 	private Collection<? extends GrantedAuthority> mapearAutoridadesRoles(Rol rol) {
-	    // Crear una SimpleGrantedAuthority con el código del rol
-	    SimpleGrantedAuthority authority = new SimpleGrantedAuthority(rol.getCodigo());
+		// Crear una SimpleGrantedAuthority con el código del rol
+		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(rol.getCodigo());
 
-	    // Devolver una lista con la única autoridad
-	    return Collections.singletonList(authority);
+		// Devolver una lista con la única autoridad
+		return Collections.singletonList(authority);
 	}
-
 
 }
