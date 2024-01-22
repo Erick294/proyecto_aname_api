@@ -13,6 +13,7 @@ public class CompetidorReqTO extends RepresentationModel<CompetidorReqTO>{
 	private Integer idCampeonato;
 	private Integer idAsociacionDeportiva;
 	private List<Integer> pruebas;
+	private List<Integer> campeonatos;
 	
 	
 }

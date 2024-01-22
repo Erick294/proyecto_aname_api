@@ -146,6 +146,18 @@ public class CompetidorServiceImpl implements ICompetidorService {
 			idsP.add(n);
 		}
 		c.setPruebas(idsP);
+
+
+		List<Campeonato> campeonatos = competidor.getCampeonatos();
+		List<Integer> idsC = new ArrayList<Integer>();
+
+		for(Campeonato campeonato : campeonatos){
+			Integer n = campeonato.getId();
+			idsC.add(n);
+		}
+
+		c.setCampeonatos(idsC);
+		
 		return c;
 
 	}

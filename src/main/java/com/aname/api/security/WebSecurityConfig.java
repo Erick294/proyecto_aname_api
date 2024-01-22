@@ -43,7 +43,7 @@ public class WebSecurityConfig {
 			auth.requestMatchers("/campeonato/**").hasAnyAuthority("ORG", "JUN", "ADM");
 			auth.requestMatchers("/campeonato/pruebas").hasAnyAuthority("ORG", "JUN", "ADM", "ATL");
 			auth.requestMatchers("/competidor/inscritos/**", "/competidor/confirmarInscripcion/**", "/competidor/negarInscripcion/**").hasAnyAuthority("ORG", "JUN", "ADM");
-			auth.requestMatchers("/competidor/**").hasAnyAuthority("ORG", "JUN", "ADM", "ATL");
+			auth.requestMatchers("/competidor/**").permitAll();
 			auth.anyRequest().authenticated();
 		}).sessionManagement(session -> {
 			session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
