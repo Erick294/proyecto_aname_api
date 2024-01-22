@@ -21,7 +21,7 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 
 	@Override
 	public void insertarCompetidor(Competidor competidor) {
-		System.out.println("JPA REPO");
+		//System.out.println("JPA REPO");
 		this.entityManager.persist(competidor);
 	}
 
@@ -49,6 +49,17 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 		return myQuery.getResultList().get(0);
 	}
 
+	@Override
+	public Competidor buscarCompetidorPorUsuario(String email) {
+		TypedQuery<Competidor> myQuery = this.entityManager
+				.createQuery("SELECT c FROM Competidor c JOIN c.usuario u "
+						+ "WHERE u.email = :email ", Competidor.class);
+
+		myQuery.setParameter("email", email);
+
+		return myQuery.getResultList().get(0);
+	}
+
 	// Todos los competidores inscritos
 	@Override
 	public List<Competidor> buscarCompetidoresInscritos() {
@@ -71,6 +82,9 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 	}
 
 	// Competidores inscriptos por campeonato
+
+	
+
 
 	@Override
 	public List<Competidor> buscarCompetidoresInscritosPorCampeonato(Integer idCampeonato) {

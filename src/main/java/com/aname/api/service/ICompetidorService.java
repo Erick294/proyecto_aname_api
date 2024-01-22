@@ -15,7 +15,6 @@ public interface ICompetidorService {
 
 	CategoriaTO calcularCategoriaUsuario(Integer edad, String genero);
 
-
 	void registroInicialCompetidor(CompetidorReqTO c);
 
 	PreciosInscripcionCalcTO calcularPreciosInscripcion(Integer idCampeonato, String email, List<String> pruebas);
@@ -28,9 +27,13 @@ public interface ICompetidorService {
 
 	void negarInscripcionCompetidor(Integer id);
 
+	CompetidorReqTO buscarCompetidorID(Integer id);
+
 	List<CompetidorResTO> listaCompetidoresInscritosPorUsuario(String email);
 
 	List<CompetidorResTO> listaCompetidoresInscritosPorCampeonato(Integer idCampeonato);
+
+	CompetidorReqTO buscarCompetidorUsuario(String email);
 
 	List<CompetidorResTO> listaCompetidoresInscritosPorCampeonatoUser(String email, Integer idCampeonato);
 

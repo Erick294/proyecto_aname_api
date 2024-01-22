@@ -108,6 +108,60 @@ public class CompetidorServiceImpl implements ICompetidorService {
 		this.competidorRepo.actualizarCompetidor(comp);
 	}
 
+	//Buscar competidor por id
+
+	@Override
+	public CompetidorReqTO buscarCompetidorID(Integer id){
+		Competidor competidor = this.competidorRepo.buscarCompetidor(id);
+		CompetidorReqTO c = new CompetidorReqTO();
+		c.setEmail(competidor.getUsuario().getEmail());
+		c.setIdAsociacionDeportiva(competidor.getAsociacionDeportiva().getId());
+		c.setIdCampeonato(id);
+
+		List<Prueba> pruebas = competidor.getPruebas();
+
+		List<Integer> idsP = new ArrayList<Integer>();
+
+		for(Prueba p : pruebas){
+			Integer n = p.getId();
+			idsP.add(n);
+		}
+		c.setPruebas(idsP);
+		return c;
+
+	}
+
+	@Override
+	public CompetidorReqTO buscarCompetidorUsuario(String email){
+		Competidor competidor = this.competidorRepo.buscarCompetidorPorUsuario(email);
+		CompetidorReqTO c = new CompetidorReqTO();
+		c.setEmail(competidor.getUsuario().getEmail());
+		c.setIdAsociacionDeportiva(competidor.getAsociacionDeportiva().getId());
+		//c.setIdCampeonato(competidor.ge);
+		List<Prueba> pruebas = competidor.getPruebas();
+		List<Integer> idsP = new ArrayList<Integer>();
+
+		for(Prueba p : pruebas){
+			Integer n = p.getId();
+			idsP.add(n);
+		}
+		c.setPruebas(idsP);
+
+
+		List<Campeonato> campeonatos = competidor.getCampeonatos();
+		List<Integer> idsC = new ArrayList<Integer>();
+
+		for(Campeonato campeonato : campeonatos){
+			Integer n = campeonato.getId();
+			idsC.add(n);
+		}
+
+		c.setCampeonatos(idsC);
+		
+		return c;
+
+	}
+
 	// Lista competidores
 	// inscritos-----------------------------------------------------------------
 
