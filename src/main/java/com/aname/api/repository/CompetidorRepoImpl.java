@@ -52,7 +52,7 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 	@Override
 	public Competidor buscarCompetidorPorUsuario(String email) {
 		TypedQuery<Competidor> myQuery = this.entityManager
-				.createQuery("SELECT c FROM Competidor c JOIN c.usuario u"
+				.createQuery("SELECT c FROM Competidor c JOIN c.usuario u "
 						+ "WHERE u.email = :email ", Competidor.class);
 
 		myQuery.setParameter("email", email);
