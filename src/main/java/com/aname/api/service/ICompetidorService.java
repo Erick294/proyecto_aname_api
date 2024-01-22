@@ -27,6 +27,7 @@ public interface ICompetidorService {
 	void confirmarInscripcionCompetidor(Integer id);
 
 	void negarInscripcionCompetidor(Integer id);
+	CompetidorReqTO buscarCompetidorID(Integer id);
 
 	List<CompetidorResTO> listaCompetidoresInscritosPorUsuario(String email);
 

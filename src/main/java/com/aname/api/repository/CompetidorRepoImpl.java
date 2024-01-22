@@ -21,7 +21,7 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 
 	@Override
 	public void insertarCompetidor(Competidor competidor) {
-		System.out.println("JPA REPO");
+		//System.out.println("JPA REPO");
 		this.entityManager.persist(competidor);
 	}
 
@@ -71,6 +71,9 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 	}
 
 	// Competidores inscriptos por campeonato
+
+	
+
 
 	@Override
 	public List<Competidor> buscarCompetidoresInscritosPorCampeonato(Integer idCampeonato) {
