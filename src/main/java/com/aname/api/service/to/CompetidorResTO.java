@@ -19,4 +19,5 @@ public class CompetidorResTO extends RepresentationModel<CompetidorResTO> {
 	private Integer idCampeonato;
 	private String estadoParticipacion;
 	private List<DocResponseDTO> documentos;
+	private List<PruebaResponseDTO> pruebas;
 }

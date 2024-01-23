@@ -68,17 +68,7 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 		return myQuery.getResultList();
 	}
 
-	@Override
-	public List<DocumentoCompetidores> buscarDocsCompetidoresInscritos(Integer idCompetidor) {
-		TypedQuery<DocumentoCompetidores> myQuery = this.entityManager.createQuery(
-				"SELECT d FROM DocumentoCompetidores d JOIN d.competidor c WHERE c.estadoParticipacion = :estado AND c.id=:idCompetidor",
-				DocumentoCompetidores.class);
 
-		myQuery.setParameter("estado", "Inscrito");
-		myQuery.setParameter("idCompetidor", idCompetidor);
-
-		return myQuery.getResultList();
-	}
 
 	// Competidores inscriptos por
 	// campeonato--------------------------------------------------------------------------
@@ -95,20 +85,6 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 		return myQuery.getResultList();
 	}
 
-	@Override
-	public List<DocumentoCompetidores> buscarDocsCompetidoresInscritosPorCampeonato(Integer idCampeonato,
-			Integer idCompetidor) {
-		TypedQuery<DocumentoCompetidores> myQuery = this.entityManager.createQuery(
-				"SELECT d FROM DocumentoCompetidores d JOIN d.competidor c JOIN c.campeonatos ca "
-						+ "WHERE c.estadoParticipacion = :estado AND c.id=:idCompetidor AND ca.id=:idCampeonato",
-				DocumentoCompetidores.class);
-
-		myQuery.setParameter("estado", "Inscrito");
-		myQuery.setParameter("idCampeonato", idCampeonato);
-		myQuery.setParameter("idCompetidor", idCompetidor);
-
-		return myQuery.getResultList();
-	}
 
 	// Competidores inscritos por usuario y por
 	// campeonato---------------------------------------------------------------
@@ -127,22 +103,7 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 		return myQuery.getResultList();
 	}
 
-	@Override
-	public List<DocumentoCompetidores> buscarDocsCompetidoresInscritosPorCampeonatoYUsers(Integer idCampeonato,
-			Integer idCompetidor, String email) {
-		TypedQuery<DocumentoCompetidores> myQuery = this.entityManager.createQuery(
-				"SELECT d FROM DocumentoCompetidores d JOIN d.competidor c JOIN c.campeonatos ca JOIN c.usuario u "
-						+ "WHERE c.estadoParticipacion = :estado AND c.id=:idCompetidor " + "AND ca.id=:idCampeonato "
-						+ "AND u.email = :email",
-				DocumentoCompetidores.class);
 
-		myQuery.setParameter("estado", "Inscrito");
-		myQuery.setParameter("idCampeonato", idCampeonato);
-		myQuery.setParameter("idCompetidor", idCompetidor);
-		myQuery.setParameter("email", email);
-
-		return myQuery.getResultList();
-	}
 
 	@Override
 	public List<DocumentoCompetidores> buscarDocsCompetidores(Integer idCompetidor) {
@@ -168,19 +129,7 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 		return myQuery.getResultList();
 	}
 
-	@Override
-	public List<DocumentoCompetidores> buscarDocsCompetidoresInscritosPorUsuario(Integer idCompetidor, String email) {
-		TypedQuery<DocumentoCompetidores> myQuery = this.entityManager.createQuery(
-				"SELECT d FROM DocumentoCompetidores d JOIN d.competidor c JOIN c.usuario u "
-						+ "WHERE c.id=:idCompetidor AND c.estadoParticipacion = :estado AND u.email = :email",
-				DocumentoCompetidores.class);
-
-		myQuery.setParameter("estado", "Inscrito");
-		myQuery.setParameter("idCompetidor", idCompetidor);
-		myQuery.setParameter("email", email);
-
-		return myQuery.getResultList();
-	}
+	
 
 	// **************************************************************************************************************
 

@@ -6,7 +6,7 @@ import com.aname.api.model.Competidor;
 import com.aname.api.model.DocumentoCompetidores;
 
 public interface ICompetidorRepo {
-	
+
 	void insertarCompetidor(Competidor competidor);
 
 	Competidor buscarCompetidor(Integer id);
@@ -27,20 +27,8 @@ public interface ICompetidorRepo {
 
 	List<Competidor> buscarCompetidorresInscritosPorUserYCamp(String email, Integer idCampeonato);
 
-	List<DocumentoCompetidores> buscarDocsCompetidoresInscritosPorUsuario(Integer idCompetidor, String email);
-
-	List<DocumentoCompetidores> buscarDocsCompetidoresInscritosPorCampeonatoYUsers(Integer idCampeonato,
-			Integer idCompetidor, String email);
-
-	List<DocumentoCompetidores> buscarDocsCompetidoresInscritosPorCampeonato(Integer idCampeonato,
-			Integer idCompetidor);
-
-	List<DocumentoCompetidores> buscarDocsCompetidoresInscritos(Integer idCompetidor);
-
 	List<Competidor> buscarCompetidorPorUsuario(String email);
 
 	List<DocumentoCompetidores> buscarDocsCompetidores(Integer idCompetidor);
-
-	
 
 }

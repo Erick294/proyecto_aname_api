@@ -29,6 +29,7 @@ import com.aname.api.service.to.DocResponseDTO;
 import com.aname.api.service.to.FichaInscripcionCampTO;
 import com.aname.api.service.to.InscripcionDocsReq;
 import com.aname.api.service.to.PreciosInscripcionCalcTO;
+import com.aname.api.service.to.PruebaResponseDTO;
 
 @Service
 public class CompetidorServiceImpl implements ICompetidorService {
@@ -155,6 +156,18 @@ public class CompetidorServiceImpl implements ICompetidorService {
 					List<DocResponseDTO> docsR = this.azureBlobAdapter.listarDocumentosCompetidor(docs);
 					com.setDocumentos(docsR);
 				}
+				
+				List<Prueba> pruebas = c.getPruebas();
+				if(pruebas !=null && !pruebas.isEmpty()) {
+					List<PruebaResponseDTO> prs = new ArrayList<PruebaResponseDTO>();
+					
+					for(Prueba p : pruebas) {
+						prs.add(this.pruebaService.convertirPruebaResponseDTO(p));
+					}
+					
+					com.setPruebas(prs);
+					
+				}
 
 				comps.add(com);
 
@@ -163,7 +176,6 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 		return comps;
 	}
-	
 
 	// Lista competidores
 	// inscritos-----------------------------------------------------------------
@@ -185,14 +197,28 @@ public class CompetidorServiceImpl implements ICompetidorService {
 				com.setNombreCampeonato(c.getCampeonatos().get(c.getCampeonatos().size() - 1).getNombre());
 				com.setIdCampeonato(c.getCampeonatos().get(c.getCampeonatos().size() - 1).getId());
 				com.setEstadoParticipacion(c.getEstadoParticipacion());
-				List<DocumentoCompetidores> docs = this.competidorRepo.buscarDocsCompetidoresInscritos(c.getId());
+				List<DocumentoCompetidores> docs = this.competidorRepo.buscarDocsCompetidores(c.getId());
 
 				if (docs != null && !docs.isEmpty()) {
 					List<DocResponseDTO> docsR = this.azureBlobAdapter.listarDocumentosCompetidor(docs);
 					com.setDocumentos(docsR);
 				}
+				
+				List<Prueba> pruebas = c.getPruebas();
+				if(pruebas !=null && !pruebas.isEmpty()) {
+					List<PruebaResponseDTO> prs = new ArrayList<PruebaResponseDTO>();
+					
+					for(Prueba p : pruebas) {
+						prs.add(this.pruebaService.convertirPruebaResponseDTO(p));
+					}
+					
+					com.setPruebas(prs);
+					
+				}
 
 				comps.add(com);
+				
+				
 
 			}
 		}
@@ -218,11 +244,22 @@ public class CompetidorServiceImpl implements ICompetidorService {
 				com.setIdCampeonato(c.getCampeonatos().get(c.getCampeonatos().size() - 1).getId());
 				com.setEstadoParticipacion(c.getEstadoParticipacion());
 
-				List<DocumentoCompetidores> docs = this.competidorRepo
-						.buscarDocsCompetidoresInscritosPorUsuario(c.getId(), com.getEmail());
+				List<DocumentoCompetidores> docs = this.competidorRepo.buscarDocsCompetidores(c.getId());
 				if (docs != null && !docs.isEmpty()) {
 					List<DocResponseDTO> docsR = this.azureBlobAdapter.listarDocumentosCompetidor(docs);
 					com.setDocumentos(docsR);
+				}
+				
+				List<Prueba> pruebas = c.getPruebas();
+				if(pruebas !=null && !pruebas.isEmpty()) {
+					List<PruebaResponseDTO> prs = new ArrayList<PruebaResponseDTO>();
+					
+					for(Prueba p : pruebas) {
+						prs.add(this.pruebaService.convertirPruebaResponseDTO(p));
+					}
+					
+					com.setPruebas(prs);
+					
 				}
 
 				comps.add(com);
@@ -251,12 +288,23 @@ public class CompetidorServiceImpl implements ICompetidorService {
 				com.setIdCampeonato(c.getCampeonatos().get(c.getCampeonatos().size() - 1).getId());
 				com.setEstadoParticipacion(c.getEstadoParticipacion());
 
-				List<DocumentoCompetidores> docs = this.competidorRepo
-						.buscarDocsCompetidoresInscritosPorCampeonato(idCampeonato, c.getId());
+				List<DocumentoCompetidores> docs = this.competidorRepo.buscarDocsCompetidores(c.getId());
 				if (docs != null && !docs.isEmpty()) {
 					List<DocResponseDTO> docsR = this.azureBlobAdapter.listarDocumentosCompetidor(docs);
 					com.setDocumentos(docsR);
 				}
+				
+				List<Prueba> pruebas = c.getPruebas();
+				if(pruebas !=null && !pruebas.isEmpty()) {
+					List<PruebaResponseDTO> prs = new ArrayList<PruebaResponseDTO>();
+					
+					for(Prueba p : pruebas) {
+						prs.add(this.pruebaService.convertirPruebaResponseDTO(p));
+					}
+					
+					com.setPruebas(prs);
+					
+				} 
 				comps.add(com);
 
 			}
@@ -288,6 +336,18 @@ public class CompetidorServiceImpl implements ICompetidorService {
 					List<DocResponseDTO> docsR = this.azureBlobAdapter.listarDocumentosCompetidor(docs);
 					com.setDocumentos(docsR);
 				}
+				
+				List<Prueba> pruebas = c.getPruebas();
+				if(pruebas !=null && !pruebas.isEmpty()) {
+					List<PruebaResponseDTO> prs = new ArrayList<PruebaResponseDTO>();
+					
+					for(Prueba p : pruebas) {
+						prs.add(this.pruebaService.convertirPruebaResponseDTO(p));
+					}
+					
+					com.setPruebas(prs);
+					
+				}
 
 				comps.add(com);
 
@@ -316,11 +376,22 @@ public class CompetidorServiceImpl implements ICompetidorService {
 				com.setIdCampeonato(c.getCampeonatos().get(c.getCampeonatos().size() - 1).getId());
 				com.setEstadoParticipacion(c.getEstadoParticipacion());
 
-				List<DocumentoCompetidores> docs = this.competidorRepo
-						.buscarDocsCompetidoresInscritosPorCampeonatoYUsers(idCampeonato, c.getId(), email);
+				List<DocumentoCompetidores> docs = this.competidorRepo.buscarDocsCompetidores(c.getId());
 				if (docs != null && !docs.isEmpty()) {
 					List<DocResponseDTO> docsR = this.azureBlobAdapter.listarDocumentosCompetidor(docs);
 					com.setDocumentos(docsR);
+				}
+				
+				List<Prueba> pruebas = c.getPruebas();
+				if(pruebas !=null && !pruebas.isEmpty()) {
+					List<PruebaResponseDTO> prs = new ArrayList<PruebaResponseDTO>();
+					
+					for(Prueba p : pruebas) {
+						prs.add(this.pruebaService.convertirPruebaResponseDTO(p));
+					}
+					
+					com.setPruebas(prs);
+					
 				}
 
 				comps.add(com);
