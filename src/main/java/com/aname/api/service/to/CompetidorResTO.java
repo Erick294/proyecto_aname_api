@@ -17,5 +17,6 @@ public class CompetidorResTO extends RepresentationModel<CompetidorResTO> {
 	private LocalDateTime fechaInscripcion;
 	private String nombreCampeonato;
 	private Integer idCampeonato;
+	private String estadoParticipacion;
 	private List<DocResponseDTO> documentos;
 }

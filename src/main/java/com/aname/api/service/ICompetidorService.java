@@ -33,8 +33,10 @@ public interface ICompetidorService {
 
 	List<CompetidorResTO> listaCompetidoresInscritosPorCampeonato(Integer idCampeonato);
 
-	CompetidorReqTO buscarCompetidorUsuario(String email);
-
 	List<CompetidorResTO> listaCompetidoresInscritosPorCampeonatoUser(String email, Integer idCampeonato);
+
+	List<CompetidorResTO> listaCompetidoresPorCampeonatoUser(String email);
+
+	List<CompetidorResTO> listaCompetidoresPorUsuario(String email);
 
 }

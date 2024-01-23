@@ -37,7 +37,9 @@ public interface ICompetidorRepo {
 
 	List<DocumentoCompetidores> buscarDocsCompetidoresInscritos(Integer idCompetidor);
 
-	Competidor buscarCompetidorPorUsuario(String email);
+	List<Competidor> buscarCompetidorPorUsuario(String email);
+
+	List<DocumentoCompetidores> buscarDocsCompetidores(Integer idCompetidor);
 
 	
 
