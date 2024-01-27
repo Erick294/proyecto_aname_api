@@ -51,17 +51,19 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 
 		if (a != null) {
 			
-			if (c.getAsociaciones() != null) {
-				List<AsociacionDeportiva> asos = c.getAsociaciones(); 
-				asos.add(a);
-				c.setAsociaciones(asos);
+			if (a.getCampeonatos() != null) {
+				List<Campeonato> camps = a.getCampeonatos();
+				camps.add(c);
+				a.setCampeonatos(camps);
 			}else {
-				List<AsociacionDeportiva> asos =new ArrayList<AsociacionDeportiva>(); 
-				asos.add(a);
-				c.setAsociaciones(asos);
+				List<Campeonato> camps = new ArrayList<Campeonato>();
+				camps.add(c);
+				a.setCampeonatos(camps);
 			}
 
 		}
+		
+		this.asociacionDeportivaService.actualizarAsociacion(a);
 		this.campeonatoRepo.actualizarCampeonato(c);
 
 		// precio.setCampeonato(c);

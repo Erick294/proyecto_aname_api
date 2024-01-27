@@ -34,6 +34,11 @@ public class AsociacionDeportivaServiceImpl implements IAsociacionDeportivaServi
 
 		return this.asociacionDeportivaRepo.buscarAsociacionDeportiva(id);
 	}
+	
+	@Override
+	public void actualizarAsociacion(AsociacionDeportiva a) {
+		this.asociacionDeportivaRepo.actualizarAsociacionDeportiva(a);
+	}
 
 	private AsociacionDeportivaDTO convertirAsociacionDeportivaService(AsociacionDeportiva aso) {
 		AsociacionDeportivaDTO a = new AsociacionDeportivaDTO();

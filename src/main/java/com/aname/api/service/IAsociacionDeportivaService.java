@@ -10,6 +10,8 @@ public interface IAsociacionDeportivaService {
 	List<AsociacionDeportivaDTO> listarAsociacionesDeportivas();
 
 	AsociacionDeportiva buscarAsociacionDeportiva(Integer id);
+
+	void actualizarAsociacion(AsociacionDeportiva a);
 	
 
 }
