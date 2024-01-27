@@ -25,14 +25,14 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 
 	@Autowired
 	private IPrecioInscripcionRepo precioInscripcionRepo;
-	
+
 	@Autowired
 	private IAsociacionDeportivaService asociacionDeportivaService;
 
 	@Override
 	public void registrarCampeonato(CampeonatoReqDTO campeonato) {
 		Campeonato c = this.convertirCampeonatoReqDTO(campeonato);
-		
+
 		this.campeonatoRepo.insertarCampeonato(c);
 		PrecioInscripcion precio = new PrecioInscripcion();
 
@@ -41,37 +41,37 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 		precio.setCostoSocio(campeonato.getCostoSocio());
 		precio.setCampeonato(c);
 		precio.setCuentaBancaria(campeonato.getCuentaBancaria());
-		
 
-		
 		if (precio.getCostoNoSocio() != null) {
 			this.precioInscripcionRepo.insertarPrecioInscripcion(precio);
 			c.setPrecioInscripcion(precio);
 		}
-		
-		
+
 		AsociacionDeportiva a = this.asociacionDeportivaService.buscarAsociacionDeportiva(campeonato.getIdAsociacion());
 
-		
-		if(a!=null) {
+		if (a != null) {
 			
-			List<AsociacionDeportiva> asos = c.getAsociaciones();
-			asos.add(a);
-			c.setAsociaciones(asos);
-			
+			if (c.getAsociaciones() != null) {
+				List<AsociacionDeportiva> asos = c.getAsociaciones(); 
+				asos.add(a);
+				c.setAsociaciones(asos);
+			}else {
+				List<AsociacionDeportiva> asos =new ArrayList<AsociacionDeportiva>(); 
+				asos.add(a);
+				c.setAsociaciones(asos);
+			}
+
 		}
 		this.campeonatoRepo.actualizarCampeonato(c);
-		
-		//precio.setCampeonato(c);
-		
-		//this.precioInscripcionRepo.actualizarPrecioInscripcion(precio);
-		
-		
+
+		// precio.setCampeonato(c);
+
+		// this.precioInscripcionRepo.actualizarPrecioInscripcion(precio);
 
 	}
-	
+
 	@Override
-	public Campeonato buscarCampeonatoPorID(Integer id){
+	public Campeonato buscarCampeonatoPorID(Integer id) {
 		return this.campeonatoRepo.buscarCampeonato(id);
 	}
 
