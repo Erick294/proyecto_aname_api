@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aname.api.service.IAsociacionDeportivaService;
 import com.aname.api.service.ICompetidorService;
 import com.aname.api.service.to.CalculoPrecioReqTO;
 import com.aname.api.service.to.CompetidorReqTO;
@@ -26,8 +27,23 @@ public class CompetidorControllerRest {
 	@Autowired
 	private ICompetidorService competidorServiceImpl;
 
+	@Autowired
+	private IAsociacionDeportivaService asociacionDeportivaService;
+
 	// PATHS PARA ADM,JUN, ORG Y
 	// ATL------------------------------------------------------------------------------------
+
+	@GetMapping("/asociaciones")
+	public ResponseEntity<?> obtenerAsociaciones() {
+		try {
+
+			return ResponseEntity.ok(this.asociacionDeportivaService.listarAsociacionesDeportivas());
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error a obtener asociaciones: " + e.getMessage());
+		}
+	}
+
 	@GetMapping("/fichaInscripcion")
 	public ResponseEntity<?> obtenerDatosFichaInscripcion(@RequestParam String email,
 			@RequestParam Integer idCampeonato) {
@@ -98,7 +114,6 @@ public class CompetidorControllerRest {
 					.body("Error al obtener competidor: " + e.getMessage());
 		}
 	}
-
 
 	// PATHS PARA ADM,JUN,
 	// ORG--------------------------------------------------------------------------------
