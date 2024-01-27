@@ -29,6 +29,7 @@ public class CampeonatoReqDTO extends RepresentationModel<CampeonatoReqDTO> impl
 	private BigDecimal costoNoSocio;
 	private BigDecimal costoPruebaAdicional;
 	private String cuentaBancaria;
+	private Integer idAsociacion;
 
 
 }

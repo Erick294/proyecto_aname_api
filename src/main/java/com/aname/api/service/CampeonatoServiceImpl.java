@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.aname.api.model.AsociacionDeportiva;
 import com.aname.api.model.Campeonato;
 import com.aname.api.model.PrecioInscripcion;
 import com.aname.api.model.Prueba;
@@ -24,6 +25,9 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 
 	@Autowired
 	private IPrecioInscripcionRepo precioInscripcionRepo;
+	
+	@Autowired
+	private IAsociacionDeportivaService asociacionDeportivaService;
 
 	@Override
 	public void registrarCampeonato(CampeonatoReqDTO campeonato) {
@@ -39,11 +43,23 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 		precio.setCuentaBancaria(campeonato.getCuentaBancaria());
 		
 
+		
 		if (precio.getCostoNoSocio() != null) {
 			this.precioInscripcionRepo.insertarPrecioInscripcion(precio);
 			c.setPrecioInscripcion(precio);
 		}
 		
+		
+		AsociacionDeportiva a = this.asociacionDeportivaService.buscarAsociacionDeportiva(campeonato.getIdAsociacion());
+
+		
+		if(a!=null) {
+			
+			List<AsociacionDeportiva> asos = c.getAsociaciones();
+			asos.add(a);
+			c.setAsociaciones(asos);
+			
+		}
 		this.campeonatoRepo.actualizarCampeonato(c);
 		
 		//precio.setCampeonato(c);

@@ -56,7 +56,7 @@ public class CampeonatoControllerRest {
 		}
 	}
 
-	@GetMapping("/sedes")
+	@GetMapping("/asociaciones")
 	public ResponseEntity<?> obtenerListaSedes() {
 		try {
 
