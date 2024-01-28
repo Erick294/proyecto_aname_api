@@ -44,4 +44,10 @@ public interface ICompetidorService {
 
 	void registrarFichaInscripcion(DocsCompetidoresDTO doc);
 
+	void confirmarPago(Integer id);
+
+	void aprobarFichaInscripcion(DocsCompetidoresDTO doc);
+
+	void negarPago(Integer id);
+
 }

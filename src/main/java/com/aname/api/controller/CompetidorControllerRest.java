@@ -98,6 +98,7 @@ public class CompetidorControllerRest {
 		}
 	}
 	
+	
 	@PostMapping("/registroFichaInscripcion")
 	public ResponseEntity<?> registrarFicha(@RequestBody DocsCompetidoresDTO docs) {
 		try {
@@ -110,6 +111,9 @@ public class CompetidorControllerRest {
 					.body("Error al registrar ficha de inscripcion: " + e.getMessage());
 		}
 	}
+	
+	
+	
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> obtenerCompetidorID(@PathVariable Integer id) {
@@ -217,6 +221,45 @@ public class CompetidorControllerRest {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("Error al negar inscripcion: " + e.getMessage());
+		}
+	}
+	
+	@PutMapping("/negarPago/{idCompetidor}")
+	public ResponseEntity<?> negarPago(@PathVariable Integer idCompetidor) {
+		try {
+
+			this.competidorServiceImpl.negarPago(idCompetidor);
+
+			return ResponseEntity.ok("Pago no acpetado");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al negar pago: " + e.getMessage());
+		}
+	}
+	
+	@PutMapping("/confirmarPago/{idCompetidor}")
+	public ResponseEntity<?> confirmarPago(@PathVariable Integer idCompetidor) {
+		try {
+
+			this.competidorServiceImpl.confirmarPago(idCompetidor);
+
+			return ResponseEntity.ok("Pago Aceptado");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al negar pago: " + e.getMessage());
+		}
+	}
+	
+	@PostMapping("/aprobarInscripcion")
+	public ResponseEntity<?> confirmarPago(@RequestBody DocsCompetidoresDTO docs) {
+		try {
+
+			this.competidorServiceImpl.aprobarFichaInscripcion(docs);
+
+			return ResponseEntity.ok("Pago Aceptado");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al negar pago: " + e.getMessage());
 		}
 	}
 

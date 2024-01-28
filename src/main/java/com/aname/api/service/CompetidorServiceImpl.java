@@ -180,7 +180,43 @@ public class CompetidorServiceImpl implements ICompetidorService {
 	@Override
 	public void confirmarInscripcionCompetidor(Integer id) {
 		Competidor c = this.competidorRepo.buscarCompetidor(id);
-		c.setEstadoParticipacion("Confirmado");
+		List<DocumentoCompetidores> documentosC = c.getDocumentos();
+		boolean tieneInscripcionFirmada = documentosC.stream()
+				.anyMatch(docComp -> docComp.getNombre().startsWith("inscripcion-firmada"));
+		
+		if(tieneInscripcionFirmada && c.getEstadoParticipacion().equals("Pago Aceptado")) {
+			c.setEstadoParticipacion("Confirmado");
+			this.competidorRepo.actualizarCompetidor(c);
+		}
+		
+	}
+	
+	@Override
+	public void confirmarPago(Integer id) {
+		Competidor c = this.competidorRepo.buscarCompetidor(id);
+		c.setEstadoParticipacion("Pago Aceptado");
+		this.competidorRepo.actualizarCompetidor(c);
+	}
+	
+	@Override
+	public void negarPago(Integer id) {
+		Competidor c = this.competidorRepo.buscarCompetidor(id);
+		c.setEstadoParticipacion("Pago Denegado");
+		this.competidorRepo.actualizarCompetidor(c);
+	}
+	
+	@Override
+	public void aprobarFichaInscripcion(DocsCompetidoresDTO doc) {
+		Competidor c = this.competidorRepo.buscarCompetidor(doc.getIdCompetidor());
+		DocumentoCompetidores fichaF= new DocumentoCompetidores();
+		fichaF.setCompetidor(c);
+		fichaF.setExtension(doc.getExtension());
+		fichaF.setLink(doc.getLink());
+		fichaF.setNombre(doc.getLink());
+		
+		List<DocumentoCompetidores> dcs= c.getDocumentos();
+		dcs.add(fichaF);
+		c.setDocumentos(dcs);
 		this.competidorRepo.actualizarCompetidor(c);
 	}
 
