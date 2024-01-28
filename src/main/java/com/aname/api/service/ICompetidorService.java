@@ -11,13 +11,10 @@ import com.aname.api.service.to.PreciosInscripcionCalcTO;
 
 public interface ICompetidorService {
 
-	FichaInscripcionCampTO obtenerFichaInscripcion(String email, Integer idcampeonato);
 
-	CategoriaTO calcularCategoriaUsuario(Integer edad, String genero);
+	String calcularCategoriaUsuario(Integer edad, String genero);
 
 	void registroInicialCompetidor(CompetidorReqTO c);
-
-	PreciosInscripcionCalcTO calcularPreciosInscripcion(Integer idCampeonato, String email, List<String> pruebas);
 
 	void inscripcionCompleta(InscripcionDocsReq i);
 
@@ -41,5 +38,7 @@ public interface ICompetidorService {
 
 
 	CompetidorResTO competidororCampeonatoUser(String email, Integer idCampeonato);
+
+	FichaInscripcionCampTO obtenerFichaInscripcion(Integer idCompetidor);
 
 }

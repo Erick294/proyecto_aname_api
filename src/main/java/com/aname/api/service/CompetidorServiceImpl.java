@@ -1,34 +1,30 @@
 package com.aname.api.service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.aname.api.model.AsociacionDeportiva;
 import com.aname.api.model.Campeonato;
 import com.aname.api.model.Categoria;
 import com.aname.api.model.Competidor;
 import com.aname.api.model.DocumentoCompetidores;
-import com.aname.api.model.PrecioInscripcion;
 import com.aname.api.model.Prueba;
 import com.aname.api.model.Usuario;
 import com.aname.api.repository.ICategoriaRepo;
 import com.aname.api.repository.ICompetidorRepo;
 import com.aname.api.repository.IPrecioInscripcionRepo;
-import com.aname.api.service.to.CategoriaTO;
 import com.aname.api.service.to.CompetidorReqTO;
 import com.aname.api.service.to.CompetidorResTO;
 import com.aname.api.service.to.DocResponseDTO;
 import com.aname.api.service.to.FichaInscripcionCampTO;
 import com.aname.api.service.to.InscripcionDocsReq;
-import com.aname.api.service.to.PreciosInscripcionCalcTO;
 import com.aname.api.service.to.PruebaResponseDTO;
 
 @Service
@@ -453,123 +449,45 @@ public class CompetidorServiceImpl implements ICompetidorService {
 	}
 
 	@Override
-	public FichaInscripcionCampTO obtenerFichaInscripcion(String email, Integer idcampeonato) {
+	public FichaInscripcionCampTO obtenerFichaInscripcion(Integer idCompetidor) {
 		FichaInscripcionCampTO ficha = new FichaInscripcionCampTO();
-		Usuario u = this.usuarioService.buscarUsuarioPorEmail(email);
+		Competidor c = this.competidorRepo.buscarCompetidor(idCompetidor);
+
+		Usuario u = c.getUsuario();
 
 		ficha.setApellidos(u.getApellidos());
 		ficha.setCiudad(u.getCiudad());
 		ficha.setDireccion(u.getCiudad());
-		ficha.setEmail(email);
+		ficha.setEmail(u.getEmail());
 		ficha.setFechaNacimiento(u.getFechaNacimiento());
 		ficha.setNombres(u.getNombres());
 		ficha.setSexo(u.getSexo());
 
-		List<Integer> idsAsocUsua = new ArrayList<Integer>();
-
-		for (AsociacionDeportiva a : u.getAsociaciones()) {
-			idsAsocUsua.add(a.getId());
-		}
-
-		ficha.setAsociacionesUsuariosIds(idsAsocUsua);
-
 		Integer edad = this.calcularEdad(u.getFechaNacimiento());
-
 		ficha.setCategoria(this.calcularCategoriaUsuario(edad, u.getSexo()));
 
-		PrecioInscripcion pre = this.precioInscripcionRepo.buscarPreciosPorCampeonato(idcampeonato);
-		ficha.setCostoNoSocio(pre.getCostoNoSocio());
-		ficha.setCostoPruebaAdicional(pre.getCostoPruebaAdicional());
-		ficha.setCostoSocio(pre.getCostoSocio());
-		ficha.setCuentaBancaria(pre.getCuentaBancaria());
+		ficha.setAsociacion(c.getAsociacionDeportiva().getNombre());
 
-		// ficha.setPruebas(this.pruebaService.listarPruebasPorCampeonato(idcampeonato));
-		ficha.setPruebas(
-				this.pruebaService.listarPruebasPorCampeonatoYCategoria(idcampeonato, ficha.getCategoria().getId()));
+		Campeonato camp = c.getCampeonatos().get(0);
+
+		ficha.setFechaCampeonato(this.formatearFechas(camp.getFechaInicio(), camp.getFechaFin()));
+		ficha.setNombreCampeonato(camp.getNombre());
+		
+		List<Prueba> pruebas = c.getPruebas();
+		List<PruebaResponseDTO> lista = new ArrayList<PruebaResponseDTO>();
+
+		for (Prueba p : pruebas) {
+			PruebaResponseDTO pr = this.pruebaService.convertirPruebaResponseDTO(p);
+			lista.add(pr);
+		}
+		ficha.setPruebas(lista);
 
 		return ficha;
 
 	}
 
 	@Override
-	public PreciosInscripcionCalcTO calcularPreciosInscripcion(Integer idCampeonato, String email,
-			List<String> pruebas) {
-
-		PrecioInscripcion p = this.precioInscripcionRepo.buscarPreciosPorCampeonato(idCampeonato);
-
-		Usuario u = this.usuarioService.buscarUsuarioPorEmail(email);
-
-		PreciosInscripcionCalcTO precioI = new PreciosInscripcionCalcTO();
-
-		BigDecimal total = new BigDecimal(0);
-		BigDecimal precioSocio = p.getCostoSocio();
-		BigDecimal precioNoSocio = p.getCostoNoSocio();
-		BigDecimal precioPruAd = p.getCostoPruebaAdicional();
-
-		Integer numPruebas = (int) pruebas.stream().count();
-		System.out.println("NumP: " + numPruebas);
-
-		Integer pruebasAdicionales = 0;
-
-		// Ajuste para pruebas adicionales si hay 4 o más pruebas
-		if (numPruebas >= 4) {
-			pruebasAdicionales = numPruebas - 3;
-		}
-
-		precioI.setPrecioPentatlon(BigDecimal.ZERO); // Inicializar el precio como 0
-
-		for (int i = 0; i < pruebas.size(); i++) {
-			String pn = pruebas.get(i);
-			System.out.println("Prueba: " + pn + " i: " + i);
-
-			if (pn.toLowerCase().contains("pentatlon")) {
-				numPruebas--;
-				precioI.setPrecioPentatlon(new BigDecimal(10));
-				total = total.add(precioI.getPrecioPentatlon());
-
-				System.out.println("NumP sin Pent: " + numPruebas);
-			}
-
-			if (pn.toLowerCase().contains("posta")) {
-				numPruebas--;
-			}
-		}
-
-		// Ajuste para pruebas adicionales si hay 4 o más pruebas
-		if (numPruebas >= 4) {
-			pruebasAdicionales = numPruebas - 3;
-			System.out.println("Pruebas Adicionales: " + pruebasAdicionales);
-		} else {
-			pruebasAdicionales = 0;
-		}
-
-		System.out.println("Preubas finales" + pruebasAdicionales);
-
-		// System.out.println("Asociaciones: " + u.getAsociaciones());
-		if (u.getAsociaciones() != null && !u.getAsociaciones().isEmpty()) {
-			total = total.add(precioSocio);
-			System.out.println("TOTALS: " + total);
-
-			precioI.setPrecioSocio(precioSocio);
-			precioI.setPrecioNoSocio(BigDecimal.ZERO);
-		} else {
-			total = total.add(precioNoSocio);
-			System.out.println("TOTALNS: " + total);
-			precioI.setPrecioNoSocio(precioSocio);
-			precioI.setPrecioSocio(BigDecimal.ZERO);
-		}
-
-		BigDecimal totalAdicional = precioPruAd.multiply(new BigDecimal(pruebasAdicionales));
-		total = total.add(totalAdicional);
-
-		precioI.setPrecioPruebasAdicionales(totalAdicional);
-		precioI.setTotal(total);
-
-		return precioI;
-	}
-
-	@Override
-	public CategoriaTO calcularCategoriaUsuario(Integer edad, String genero) {
+	public String calcularCategoriaUsuario(Integer edad, String genero) {
 
 		System.out.println("Genero: " + genero);
 
@@ -585,12 +503,14 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 		System.out.println("GeneroT: " + g);
 
-		Categoria c = this.categoriaRepo.obtenerCategoriaPorEdadYGenero(edad, g);
-		CategoriaTO cat = new CategoriaTO();
+		try {
+			Categoria c = this.categoriaRepo.obtenerCategoriaPorEdadYGenero(edad, g);
+			String cat = c.getNombre() + "-" + g;
 
-		cat.setId(c.getId());
-		cat.setNombre(c.getNombre() + "-" + g);
-		return cat;
+			return cat;
+		} catch (Exception e) {
+			return null;
+		}
 
 	}
 
@@ -606,6 +526,31 @@ public class CompetidorServiceImpl implements ICompetidorService {
 		Period periodo = Period.between(nacimientoLocalDate, actualLocalDate);
 		System.out.println(periodo.getYears());
 		return periodo.getYears();
+	}
+
+	private String formatearFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+		DateTimeFormatter formatterDia = DateTimeFormatter.ofPattern("d", new Locale("es", "ES"));
+		DateTimeFormatter formatterMes = DateTimeFormatter.ofPattern("MMMM", new Locale("es", "ES"));
+		DateTimeFormatter formatterAnio = DateTimeFormatter.ofPattern("yyyy");
+
+		String fechaInicioStr = fechaInicio.format(formatterDia) + " de " + fechaInicio.format(formatterMes);
+		String fechaFinStr = fechaFin.format(formatterDia) + " de " + fechaFin.format(formatterMes);
+		String anioInicioStr = fechaInicio.format(formatterAnio);
+		String anioFinStr = fechaFin.format(formatterAnio);
+
+		if (fechaInicio.getMonth().equals(fechaFin.getMonth())) {
+			// Mismo mes
+			if (fechaInicio.getYear() == fechaFin.getYear()) {
+				// Mismo año
+				return fechaInicioStr + " y " + fechaFinStr + " de " + anioInicioStr;
+			} else {
+				// Años diferentes
+				return fechaInicioStr + " de " + anioInicioStr + " y " + fechaFinStr + " de " + anioFinStr;
+			}
+		} else {
+			// Meses diferentes
+			return fechaInicioStr + " de " + anioInicioStr + " y " + fechaFinStr + " de " + anioFinStr;
+		}
 	}
 
 }

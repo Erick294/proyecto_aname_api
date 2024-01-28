@@ -30,7 +30,7 @@ public class CompetidorControllerRest {
 
 	@Autowired
 	private IAsociacionDeportivaService asociacionDeportivaService;
-	
+
 	@Autowired
 	private ICampeonatoService campeonatoService;
 
@@ -48,18 +48,17 @@ public class CompetidorControllerRest {
 		}
 	}
 
-	@GetMapping("/fichaInscripcion")
-	public ResponseEntity<?> obtenerDatosFichaInscripcion(@RequestParam String email,
-			@RequestParam Integer idCampeonato) {
+	@GetMapping("/fichaInscripcion/{idCompetidor}")
+	public ResponseEntity<?> obtenerDatosFichaInscripcion(@PathVariable Integer idCompetidor) {
 		try {
 
-			return ResponseEntity.ok(this.competidorServiceImpl.obtenerFichaInscripcion(email, idCampeonato));
+			return ResponseEntity.ok(this.competidorServiceImpl.obtenerFichaInscripcion(idCompetidor));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("Error al generar ficha de inscripcion: " + e.getMessage());
 		}
 	}
-	
+
 	@GetMapping("/campeonato/{idCampeonato}/precios")
 	public ResponseEntity<?> obtenerPreciosCampeonato(@PathVariable Integer idCampeonato) {
 		try {
@@ -71,18 +70,7 @@ public class CompetidorControllerRest {
 		}
 	}
 
-	@GetMapping("/calcularPrecios")
-	public ResponseEntity<?> calcularPreciosInscripcion(@RequestBody CalculoPrecioReqTO calculo) {
-		try {
-
-			return ResponseEntity.ok(this.competidorServiceImpl.calcularPreciosInscripcion(calculo.getIdCampeonato(),
-					calculo.getEmail(), calculo.getPruebas()));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("Error al calcular precios: " + e.getMessage());
-		}
-	}
-
+	
 	@PostMapping("/inscripcionInicial")
 	public ResponseEntity<?> inscripcionInicial(@RequestBody CompetidorReqTO competidor) {
 		try {
@@ -129,14 +117,13 @@ public class CompetidorControllerRest {
 					.body("Error al obtener competidor: " + e.getMessage());
 		}
 	}
-	
+
 	@GetMapping("/campeonato/{idCampeonato}/usuario/{email}")
 	public ResponseEntity<?> obtenerCompetidorPorUserCampeonato(@PathVariable Integer idCampeonato,
 			@PathVariable String email) {
 		try {
 
-			return ResponseEntity
-					.ok(this.competidorServiceImpl.competidororCampeonatoUser(email, idCampeonato));
+			return ResponseEntity.ok(this.competidorServiceImpl.competidororCampeonatoUser(email, idCampeonato));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("Error al obtener competidores: " + e.getMessage());
