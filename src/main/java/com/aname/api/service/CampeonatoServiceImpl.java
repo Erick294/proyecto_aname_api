@@ -57,6 +57,7 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 		precio.setCostoSocio(campeonato.getCostoSocio());
 		precio.setInstitucionFinanciera(campeonato.getInstitucionFinanciera());
 		precio.setTitularCuenta(campeonato.getTitularCuenta());
+		
 		precio.setCampeonato(c);
 		precio.setCuentaBancaria(campeonato.getCuentaBancaria());
 
