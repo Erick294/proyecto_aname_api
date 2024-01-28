@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aname.api.service.IAsociacionDeportivaService;
+import com.aname.api.service.ICampeonatoService;
 import com.aname.api.service.ICompetidorService;
 import com.aname.api.service.to.CalculoPrecioReqTO;
 import com.aname.api.service.to.CompetidorReqTO;
@@ -29,6 +30,9 @@ public class CompetidorControllerRest {
 
 	@Autowired
 	private IAsociacionDeportivaService asociacionDeportivaService;
+	
+	@Autowired
+	private ICampeonatoService campeonatoService;
 
 	// PATHS PARA ADM,JUN, ORG Y
 	// ATL------------------------------------------------------------------------------------
@@ -53,6 +57,17 @@ public class CompetidorControllerRest {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("Error al generar ficha de inscripcion: " + e.getMessage());
+		}
+	}
+	
+	@GetMapping("/campeonato/{idCampeonato}/precios")
+	public ResponseEntity<?> obtenerPreciosCampeonato(@PathVariable Integer idCampeonato) {
+		try {
+
+			return ResponseEntity.ok(this.campeonatoService.obtenerPreciosCampeonato(idCampeonato));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al obtener precios: " + e.getMessage());
 		}
 	}
 

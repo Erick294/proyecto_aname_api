@@ -13,6 +13,7 @@ import com.aname.api.model.Prueba;
 import com.aname.api.repository.ICampeonatoRepo;
 import com.aname.api.repository.IPrecioInscripcionRepo;
 import com.aname.api.service.to.CampeonatoReqDTO;
+import com.aname.api.service.to.PreciosCampeonatosTO;
 
 @Service
 public class CampeonatoServiceImpl implements ICampeonatoService {
@@ -28,6 +29,21 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 
 	@Autowired
 	private IAsociacionDeportivaService asociacionDeportivaService;
+	
+	@Override
+	public PreciosCampeonatosTO obtenerPreciosCampeonato(Integer idCampeonato) {
+		PrecioInscripcion precio = this.precioInscripcionRepo.buscarPreciosPorCampeonato(idCampeonato);
+		PreciosCampeonatosTO p = new PreciosCampeonatosTO();
+		p.setCostoNoSocio(precio.getCostoNoSocio());
+		p.setCostoPruebaAdicional(precio.getCostoPruebaAdicional());
+		p.setCostoSocio(precio.getCostoSocio());
+		p.setCuentaBancaria(precio.getCuentaBancaria());
+		p.setInstitucionFinanciera(precio.getInstitucionFinanciera());
+		p.setTitularCuenta(precio.getTitularCuenta());
+		
+		return p;
+		
+	}
 
 	@Override
 	public void registrarCampeonato(CampeonatoReqDTO campeonato) {
