@@ -18,6 +18,7 @@ import com.aname.api.service.ICampeonatoService;
 import com.aname.api.service.ICompetidorService;
 import com.aname.api.service.to.CalculoPrecioReqTO;
 import com.aname.api.service.to.CompetidorReqTO;
+import com.aname.api.service.to.DocsCompetidoresDTO;
 import com.aname.api.service.to.InscripcionDocsReq;
 
 @RestController
@@ -84,16 +85,29 @@ public class CompetidorControllerRest {
 		}
 	}
 
-	@PostMapping("/inscripcionCompleta")
-	public ResponseEntity<?> inscripcionCompleta(@RequestBody InscripcionDocsReq inscripcion) {
+	@PostMapping("/registroPago")
+	public ResponseEntity<?> registrarPago(@RequestBody DocsCompetidoresDTO docs) {
 		try {
 
-			this.competidorServiceImpl.inscripcionCompleta(inscripcion);
+			this.competidorServiceImpl.registrarPago(docs);
 
-			return ResponseEntity.ok("Competidor inscrito, por favor espere a la verificación de los documentos");
+			return ResponseEntity.ok("Pago registrado con exíto, espere a la verificación de los documentos");
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("Error al inscribir competidor: " + e.getMessage());
+					.body("Error al registrar pago: " + e.getMessage());
+		}
+	}
+	
+	@PostMapping("/registroFichaInscripcion")
+	public ResponseEntity<?> registrarFicha(@RequestBody DocsCompetidoresDTO docs) {
+		try {
+
+			this.competidorServiceImpl.registrarFichaInscripcion(docs);
+
+			return ResponseEntity.ok("Ficha registrada con exíto, espere a la verificación de los documentos");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al registrar ficha de inscripcion: " + e.getMessage());
 		}
 	}
 

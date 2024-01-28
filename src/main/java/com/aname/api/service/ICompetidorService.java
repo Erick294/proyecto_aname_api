@@ -5,6 +5,7 @@ import java.util.List;
 import com.aname.api.service.to.CategoriaTO;
 import com.aname.api.service.to.CompetidorReqTO;
 import com.aname.api.service.to.CompetidorResTO;
+import com.aname.api.service.to.DocsCompetidoresDTO;
 import com.aname.api.service.to.FichaInscripcionCampTO;
 import com.aname.api.service.to.InscripcionDocsReq;
 import com.aname.api.service.to.PreciosInscripcionCalcTO;
@@ -15,8 +16,6 @@ public interface ICompetidorService {
 	String calcularCategoriaUsuario(Integer edad, String genero);
 
 	void registroInicialCompetidor(CompetidorReqTO c);
-
-	void inscripcionCompleta(InscripcionDocsReq i);
 
 	List<CompetidorResTO> listaCompetidoresInscritos();
 
@@ -40,5 +39,9 @@ public interface ICompetidorService {
 	CompetidorResTO competidororCampeonatoUser(String email, Integer idCampeonato);
 
 	FichaInscripcionCampTO obtenerFichaInscripcion(Integer idCompetidor);
+
+	void registrarPago(DocsCompetidoresDTO doc);
+
+	void registrarFichaInscripcion(DocsCompetidoresDTO doc);
 
 }

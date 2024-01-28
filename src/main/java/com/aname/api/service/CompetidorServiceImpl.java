@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,12 +20,13 @@ import com.aname.api.model.Prueba;
 import com.aname.api.model.Usuario;
 import com.aname.api.repository.ICategoriaRepo;
 import com.aname.api.repository.ICompetidorRepo;
+import com.aname.api.repository.IDocumentosCompetidoresRepo;
 import com.aname.api.repository.IPrecioInscripcionRepo;
 import com.aname.api.service.to.CompetidorReqTO;
 import com.aname.api.service.to.CompetidorResTO;
 import com.aname.api.service.to.DocResponseDTO;
+import com.aname.api.service.to.DocsCompetidoresDTO;
 import com.aname.api.service.to.FichaInscripcionCampTO;
-import com.aname.api.service.to.InscripcionDocsReq;
 import com.aname.api.service.to.PruebaResponseDTO;
 
 @Service
@@ -53,6 +55,10 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 	@Autowired
 	private AzureBlobService azureBlobAdapter;
+	
+	@Autowired
+	private IDocumentosCompetidoresRepo documentosCompetidoresRepo;
+	
 
 	@Override
 	public void registroInicialCompetidor(CompetidorReqTO c) {
@@ -79,98 +85,177 @@ public class CompetidorServiceImpl implements ICompetidorService {
 	}
 
 	@Override
-	public void inscripcionCompleta(InscripcionDocsReq i) {
-		Competidor comp = this.competidorRepo.buscarCompetidorPorUserYCamp(i.getEmail(), i.getIdCampeonato());
+	public void registrarPago(DocsCompetidoresDTO doc) {
+		Competidor c = this.competidorRepo.buscarCompetidor(doc.getIdCompetidor());
+		List<DocumentoCompetidores> documentosC = c.getDocumentos();
 
-		comp.setEstadoParticipacion("Inscrito");
+		boolean tieneComprobantePago = documentosC.stream()
+				.anyMatch(docComp -> docComp.getNombre().startsWith("comprobante-pago"));
 
-		DocumentoCompetidores pago = new DocumentoCompetidores();
-		pago.setExtension(i.getComprobantePago().getExtension());
-		pago.setLink(i.getComprobantePago().getLink());
-		pago.setNombre(i.getComprobantePago().getNombre());
-		pago.setCompetidor(comp);
+		boolean tieneFichaInscripcion = documentosC.stream()
+				.anyMatch(docComp -> docComp.getNombre().startsWith("ficha-inscripcion"));
 
-		DocumentoCompetidores ficha = new DocumentoCompetidores();
-		ficha.setExtension(i.getFichaInscripcion().getExtension());
-		ficha.setLink(i.getFichaInscripcion().getLink());
-		ficha.setNombre(i.getFichaInscripcion().getNombre());
-		ficha.setCompetidor(comp);
+		// Actualizar documentos según su existencia
+		if (tieneComprobantePago) {
+			Optional<DocumentoCompetidores> documentoComprobantePagoOptional = documentosC.stream()
+					.filter(docComp -> docComp.getNombre().startsWith("comprobante-pago")).findFirst();
 
-		List<DocumentoCompetidores> documentos = comp.getDocumentos();
-		documentos.add(pago);
-		documentos.add(ficha);
+			DocumentoCompetidores documentoComprobantePago = documentoComprobantePagoOptional.get();
 
-		comp.setDocumentos(documentos);
+			documentoComprobantePago.setExtension(doc.getExtension());
+			documentoComprobantePago.setLink(doc.getLink());
+			documentoComprobantePago.setNombre(doc.getNombre());
+			
+			this.documentosCompetidoresRepo.actualizarDocumento(documentoComprobantePago);
+			
+			
+		} else {
+			DocumentoCompetidores documentoComprobantePago = new DocumentoCompetidores();
+			documentoComprobantePago.setExtension(doc.getExtension());
+			documentoComprobantePago.setLink(doc.getLink());
+			documentoComprobantePago.setNombre(doc.getNombre());
+			documentoComprobantePago.setCompetidor(c);
+			documentosC.add(documentoComprobantePago);
+			c.setDocumentos(documentosC);
+		}
 
-		this.competidorRepo.actualizarCompetidor(comp);
+		// Actualizar el estado del competidor
+		if (tieneFichaInscripcion) {
+			c.setEstadoParticipacion("Inscrito");
+		} else {
+			c.setEstadoParticipacion("Pendiente");
+		}
+
+		// Guardar el competidor actualizado en el repositorio
+		this.competidorRepo.actualizarCompetidor(c);
+
+	}
+	@Override
+	public void registrarFichaInscripcion(DocsCompetidoresDTO doc) {
+		Competidor c = this.competidorRepo.buscarCompetidor(doc.getIdCompetidor());
+		List<DocumentoCompetidores> documentosC = c.getDocumentos();
+
+		boolean tieneComprobantePago = documentosC.stream()
+				.anyMatch(docComp -> docComp.getNombre().startsWith("comprobante-pago"));
+
+		boolean tieneFichaInscripcion = documentosC.stream()
+				.anyMatch(docComp -> docComp.getNombre().startsWith("ficha-inscripcion"));
+
+		// Actualizar documentos según su existencia
+		if (tieneFichaInscripcion) {
+			Optional<DocumentoCompetidores> documentoFichaInscripcionOptional = documentosC.stream()
+					.filter(docComp -> docComp.getNombre().startsWith("ficha-inscripcion")).findFirst();
+
+			DocumentoCompetidores documentoFichaInscripcion = documentoFichaInscripcionOptional.get();
+
+			documentoFichaInscripcion.setExtension(doc.getExtension());
+			documentoFichaInscripcion.setLink(doc.getLink());
+			documentoFichaInscripcion.setNombre(doc.getNombre());
+			
+			this.documentosCompetidoresRepo.actualizarDocumento(documentoFichaInscripcion);
+			
+			
+		} else {
+			DocumentoCompetidores documentoFichaInscripcion = new DocumentoCompetidores();
+			documentoFichaInscripcion.setExtension(doc.getExtension());
+			documentoFichaInscripcion.setLink(doc.getLink());
+			documentoFichaInscripcion.setNombre(doc.getNombre());
+			documentoFichaInscripcion.setCompetidor(c);
+			documentosC.add(documentoFichaInscripcion);
+			c.setDocumentos(documentosC);
+		}
+
+		// Actualizar el estado del competidor
+		if (tieneComprobantePago) {
+			c.setEstadoParticipacion("Inscrito");
+		} else {
+			c.setEstadoParticipacion("Pendiente");
+		}
+
+		// Guardar el competidor actualizado en el repositorio
+		this.competidorRepo.actualizarCompetidor(c);
+
 	}
 
-	// Buscar competidor por id
+	@Override
+	public void confirmarInscripcionCompetidor(Integer id) {
+		Competidor c = this.competidorRepo.buscarCompetidor(id);
+		c.setEstadoParticipacion("Confirmado");
+		this.competidorRepo.actualizarCompetidor(c);
+	}
 
 	@Override
-	public CompetidorReqTO buscarCompetidorID(Integer id) {
-		Competidor competidor = this.competidorRepo.buscarCompetidor(id);
-		CompetidorReqTO c = new CompetidorReqTO();
-		c.setEmail(competidor.getUsuario().getEmail());
-		c.setIdAsociacionDeportiva(competidor.getAsociacionDeportiva().getId());
-		c.setIdCampeonato(id);
+	public void negarInscripcionCompetidor(Integer id) {
+		Competidor c = this.competidorRepo.buscarCompetidor(id);
+		c.setEstadoParticipacion("Negado");
+		// c.setCampeonatos(null);
+		this.competidorRepo.actualizarCompetidor(c);
+	}
 
-		List<Prueba> pruebas = competidor.getPruebas();
+	@Override
+	public FichaInscripcionCampTO obtenerFichaInscripcion(Integer idCompetidor) {
+		FichaInscripcionCampTO ficha = new FichaInscripcionCampTO();
+		Competidor c = this.competidorRepo.buscarCompetidor(idCompetidor);
 
-		List<Integer> idsP = new ArrayList<Integer>();
+		Usuario u = c.getUsuario();
+
+		ficha.setApellidos(u.getApellidos());
+		ficha.setCiudad(u.getCiudad());
+		ficha.setDireccion(u.getCiudad());
+		ficha.setEmail(u.getEmail());
+		ficha.setFechaNacimiento(u.getFechaNacimiento());
+		ficha.setNombres(u.getNombres());
+		ficha.setSexo(u.getSexo());
+
+		Integer edad = this.calcularEdad(u.getFechaNacimiento());
+		ficha.setCategoria(this.calcularCategoriaUsuario(edad, u.getSexo()));
+
+		ficha.setAsociacion(c.getAsociacionDeportiva().getNombre());
+
+		Campeonato camp = c.getCampeonatos().get(0);
+
+		ficha.setFechaCampeonato(this.formatearFechas(camp.getFechaInicio(), camp.getFechaFin()));
+		ficha.setNombreCampeonato(camp.getNombre());
+
+		List<Prueba> pruebas = c.getPruebas();
+		List<PruebaResponseDTO> lista = new ArrayList<PruebaResponseDTO>();
 
 		for (Prueba p : pruebas) {
-			Integer n = p.getId();
-			idsP.add(n);
+			PruebaResponseDTO pr = this.pruebaService.convertirPruebaResponseDTO(p);
+			lista.add(pr);
 		}
-		c.setPruebas(idsP);
-		return c;
+		ficha.setPruebas(lista);
+
+		return ficha;
 
 	}
 
-	// Lista de competidores (todos los estados por user)
 	@Override
-	public List<CompetidorResTO> listaCompetidoresPorUsuario(String email) {
+	public String calcularCategoriaUsuario(Integer edad, String genero) {
 
-		List<Competidor> competidores = this.competidorRepo.buscarCompetidorPorUsuario(email);
-		List<CompetidorResTO> comps = new ArrayList<CompetidorResTO>();
+		System.out.println("Genero: " + genero);
 
-		if (competidores != null && !competidores.isEmpty()) {
-			for (Competidor c : competidores) {
-				CompetidorResTO com = new CompetidorResTO();
-				com.setApellidos(c.getUsuario().getApellidos());
-				com.setEmail(c.getUsuario().getEmail());
-				com.setFechaInscripcion(c.getFechaInscripcion());
-				com.setNombres(c.getUsuario().getNombres());
-				com.setId(c.getId());
-				com.setNombreCampeonato(c.getCampeonatos().get(c.getCampeonatos().size() - 1).getNombre());
-				com.setIdCampeonato(c.getCampeonatos().get(c.getCampeonatos().size() - 1).getId());
-				com.setEstadoParticipacion(c.getEstadoParticipacion());
+		String g = new String();
 
-				List<DocumentoCompetidores> docs = this.competidorRepo.buscarDocsCompetidores(c.getId());
-				if (docs != null && !docs.isEmpty()) {
-					List<DocResponseDTO> docsR = this.azureBlobAdapter.listarDocumentosCompetidor(docs);
-					com.setDocumentos(docsR);
-				}
-
-				List<Prueba> pruebas = c.getPruebas();
-				if (pruebas != null && !pruebas.isEmpty()) {
-					List<PruebaResponseDTO> prs = new ArrayList<PruebaResponseDTO>();
-
-					for (Prueba p : pruebas) {
-						prs.add(this.pruebaService.convertirPruebaResponseDTO(p));
-					}
-
-					com.setPruebas(prs);
-
-				}
-
-				comps.add(com);
-
-			}
+		if ("Masculino".equalsIgnoreCase(genero)) {
+			g = "M";
+		} else if ("Femenino".equalsIgnoreCase(genero)) {
+			g = "F";
+		} else {
+			g = genero;
 		}
 
-		return comps;
+		System.out.println("GeneroT: " + g);
+
+		try {
+			Categoria c = this.categoriaRepo.obtenerCategoriaPorEdadYGenero(edad, g);
+			String cat = c.getNombre() + "-" + g;
+
+			return cat;
+		} catch (Exception e) {
+			return null;
+		}
+
 	}
 
 	// Lista competidores
@@ -433,85 +518,72 @@ public class CompetidorServiceImpl implements ICompetidorService {
 		return comps;
 	}
 
-	@Override
-	public void confirmarInscripcionCompetidor(Integer id) {
-		Competidor c = this.competidorRepo.buscarCompetidor(id);
-		c.setEstadoParticipacion("Confirmado");
-		this.competidorRepo.actualizarCompetidor(c);
-	}
+	// Buscar competidor por id
 
 	@Override
-	public void negarInscripcionCompetidor(Integer id) {
-		Competidor c = this.competidorRepo.buscarCompetidor(id);
-		c.setEstadoParticipacion("Negado");
-		// c.setCampeonatos(null);
-		this.competidorRepo.actualizarCompetidor(c);
-	}
+	public CompetidorReqTO buscarCompetidorID(Integer id) {
+		Competidor competidor = this.competidorRepo.buscarCompetidor(id);
+		CompetidorReqTO c = new CompetidorReqTO();
+		c.setEmail(competidor.getUsuario().getEmail());
+		c.setIdAsociacionDeportiva(competidor.getAsociacionDeportiva().getId());
+		c.setIdCampeonato(id);
 
-	@Override
-	public FichaInscripcionCampTO obtenerFichaInscripcion(Integer idCompetidor) {
-		FichaInscripcionCampTO ficha = new FichaInscripcionCampTO();
-		Competidor c = this.competidorRepo.buscarCompetidor(idCompetidor);
+		List<Prueba> pruebas = competidor.getPruebas();
 
-		Usuario u = c.getUsuario();
-
-		ficha.setApellidos(u.getApellidos());
-		ficha.setCiudad(u.getCiudad());
-		ficha.setDireccion(u.getCiudad());
-		ficha.setEmail(u.getEmail());
-		ficha.setFechaNacimiento(u.getFechaNacimiento());
-		ficha.setNombres(u.getNombres());
-		ficha.setSexo(u.getSexo());
-
-		Integer edad = this.calcularEdad(u.getFechaNacimiento());
-		ficha.setCategoria(this.calcularCategoriaUsuario(edad, u.getSexo()));
-
-		ficha.setAsociacion(c.getAsociacionDeportiva().getNombre());
-
-		Campeonato camp = c.getCampeonatos().get(0);
-
-		ficha.setFechaCampeonato(this.formatearFechas(camp.getFechaInicio(), camp.getFechaFin()));
-		ficha.setNombreCampeonato(camp.getNombre());
-		
-		List<Prueba> pruebas = c.getPruebas();
-		List<PruebaResponseDTO> lista = new ArrayList<PruebaResponseDTO>();
+		List<Integer> idsP = new ArrayList<Integer>();
 
 		for (Prueba p : pruebas) {
-			PruebaResponseDTO pr = this.pruebaService.convertirPruebaResponseDTO(p);
-			lista.add(pr);
+			Integer n = p.getId();
+			idsP.add(n);
 		}
-		ficha.setPruebas(lista);
-
-		return ficha;
+		c.setPruebas(idsP);
+		return c;
 
 	}
 
+	// Lista de competidores (todos los estados por user)
 	@Override
-	public String calcularCategoriaUsuario(Integer edad, String genero) {
+	public List<CompetidorResTO> listaCompetidoresPorUsuario(String email) {
 
-		System.out.println("Genero: " + genero);
+		List<Competidor> competidores = this.competidorRepo.buscarCompetidorPorUsuario(email);
+		List<CompetidorResTO> comps = new ArrayList<CompetidorResTO>();
 
-		String g = new String();
+		if (competidores != null && !competidores.isEmpty()) {
+			for (Competidor c : competidores) {
+				CompetidorResTO com = new CompetidorResTO();
+				com.setApellidos(c.getUsuario().getApellidos());
+				com.setEmail(c.getUsuario().getEmail());
+				com.setFechaInscripcion(c.getFechaInscripcion());
+				com.setNombres(c.getUsuario().getNombres());
+				com.setId(c.getId());
+				com.setNombreCampeonato(c.getCampeonatos().get(c.getCampeonatos().size() - 1).getNombre());
+				com.setIdCampeonato(c.getCampeonatos().get(c.getCampeonatos().size() - 1).getId());
+				com.setEstadoParticipacion(c.getEstadoParticipacion());
 
-		if ("Masculino".equalsIgnoreCase(genero)) {
-			g = "M";
-		} else if ("Femenino".equalsIgnoreCase(genero)) {
-			g = "F";
-		} else {
-			g = genero;
+				List<DocumentoCompetidores> docs = this.competidorRepo.buscarDocsCompetidores(c.getId());
+				if (docs != null && !docs.isEmpty()) {
+					List<DocResponseDTO> docsR = this.azureBlobAdapter.listarDocumentosCompetidor(docs);
+					com.setDocumentos(docsR);
+				}
+
+				List<Prueba> pruebas = c.getPruebas();
+				if (pruebas != null && !pruebas.isEmpty()) {
+					List<PruebaResponseDTO> prs = new ArrayList<PruebaResponseDTO>();
+
+					for (Prueba p : pruebas) {
+						prs.add(this.pruebaService.convertirPruebaResponseDTO(p));
+					}
+
+					com.setPruebas(prs);
+
+				}
+
+				comps.add(com);
+
+			}
 		}
 
-		System.out.println("GeneroT: " + g);
-
-		try {
-			Categoria c = this.categoriaRepo.obtenerCategoriaPorEdadYGenero(edad, g);
-			String cat = c.getNombre() + "-" + g;
-
-			return cat;
-		} catch (Exception e) {
-			return null;
-		}
-
+		return comps;
 	}
 
 	private int calcularEdad(LocalDateTime fechaNacimiento) {
