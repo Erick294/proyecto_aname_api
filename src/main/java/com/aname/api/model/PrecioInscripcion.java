@@ -48,6 +48,4 @@ public class PrecioInscripcion {
 	private Campeonato campeonato;
 	
 	
-	
-
 }
