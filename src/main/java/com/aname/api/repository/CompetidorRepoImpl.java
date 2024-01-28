@@ -102,6 +102,25 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 
 		return myQuery.getResultList();
 	}
+	
+	
+	//competidores todos los estads por usuario y por campeonato ----------------------------
+	
+	@Override
+	public Competidor buscarCompetidoresPorUserYCamp(String email, Integer idCampeonato) {
+		TypedQuery<Competidor> myQuery = this.entityManager.createQuery(
+				"SELECT c FROM Competidor c JOIN c.usuario u JOIN c.campeonatos ca "
+						+ "WHERE u.email = :email AND ca.id = :idCampeonato",
+				Competidor.class);
+
+		myQuery.setParameter("email", email);
+		myQuery.setParameter("idCampeonato", idCampeonato);
+
+		return myQuery.getResultList().get(0);
+	}
+	
+	
+	///Documentos de competidores
 
 
 

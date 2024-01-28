@@ -39,4 +39,7 @@ public interface ICompetidorService {
 
 	List<CompetidorResTO> listaCompetidoresPorUsuario(String email);
 
+
+	CompetidorResTO competidororCampeonatoUser(String email, Integer idCampeonato);
+
 }

@@ -156,17 +156,17 @@ public class CompetidorServiceImpl implements ICompetidorService {
 					List<DocResponseDTO> docsR = this.azureBlobAdapter.listarDocumentosCompetidor(docs);
 					com.setDocumentos(docsR);
 				}
-				
+
 				List<Prueba> pruebas = c.getPruebas();
-				if(pruebas !=null && !pruebas.isEmpty()) {
+				if (pruebas != null && !pruebas.isEmpty()) {
 					List<PruebaResponseDTO> prs = new ArrayList<PruebaResponseDTO>();
-					
-					for(Prueba p : pruebas) {
+
+					for (Prueba p : pruebas) {
 						prs.add(this.pruebaService.convertirPruebaResponseDTO(p));
 					}
-					
+
 					com.setPruebas(prs);
-					
+
 				}
 
 				comps.add(com);
@@ -203,22 +203,20 @@ public class CompetidorServiceImpl implements ICompetidorService {
 					List<DocResponseDTO> docsR = this.azureBlobAdapter.listarDocumentosCompetidor(docs);
 					com.setDocumentos(docsR);
 				}
-				
+
 				List<Prueba> pruebas = c.getPruebas();
-				if(pruebas !=null && !pruebas.isEmpty()) {
+				if (pruebas != null && !pruebas.isEmpty()) {
 					List<PruebaResponseDTO> prs = new ArrayList<PruebaResponseDTO>();
-					
-					for(Prueba p : pruebas) {
+
+					for (Prueba p : pruebas) {
 						prs.add(this.pruebaService.convertirPruebaResponseDTO(p));
 					}
-					
+
 					com.setPruebas(prs);
-					
+
 				}
 
 				comps.add(com);
-				
-				
 
 			}
 		}
@@ -249,17 +247,17 @@ public class CompetidorServiceImpl implements ICompetidorService {
 					List<DocResponseDTO> docsR = this.azureBlobAdapter.listarDocumentosCompetidor(docs);
 					com.setDocumentos(docsR);
 				}
-				
+
 				List<Prueba> pruebas = c.getPruebas();
-				if(pruebas !=null && !pruebas.isEmpty()) {
+				if (pruebas != null && !pruebas.isEmpty()) {
 					List<PruebaResponseDTO> prs = new ArrayList<PruebaResponseDTO>();
-					
-					for(Prueba p : pruebas) {
+
+					for (Prueba p : pruebas) {
 						prs.add(this.pruebaService.convertirPruebaResponseDTO(p));
 					}
-					
+
 					com.setPruebas(prs);
-					
+
 				}
 
 				comps.add(com);
@@ -293,18 +291,18 @@ public class CompetidorServiceImpl implements ICompetidorService {
 					List<DocResponseDTO> docsR = this.azureBlobAdapter.listarDocumentosCompetidor(docs);
 					com.setDocumentos(docsR);
 				}
-				
+
 				List<Prueba> pruebas = c.getPruebas();
-				if(pruebas !=null && !pruebas.isEmpty()) {
+				if (pruebas != null && !pruebas.isEmpty()) {
 					List<PruebaResponseDTO> prs = new ArrayList<PruebaResponseDTO>();
-					
-					for(Prueba p : pruebas) {
+
+					for (Prueba p : pruebas) {
 						prs.add(this.pruebaService.convertirPruebaResponseDTO(p));
 					}
-					
+
 					com.setPruebas(prs);
-					
-				} 
+
+				}
 				comps.add(com);
 
 			}
@@ -336,17 +334,17 @@ public class CompetidorServiceImpl implements ICompetidorService {
 					List<DocResponseDTO> docsR = this.azureBlobAdapter.listarDocumentosCompetidor(docs);
 					com.setDocumentos(docsR);
 				}
-				
+
 				List<Prueba> pruebas = c.getPruebas();
-				if(pruebas !=null && !pruebas.isEmpty()) {
+				if (pruebas != null && !pruebas.isEmpty()) {
 					List<PruebaResponseDTO> prs = new ArrayList<PruebaResponseDTO>();
-					
-					for(Prueba p : pruebas) {
+
+					for (Prueba p : pruebas) {
 						prs.add(this.pruebaService.convertirPruebaResponseDTO(p));
 					}
-					
+
 					com.setPruebas(prs);
-					
+
 				}
 
 				comps.add(com);
@@ -355,6 +353,43 @@ public class CompetidorServiceImpl implements ICompetidorService {
 		}
 
 		return comps;
+	}
+
+	@Override
+	public CompetidorResTO competidororCampeonatoUser(String email, Integer idCampeonato) {
+
+		Competidor c = this.competidorRepo.buscarCompetidoresPorUserYCamp(email, idCampeonato);
+
+		CompetidorResTO com = new CompetidorResTO();
+		com.setApellidos(c.getUsuario().getApellidos());
+		com.setEmail(c.getUsuario().getEmail());
+		com.setFechaInscripcion(c.getFechaInscripcion());
+		com.setNombres(c.getUsuario().getNombres());
+		com.setId(c.getId());
+		com.setNombreCampeonato(c.getCampeonatos().get(c.getCampeonatos().size() - 1).getNombre());
+		com.setIdCampeonato(c.getCampeonatos().get(c.getCampeonatos().size() - 1).getId());
+		com.setEstadoParticipacion(c.getEstadoParticipacion());
+
+		List<DocumentoCompetidores> docs = this.competidorRepo.buscarDocsCompetidores(c.getId());
+		if (docs != null && !docs.isEmpty()) {
+			List<DocResponseDTO> docsR = this.azureBlobAdapter.listarDocumentosCompetidor(docs);
+			com.setDocumentos(docsR);
+		}
+
+		List<Prueba> pruebas = c.getPruebas();
+		if (pruebas != null && !pruebas.isEmpty()) {
+			List<PruebaResponseDTO> prs = new ArrayList<PruebaResponseDTO>();
+
+			for (Prueba p : pruebas) {
+				prs.add(this.pruebaService.convertirPruebaResponseDTO(p));
+			}
+
+			com.setPruebas(prs);
+
+		}
+
+		return com;
+
 	}
 
 	@Override
@@ -381,17 +416,17 @@ public class CompetidorServiceImpl implements ICompetidorService {
 					List<DocResponseDTO> docsR = this.azureBlobAdapter.listarDocumentosCompetidor(docs);
 					com.setDocumentos(docsR);
 				}
-				
+
 				List<Prueba> pruebas = c.getPruebas();
-				if(pruebas !=null && !pruebas.isEmpty()) {
+				if (pruebas != null && !pruebas.isEmpty()) {
 					List<PruebaResponseDTO> prs = new ArrayList<PruebaResponseDTO>();
-					
-					for(Prueba p : pruebas) {
+
+					for (Prueba p : pruebas) {
 						prs.add(this.pruebaService.convertirPruebaResponseDTO(p));
 					}
-					
+
 					com.setPruebas(prs);
-					
+
 				}
 
 				comps.add(com);

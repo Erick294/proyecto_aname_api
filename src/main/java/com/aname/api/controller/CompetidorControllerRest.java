@@ -114,6 +114,19 @@ public class CompetidorControllerRest {
 					.body("Error al obtener competidor: " + e.getMessage());
 		}
 	}
+	
+	@GetMapping("/campeonato/{idCampeonato}/usuario/{email}")
+	public ResponseEntity<?> obtenerCompetidorPorUserCampeonato(@PathVariable Integer idCampeonato,
+			@PathVariable String email) {
+		try {
+
+			return ResponseEntity
+					.ok(this.competidorServiceImpl.competidororCampeonatoUser(email, idCampeonato));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al obtener competidores: " + e.getMessage());
+		}
+	}
 
 	// PATHS PARA ADM,JUN,
 	// ORG--------------------------------------------------------------------------------
