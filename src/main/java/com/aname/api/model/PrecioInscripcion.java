@@ -37,8 +37,17 @@ public class PrecioInscripcion {
 	@Column(name = "prin_cuenta_bancaria")
 	private String cuentaBancaria;
 	
+	@Column(name = "prin_titular_cuenta")
+	private String titularCuenta;
+	
+	@Column(name = "prin_institucion_financiera")
+	private String institucionFinanciera;
+	
 	@OneToOne
 	@JoinColumn(name = "camp_id")
 	private Campeonato campeonato;
+	
+	
+	
 
 }

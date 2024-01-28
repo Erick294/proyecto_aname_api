@@ -39,6 +39,8 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 		precio.setCostoNoSocio(campeonato.getCostoNoSocio());
 		precio.setCostoPruebaAdicional(campeonato.getCostoPruebaAdicional());
 		precio.setCostoSocio(campeonato.getCostoSocio());
+		precio.setInstitucionFinanciera(campeonato.getInstitucionFinanciera());
+		precio.setTitularCuenta(campeonato.getInstitucionFinanciera());
 		precio.setCampeonato(c);
 		precio.setCuentaBancaria(campeonato.getCuentaBancaria());
 
@@ -164,6 +166,8 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 			c.setCostoNoSocio(campeonato.getPrecioInscripcion().getCostoNoSocio());
 			c.setCostoPruebaAdicional(campeonato.getPrecioInscripcion().getCostoPruebaAdicional());
 			c.setCostoSocio(campeonato.getPrecioInscripcion().getCostoSocio());
+			c.setTitularCuenta(campeonato.getPrecioInscripcion().getTitularCuenta());
+			c.setInstitucionFinanciera(campeonato.getPrecioInscripcion().getInstitucionFinanciera());
 		}
 		// PrecioInscripcion precio = new PrecioInscripcion();
 
