@@ -212,7 +212,7 @@ public class CompetidorServiceImpl implements ICompetidorService {
 		fichaF.setCompetidor(c);
 		fichaF.setExtension(doc.getExtension());
 		fichaF.setLink(doc.getLink());
-		fichaF.setNombre(doc.getLink());
+		fichaF.setNombre(doc.getNombre());
 		
 		List<DocumentoCompetidores> dcs= c.getDocumentos();
 		dcs.add(fichaF);
