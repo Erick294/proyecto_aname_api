@@ -37,9 +37,7 @@ public class AzureBlobService {
 	@Autowired
 	private ICompetidorRepo competidorRepo;
 
-	private String tokenSAS = "?sv=2022-11-02&ss=bfqt&srt=co&sp=rwdlacupiytfx&se="
-			+ "2024-08-09T06:22:34Z&st=2024-01-18T22:22:34Z&spr=https,http&sig="
-			+ "Vr7noWuMd19NdAnTqqBau2%2BeOFKaWgliGA2ZxGHVT3w%3D";
+	private String tokenSAS = "?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2024-03-29T22:19:13Z&st=2024-01-29T14:19:13Z&spr=https,http&sig=5n44N%2BrVDmWYMuwzu0fJDpNDg9knKZErKMN6uetY2gE%3D";
 
 	public DocResponseDTO upload(MultipartFile multipartFile, String contenedor, String email) throws Exception {
 		String username = extractUsernameFromEmail(email);
@@ -47,19 +45,18 @@ public class AzureBlobService {
 
 		// Establecer límites de tamaño según el tipo de contenido
 
-
 		String originalFileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 		String fileExtension = StringUtils.getFilenameExtension(originalFileName);
 
 		// Verificar el tipo de archivo permitido según el contenedor
 		if ((contenedor.equals("fotografia") && !isImageFileAllowed(fileExtension))) {
-		    throw new Exception("Solo se permiten archivos de imagen con extensiones jpg, jpeg, png para el contenedor de fotografía.");
+			throw new Exception(
+					"Solo se permiten archivos de imagen con extensiones jpg, jpeg, png para el contenedor de fotografía.");
 		} else if (!contenedor.equals("fotografia") && !isPdfFile(fileExtension)) {
-		    throw new Exception("Solo se permiten archivos PDF para el contenedor especificado.");
+			throw new Exception("Solo se permiten archivos PDF para el contenedor especificado.");
 		}
 
-
-		String uniqueFileName = containerName + "_" + username + "_" + LocalDateTime.now() + "." +fileExtension;
+		String uniqueFileName = containerName + "_" + username + "_" + LocalDateTime.now() + "." + fileExtension;
 
 		BlobClient blob = blobServiceClient.getBlobContainerClient(containerName).getBlobClient(uniqueFileName);
 
