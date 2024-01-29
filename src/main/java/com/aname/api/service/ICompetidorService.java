@@ -19,7 +19,7 @@ public interface ICompetidorService {
 
 	List<CompetidorResTO> listaCompetidoresInscritos();
 
-	void confirmarInscripcionCompetidor(Integer id);
+	void confirmarInscripcionCompetidor(Integer id) throws Exception;
 
 	void negarInscripcionCompetidor(Integer id);
 

@@ -178,18 +178,21 @@ public class CompetidorServiceImpl implements ICompetidorService {
 	}
 
 	@Override
-	public void confirmarInscripcionCompetidor(Integer id) {
-		Competidor c = this.competidorRepo.buscarCompetidor(id);
-		List<DocumentoCompetidores> documentosC = c.getDocumentos();
-		boolean tieneInscripcionFirmada = documentosC.stream()
-				.anyMatch(docComp -> docComp.getNombre().startsWith("inscripcion-firmada"));
-		
-		if(tieneInscripcionFirmada && c.getEstadoParticipacion().equals("Pago Aceptado")) {
-			c.setEstadoParticipacion("Confirmado");
-			this.competidorRepo.actualizarCompetidor(c);
-		}
-		
+	public void confirmarInscripcionCompetidor(Integer id) throws Exception {
+	    Competidor c = this.competidorRepo.buscarCompetidor(id);
+	    List<DocumentoCompetidores> documentosC = c.getDocumentos();
+	    boolean tieneInscripcionFirmada = documentosC.stream()
+	            .anyMatch(docComp -> docComp.getNombre().startsWith("inscripcion-firmada"));
+	    
+	    if(tieneInscripcionFirmada && c.getEstadoParticipacion().equals("Pago Aceptado")) {
+	        c.setEstadoParticipacion("Confirmado");
+	        this.competidorRepo.actualizarCompetidor(c);
+	    } else {
+	        // Lanzar una excepción, por ejemplo, RuntimeException
+	        throw new Exception("El competidor no cumple con los requisitos para confirmar la inscripción");
+	    }
 	}
+
 	
 	@Override
 	public void confirmarPago(Integer id) {
