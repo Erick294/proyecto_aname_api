@@ -82,7 +82,7 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 
 		myQuery.setParameter("estado1", "Inscrito");
 		myQuery.setParameter("estado2", "Pago Aceptado");
-		myQuery.setParameter("estado2", "Pago Denegado");
+		myQuery.setParameter("estado3", "Pago Denegado");
 		myQuery.setParameter("idCampeonato", idCampeonato);
 
 		return myQuery.getResultList();
