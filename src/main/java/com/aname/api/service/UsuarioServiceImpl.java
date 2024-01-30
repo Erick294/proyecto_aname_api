@@ -51,9 +51,13 @@ public class UsuarioServiceImpl implements IUsuarioService {
 				passwordEncoder.encode(registroDTO.getPassword()), registroDTO.getEstado(), registroDTO.getDireccion(),
 				registroDTO.getCiudad(), registroDTO.getSexo(), registroDTO.getFechaNacimiento(),
 				perfil);
+		
 
 		usuario.setEstado(registroDTO.getEstado());
 		usuario.setAsociaciones(asos);
+		List<Usuario> usuarios = a.getUsuarios();
+		usuarios.add(usuario);
+		a.setUsuarios(usuarios);
 		DocumentoUsuarios docI = new DocumentoUsuarios();
 		
 		DocumentoUsuarios docF = new DocumentoUsuarios();
