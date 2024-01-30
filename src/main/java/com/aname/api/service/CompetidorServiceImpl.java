@@ -64,8 +64,9 @@ public class CompetidorServiceImpl implements ICompetidorService {
 	public void registroInicialCompetidor(CompetidorReqTO c) {
 		Competidor competidor = new Competidor();
 
-		competidor.setAsociacionDeportiva(
-				this.asociacionDeportivaService.buscarAsociacionDeportiva(c.getIdAsociacionDeportiva()));
+		Usuario u = this.usuarioService.buscarUsuarioPorEmail(c.getEmail());
+		
+		competidor.setAsociacionDeportiva(u.getAsociaciones().get(0));
 
 		List<Campeonato> campeonatos = new ArrayList<Campeonato>();
 		campeonatos.add(this.campeonatoService.buscarCampeonatoPorID(c.getIdCampeonato()));
@@ -79,7 +80,7 @@ public class CompetidorServiceImpl implements ICompetidorService {
 			pruebas.add(this.pruebaService.buscarPrueba(id));
 		}
 		competidor.setPruebas(pruebas);
-		competidor.setUsuario(this.usuarioService.buscarUsuarioPorEmail(c.getEmail()));
+		competidor.setUsuario(u);
 
 		this.competidorRepo.insertarCompetidor(competidor);
 	}
@@ -143,6 +144,8 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 		// Actualizar documentos según su existencia
 		if (tieneFichaInscripcion) {
+			
+			System.out.println("Tiene ficha----------");
 			Optional<DocumentoCompetidores> documentoFichaInscripcionOptional = documentosC.stream()
 					.filter(docComp -> docComp.getNombre().startsWith("ficha-inscripcion")).findFirst();
 
@@ -156,6 +159,8 @@ public class CompetidorServiceImpl implements ICompetidorService {
 			
 			
 		} else {
+			
+			System.out.println("No tiene ficha-----------");
 			DocumentoCompetidores documentoFichaInscripcion = new DocumentoCompetidores();
 			documentoFichaInscripcion.setExtension(doc.getExtension());
 			documentoFichaInscripcion.setLink(doc.getLink());

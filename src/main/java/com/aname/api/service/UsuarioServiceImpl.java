@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.aname.api.model.AsociacionDeportiva;
 import com.aname.api.model.DocumentoUsuarios;
 import com.aname.api.model.Rol;
 import com.aname.api.model.Usuario;
@@ -31,6 +32,9 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
 	@Autowired
 	private IRolService rolService;
+	
+	@Autowired
+	private IAsociacionDeportivaService asociacionDeportivaService;
 
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -39,14 +43,17 @@ public class UsuarioServiceImpl implements IUsuarioService {
 	public UsuarioRegistroDTO guardar(UsuarioRegistroDTO registroDTO) {
 
 		Rol perfil = this.rolService.buscarRolCodigo(registroDTO.getRol());
+		AsociacionDeportiva a = this.asociacionDeportivaService.buscarAsociacionDeportiva(registroDTO.getIdAsociacion());
 
+		List<AsociacionDeportiva> asos = new ArrayList<AsociacionDeportiva>();
+		asos.add(a);
 		Usuario usuario = new Usuario(registroDTO.getApellidos(), registroDTO.getNombres(), registroDTO.getEmail(),
 				passwordEncoder.encode(registroDTO.getPassword()), registroDTO.getEstado(), registroDTO.getDireccion(),
 				registroDTO.getCiudad(), registroDTO.getSexo(), registroDTO.getFechaNacimiento(),
 				perfil);
 
 		usuario.setEstado(registroDTO.getEstado());
-
+		usuario.setAsociaciones(asos);
 		DocumentoUsuarios docI = new DocumentoUsuarios();
 		
 		DocumentoUsuarios docF = new DocumentoUsuarios();

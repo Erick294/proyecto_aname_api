@@ -20,6 +20,7 @@ public class UsuarioRegistroDTO {
 	private String ciudad;
 	private DocResponseDTO documentoIdentidad;
 	private DocResponseDTO fotografia;
+	private Integer idAsociacion;
 
 	public UsuarioRegistroDTO() {
 		
