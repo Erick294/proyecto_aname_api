@@ -49,6 +49,7 @@ public class WebSecurityConfig {
 					"/competidor/confirmarPago/**",
 					"/competidor/aprobarInscripcion/**")
 			.hasAnyAuthority("ORG", "JUN", "ADM");
+			auth.requestMatchers("/competidor/asociaciones/**").permitAll();
 			auth.requestMatchers("/competidor/**").hasAnyAuthority("ORG", "JUN", "ADM", "ATL");
 			auth.anyRequest().authenticated();
 		}).sessionManagement(session -> {
