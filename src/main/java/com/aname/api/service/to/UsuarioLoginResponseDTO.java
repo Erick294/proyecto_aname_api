@@ -18,13 +18,15 @@ public class UsuarioLoginResponseDTO extends RepresentationModel<UsuarioLoginRes
 	private String email;
 	private Boolean estado;
 	private String rol;
-
-	public UsuarioLoginResponseDTO(String token, Integer id, String email, String rol, Boolean estado) {
+	private Boolean socio;
+	
+	public UsuarioLoginResponseDTO(String token, Integer id, String email, String rol, Boolean estado, Boolean socio) {
 		this.token = token;
 		this.id = id;
 		this.email = email;
 		this.rol = rol;
 		this.estado=estado;
+		this.socio=socio;
 	}
 
 	

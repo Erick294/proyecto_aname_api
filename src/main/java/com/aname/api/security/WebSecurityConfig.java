@@ -37,11 +37,15 @@ public class WebSecurityConfig {
 
 		return httpSecurity.csrf(config -> config.disable()).authorizeHttpRequests(auth -> {
 			auth.requestMatchers("/login").permitAll();
+			auth.requestMatchers("/usuario/aprobarRegistroUsuario/**", 
+					"/usuario/negarRegistroUsuario/**").hasAnyAuthority("ORG", "JUN", "ADM");
 			auth.requestMatchers("/usuario/**").permitAll();
+			
 			auth.requestMatchers("/files/**").permitAll();
 			auth.requestMatchers("/campeonato/disponibles", "/campeonato/{id:[0-9]+}/pruebas").hasAnyAuthority("ORG", "JUN", "ADM", "ATL");
 			auth.requestMatchers("/campeonato/**").hasAnyAuthority("ORG", "JUN", "ADM");
 			auth.requestMatchers("/campeonato/pruebas").hasAnyAuthority("ORG", "JUN", "ADM", "ATL");
+			
 			auth.requestMatchers("/competidor/inscritos/**", 
 					"/competidor/confirmarInscripcion/**", 
 					"/competidor/negarInscripcion/**", 
@@ -51,6 +55,7 @@ public class WebSecurityConfig {
 			.hasAnyAuthority("ORG", "JUN", "ADM");
 			auth.requestMatchers("/competidor/asociaciones/**").permitAll();
 			auth.requestMatchers("/competidor/**").hasAnyAuthority("ORG", "JUN", "ADM", "ATL");
+			
 			auth.anyRequest().authenticated();
 		}).sessionManagement(session -> {
 			session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);

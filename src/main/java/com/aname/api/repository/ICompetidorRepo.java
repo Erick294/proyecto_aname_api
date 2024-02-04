@@ -23,7 +23,6 @@ public interface ICompetidorRepo {
 
 	List<Competidor> buscarCompetidoresInscritosPorUsuario(String email);
 
-	List<Competidor> buscarCompetidoresInscritosPorCampeonato(Integer idCampeonato);
 
 	List<Competidor> buscarCompetidorresInscritosPorUserYCamp(String email, Integer idCampeonato);
 
@@ -32,5 +31,7 @@ public interface ICompetidorRepo {
 	List<DocumentoCompetidores> buscarDocsCompetidores(Integer idCompetidor);
 
 	Competidor buscarCompetidoresPorUserYCamp(String email, Integer idCampeonato);
+
+	List<Competidor> buscarCompetidoresInscritosPorCampeonato(Integer idCampeonato, Integer idAsociacion);
 
 }

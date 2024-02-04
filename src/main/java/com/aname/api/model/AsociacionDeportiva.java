@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -50,5 +51,8 @@ public class AsociacionDeportiva {
     
     @OneToMany(mappedBy = "asociacionDeportiva", cascade = CascadeType.ALL)
 	private List<Competidor> competidores;
+    
+    @OneToOne(mappedBy = "asociacion", cascade = CascadeType.ALL)
+	private PrecioAsociacion precioAsociacion;
     
 }

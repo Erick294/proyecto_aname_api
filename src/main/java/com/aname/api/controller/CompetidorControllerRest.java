@@ -175,10 +175,10 @@ public class CompetidorControllerRest {
 	}
 
 	@GetMapping("/inscritos/campeonato/{idCampeonato}")
-	public ResponseEntity<?> listaCompetidoresInscritosCampeonato(@PathVariable Integer idCampeonato) {
+	public ResponseEntity<?> listaCompetidoresInscritosCampeonato(@PathVariable Integer idCampeonato, @RequestParam Integer idAsociacion) {
 		try {
 
-			return ResponseEntity.ok(this.competidorServiceImpl.listaCompetidoresInscritosPorCampeonato(idCampeonato));
+			return ResponseEntity.ok(this.competidorServiceImpl.listaCompetidoresInscritosPorCampeonato(idCampeonato, idAsociacion));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("Error al obtener competidores: " + e.getMessage());

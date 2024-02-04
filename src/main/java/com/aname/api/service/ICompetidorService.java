@@ -27,7 +27,6 @@ public interface ICompetidorService {
 
 	List<CompetidorResTO> listaCompetidoresInscritosPorUsuario(String email);
 
-	List<CompetidorResTO> listaCompetidoresInscritosPorCampeonato(Integer idCampeonato);
 
 	List<CompetidorResTO> listaCompetidoresInscritosPorCampeonatoUser(String email, Integer idCampeonato);
 
@@ -49,5 +48,7 @@ public interface ICompetidorService {
 	void aprobarFichaInscripcion(DocsCompetidoresDTO doc);
 
 	void negarPago(Integer id);
+
+	List<CompetidorResTO> listaCompetidoresInscritosPorCampeonato(Integer idCampeonato, Integer idAsociacion);
 
 }

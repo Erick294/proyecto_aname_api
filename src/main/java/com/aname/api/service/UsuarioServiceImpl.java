@@ -20,7 +20,9 @@ import com.aname.api.model.Rol;
 import com.aname.api.model.Usuario;
 import com.aname.api.repository.IUsuarioRepo;
 import com.aname.api.service.to.DocResponseDTO;
+import com.aname.api.service.to.UsuarioPagoDTO;
 import com.aname.api.service.to.UsuarioRegistroDTO;
+import com.aname.api.service.to.UsuarioResDTO;
 
 import jakarta.transaction.Transactional;
 
@@ -32,7 +34,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
 	@Autowired
 	private IRolService rolService;
-	
+
 	@Autowired
 	private IAsociacionDeportivaService asociacionDeportivaService;
 
@@ -43,23 +45,23 @@ public class UsuarioServiceImpl implements IUsuarioService {
 	public UsuarioRegistroDTO guardar(UsuarioRegistroDTO registroDTO) {
 
 		Rol perfil = this.rolService.buscarRolCodigo(registroDTO.getRol());
-		AsociacionDeportiva a = this.asociacionDeportivaService.buscarAsociacionDeportiva(registroDTO.getIdAsociacion());
+		AsociacionDeportiva a = this.asociacionDeportivaService
+				.buscarAsociacionDeportiva(registroDTO.getIdAsociacion());
 
 		List<AsociacionDeportiva> asos = new ArrayList<AsociacionDeportiva>();
 		asos.add(a);
 		Usuario usuario = new Usuario(registroDTO.getApellidos(), registroDTO.getNombres(), registroDTO.getEmail(),
-				passwordEncoder.encode(registroDTO.getPassword()), registroDTO.getEstado(), registroDTO.getDireccion(),
-				registroDTO.getCiudad(), registroDTO.getSexo(), registroDTO.getFechaNacimiento(),
-				perfil);
-		
+				passwordEncoder.encode(registroDTO.getPassword()), false, registroDTO.getDireccion(),
+				registroDTO.getCiudad(), registroDTO.getSexo(), registroDTO.getFechaNacimiento(), perfil);
 
-		usuario.setEstado(registroDTO.getEstado());
+		usuario.setEstado(false);
+		usuario.setSocio(false);
 		usuario.setAsociaciones(asos);
 		List<Usuario> usuarios = a.getUsuarios();
 		usuarios.add(usuario);
 		a.setUsuarios(usuarios);
 		DocumentoUsuarios docI = new DocumentoUsuarios();
-		
+
 		DocumentoUsuarios docF = new DocumentoUsuarios();
 		DocResponseDTO docFR = registroDTO.getFotografia();
 		List<DocumentoUsuarios> documentos = new ArrayList<DocumentoUsuarios>();
@@ -73,7 +75,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		}
 
 		DocResponseDTO docIR = registroDTO.getDocumentoIdentidad();
-		if (docIR != null){
+		if (docIR != null) {
 			docI.setExtension(docIR.getExtension());
 			docI.setLink(docIR.getLink());
 			docI.setNombre(docIR.getNombre());
@@ -81,7 +83,6 @@ public class UsuarioServiceImpl implements IUsuarioService {
 			documentos.add(docI);
 		}
 		// doc.setUsuario(usuario);
-	
 
 		usuario.setDocumentos(documentos);
 		this.usuarioRepo.insertarUsuario(usuario);
@@ -109,6 +110,65 @@ public class UsuarioServiceImpl implements IUsuarioService {
 	}
 
 	@Override
+	public void aprobrarRegistroUsuario(String email) {
+		Usuario usuario = this.buscarUsuarioPorEmail(email);
+		usuario.setEstado(true);
+		this.actualizarUsuario(usuario);
+	}
+
+	@Override
+	public void negarRegistroUsuario(String email) {
+		Usuario usuario = this.buscarUsuarioPorEmail(email);
+
+		AsociacionDeportiva as = this.asociacionDeportivaService
+				.buscarAsociacionDeportiva(usuario.getAsociaciones().get(0).getId());
+		
+		List<Usuario> usuariosAs= as.getUsuarios();
+		usuariosAs.remove(usuario);
+		
+		as.setUsuarios(usuariosAs);
+
+		this.asociacionDeportivaService.actualizarAsociacion(as);
+		
+		this.usuarioRepo.eliminarUsuario(usuario.getId());
+		
+	}
+
+	@Override
+	public void registrarPagoAsociacion(UsuarioPagoDTO u) {
+		Usuario usuario = this.buscarUsuarioPorEmail(u.getEmail());
+
+		DocumentoUsuarios doc = new DocumentoUsuarios();
+		DocResponseDTO d = u.getDocumentoPagoAsociacion();
+
+		List<DocumentoUsuarios> documentoUsuarios = usuario.getDocumentos();
+		doc.setExtension(d.getExtension());
+		doc.setLink(d.getLink());
+		doc.setNombre(d.getNombre());
+		doc.setUsuario(usuario);
+
+		documentoUsuarios.add(doc);
+
+		usuario.setDocumentos(documentoUsuarios);
+		this.actualizarUsuario(usuario);
+
+	}
+
+	@Override
+	public void aprobarUsuarioAsociado(String email) {
+		Usuario usuario = this.buscarUsuarioPorEmail(email);
+		usuario.setSocio(true);
+		this.actualizarUsuario(usuario);
+	}
+
+	@Override
+	public void negarUsuarioAsociado(String email) {
+		Usuario usuario = this.buscarUsuarioPorEmail(email);
+		usuario.setSocio(false);
+		this.actualizarUsuario(usuario);
+	}
+
+	@Override
 	public void insertarUsuario(Usuario usuario) {
 		this.usuarioRepo.insertarUsuario(usuario);
 	}
@@ -128,11 +188,36 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
 	@Override
 	public Usuario buscarUsuarioPorEmail(String email) {
+		System.out.println("Email: " + email);
 		return this.usuarioRepo.buscarUsuarioPorNombreUsuario(email);
 	}
 
 	@Override
-	public void actualizarUsuario(UsuarioRegistroDTO registroDTO) {
+	public List<UsuarioResDTO> listarUsuariosRegistradosPorAsociacion(Integer idAsociacion) {
+		List<Usuario> usuarios = this.usuarioRepo.buscarUsuariosRegistradosAsociacion(idAsociacion);
+		List<UsuarioResDTO> usuariosDTO = new ArrayList<UsuarioResDTO>();
+		for (Usuario usuario : usuarios) {
+			UsuarioResDTO usuarioDTO = new UsuarioResDTO();
+			usuarioDTO.setApellidos(usuario.getApellidos());
+			usuarioDTO.setNombres(usuario.getNombres());
+			usuarioDTO.setEmail(usuario.getEmail());
+			usuarioDTO.setCiudad(usuario.getCiudad());
+			usuarioDTO.setDireccion(usuario.getDireccion());
+			usuarioDTO.setFechaNacimiento(usuario.getFechaNacimiento());
+			usuarioDTO.setSexo(usuario.getSexo());
+			usuarioDTO.setEstado(usuario.getEstado());
+			usuarioDTO.setRol(usuario.getRol().getCodigo());
+			usuarioDTO.setIdAsociacion(usuario.getAsociaciones().get(0).getId());
+			usuarioDTO.setSocio(usuario.getSocio());
+
+			usuariosDTO.add(usuarioDTO);
+		}
+
+		return usuariosDTO;
+	}
+
+	@Override
+	public void actualizarUsuarioDTO(UsuarioRegistroDTO registroDTO) {
 		Usuario usuario = this.usuarioRepo.buscarUsuarioPorNombreUsuario(registroDTO.getEmail());
 		if (usuario == null) {
 			throw new RuntimeException("No se encontró ningún usuario con el email proporcionado.");

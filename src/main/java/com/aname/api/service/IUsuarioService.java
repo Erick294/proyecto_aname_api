@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.aname.api.model.Usuario;
+import com.aname.api.service.to.UsuarioPagoDTO;
 import com.aname.api.service.to.UsuarioRegistroDTO;
+import com.aname.api.service.to.UsuarioResDTO;
 
 public interface IUsuarioService extends UserDetailsService{
 	
@@ -19,13 +21,26 @@ public interface IUsuarioService extends UserDetailsService{
 	
 	Usuario buscarUsuarioPorEmail(String email);
 	
-	void actualizarUsuario(UsuarioRegistroDTO registroDTO);
 	
 	void actualizarUsuario(Usuario usuario);
 	
 	public List<UsuarioRegistroDTO> listarUsuariosTO();
 	
 	boolean existeNombreUsuario(String email);
+
+	void aprobrarRegistroUsuario(String email);
+
+	void registrarPagoAsociacion(UsuarioPagoDTO u);
+
+	void aprobarUsuarioAsociado(String email);
+
+	void negarRegistroUsuario(String email);
+
+	void negarUsuarioAsociado(String email);
+
+	void actualizarUsuarioDTO(UsuarioRegistroDTO registroDTO);
+
+	List<UsuarioResDTO> listarUsuariosRegistradosPorAsociacion(Integer idAsociacion);
 	
 	
 

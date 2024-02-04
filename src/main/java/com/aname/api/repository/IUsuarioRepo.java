@@ -18,5 +18,7 @@ public interface IUsuarioRepo {
 
 	Usuario buscarUsuarioPorNombreUsuario(String nombreUsuario);
 
+	List<Usuario> buscarUsuariosRegistradosAsociacion(Integer idAsociacion);
+
 
 }

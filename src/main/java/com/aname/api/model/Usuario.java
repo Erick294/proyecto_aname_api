@@ -52,6 +52,9 @@ public class Usuario {
 
 	@Column(name = "usua_sexo")
 	private String sexo;
+	
+	@Column(name = "usua_socio")
+	private Boolean socio;
 
 	@Column(name = "usua_fecha_nacimiento")
 	private LocalDateTime fechaNacimiento;

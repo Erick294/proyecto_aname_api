@@ -16,7 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,18 +30,17 @@ import com.aname.api.service.to.UsuarioRegistroDTO;
 import com.aname.api.service.to.email_DTO.EmailDTO;
 import com.aname.api.service.to.email_DTO.EmailFileDTO;
 
-
 @RestController
 @CrossOrigin
 @RequestMapping(path = "/usuario")
 public class UsuarioControllerRest {
-	
+
 	@Autowired
 	private IUsuarioService usuarioServicio;
 
 	@Autowired
-    private IEmailService emailService;
-	
+	private IEmailService emailService;
+
 	@Autowired
 	private IRolService rolService;
 
@@ -57,52 +58,78 @@ public class UsuarioControllerRest {
 					.body("Error al registrar usuario: " + e.getMessage());
 		}
 	}
+
+	@PutMapping("/aprobarRegistroUsuario/{email}")
+	public ResponseEntity<?> aprobrarRegistroUsuario(@PathVariable String email) {
+
+		try {
+
+			this.usuarioServicio.aprobrarRegistroUsuario(email);
+			return ResponseEntity.ok("Registro de usuario aprobado");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al aprobar usuario: " + e.getMessage());
+		}
+	}
+	
+	@PutMapping("/negarRegistroUsuario/{email}")
+	public ResponseEntity<?> negarRegistroUsuario(@PathVariable String email) {
+
+		try {
+
+			this.usuarioServicio.negarRegistroUsuario(email);
+			return ResponseEntity.ok("Registro de usuario denegado");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al denegar usuario: " + e.getMessage());
+		}
+	}
 	
 	
+
 	@GetMapping(path = "/roles", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public List<String> getPerfiles() {
 		return this.rolService.buscarTodosRol();
 	}
 
 	@PostMapping("/email/enviarSimple")
-    public ResponseEntity<?> enviarSimpleEmail(@RequestBody EmailDTO emailDTO){
+	public ResponseEntity<?> enviarSimpleEmail(@RequestBody EmailDTO emailDTO) {
 
-        System.out.println("Mensaje Recibido " + emailDTO);
+		System.out.println("Mensaje Recibido " + emailDTO);
 
-        emailService.sendSimpleEmail(emailDTO.getToUser(), emailDTO.getSubject(), emailDTO.getMessage());
+		emailService.sendSimpleEmail(emailDTO.getToUser(), emailDTO.getSubject(), emailDTO.getMessage());
 
-        Map<String, String> response = new HashMap<>();
-        response.put("estado", "Enviado");
+		Map<String, String> response = new HashMap<>();
+		response.put("estado", "Enviado");
 
-        return ResponseEntity.ok(response);
-    }
+		return ResponseEntity.ok(response);
+	}
 
+	@PostMapping("/email/enviarArchivo")
+	public ResponseEntity<?> enviarEmailArchivo(@ModelAttribute EmailFileDTO emailFileDTO) {
 
-    @PostMapping("/email/enviarArchivo")
-    public ResponseEntity<?> enviarEmailArchivo(@ModelAttribute EmailFileDTO emailFileDTO){
+		try {
+			String fileName = emailFileDTO.getFile().getOriginalFilename();
 
-        try {
-            String fileName = emailFileDTO.getFile().getOriginalFilename();
+			Path path = Paths.get("src/mail/resources/files/" + fileName);
 
-            Path path = Paths.get("src/mail/resources/files/" + fileName);
+			Files.createDirectories(path.getParent());
+			Files.copy(emailFileDTO.getFile().getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
-            Files.createDirectories(path.getParent());
-            Files.copy(emailFileDTO.getFile().getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+			File file = path.toFile();
 
-            File file = path.toFile();
+			emailService.sendEmailArchivo(emailFileDTO.getToUser(), emailFileDTO.getSubject(),
+					emailFileDTO.getMessage(), file);
 
-            emailService.sendEmailArchivo(emailFileDTO.getToUser(), emailFileDTO.getSubject(), emailFileDTO.getMessage(), file);
+			Map<String, String> response = new HashMap<>();
+			response.put("estado", "Enviado");
+			response.put("archivo", fileName);
 
-            Map<String, String> response = new HashMap<>();
-            response.put("estado", "Enviado");
-            response.put("archivo", fileName);
+			return ResponseEntity.ok(response);
 
-            return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			throw new RuntimeException("Error al enviar el Email con el archivo. " + e.getMessage());
+		}
+	}
 
-        } catch (Exception e){
-            throw new RuntimeException("Error al enviar el Email con el archivo. " + e.getMessage());
-        }
-    }
-
-	
 }

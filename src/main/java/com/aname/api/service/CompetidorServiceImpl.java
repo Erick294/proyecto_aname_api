@@ -55,17 +55,16 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 	@Autowired
 	private AzureBlobService azureBlobAdapter;
-	
+
 	@Autowired
 	private IDocumentosCompetidoresRepo documentosCompetidoresRepo;
-	
 
 	@Override
 	public void registroInicialCompetidor(CompetidorReqTO c) {
 		Competidor competidor = new Competidor();
 
 		Usuario u = this.usuarioService.buscarUsuarioPorEmail(c.getEmail());
-		
+
 		competidor.setAsociacionDeportiva(u.getAsociaciones().get(0));
 
 		List<Campeonato> campeonatos = new ArrayList<Campeonato>();
@@ -106,10 +105,9 @@ public class CompetidorServiceImpl implements ICompetidorService {
 			documentoComprobantePago.setExtension(doc.getExtension());
 			documentoComprobantePago.setLink(doc.getLink());
 			documentoComprobantePago.setNombre(doc.getNombre());
-			
+
 			this.documentosCompetidoresRepo.actualizarDocumento(documentoComprobantePago);
-			
-			
+
 		} else {
 			DocumentoCompetidores documentoComprobantePago = new DocumentoCompetidores();
 			documentoComprobantePago.setExtension(doc.getExtension());
@@ -131,6 +129,7 @@ public class CompetidorServiceImpl implements ICompetidorService {
 		this.competidorRepo.actualizarCompetidor(c);
 
 	}
+
 	@Override
 	public void registrarFichaInscripcion(DocsCompetidoresDTO doc) {
 		Competidor c = this.competidorRepo.buscarCompetidor(doc.getIdCompetidor());
@@ -144,7 +143,7 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 		// Actualizar documentos según su existencia
 		if (tieneFichaInscripcion) {
-			
+
 			System.out.println("Tiene ficha----------");
 			Optional<DocumentoCompetidores> documentoFichaInscripcionOptional = documentosC.stream()
 					.filter(docComp -> docComp.getNombre().startsWith("ficha-inscripcion")).findFirst();
@@ -154,12 +153,11 @@ public class CompetidorServiceImpl implements ICompetidorService {
 			documentoFichaInscripcion.setExtension(doc.getExtension());
 			documentoFichaInscripcion.setLink(doc.getLink());
 			documentoFichaInscripcion.setNombre(doc.getNombre());
-			
+
 			this.documentosCompetidoresRepo.actualizarDocumento(documentoFichaInscripcion);
-			
-			
+
 		} else {
-			
+
 			System.out.println("No tiene ficha-----------");
 			DocumentoCompetidores documentoFichaInscripcion = new DocumentoCompetidores();
 			documentoFichaInscripcion.setExtension(doc.getExtension());
@@ -184,47 +182,69 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 	@Override
 	public void confirmarInscripcionCompetidor(Integer id) throws Exception {
-	    Competidor c = this.competidorRepo.buscarCompetidor(id);
-	    List<DocumentoCompetidores> documentosC = c.getDocumentos();
-	    boolean tieneInscripcionFirmada = documentosC.stream()
-	            .anyMatch(docComp -> docComp.getNombre().startsWith("inscripcion-firmada"));
-	    
-	    if(tieneInscripcionFirmada && c.getEstadoParticipacion().equals("Pago Aceptado")) {
-	        c.setEstadoParticipacion("Confirmado");
-	        this.competidorRepo.actualizarCompetidor(c);
-	    } else {
-	        // Lanzar una excepción, por ejemplo, RuntimeException
-	        throw new Exception("El competidor no cumple con los requisitos para confirmar la inscripción");
-	    }
+		Competidor c = this.competidorRepo.buscarCompetidor(id);
+		List<DocumentoCompetidores> documentosC = c.getDocumentos();
+		boolean tieneInscripcionFirmada = documentosC.stream()
+				.anyMatch(docComp -> docComp.getNombre().startsWith("inscripcion-firmada"));
+
+		if (tieneInscripcionFirmada && c.getEstadoParticipacion().equals("Pago Aceptado")) {
+			c.setEstadoParticipacion("Confirmado");
+			this.competidorRepo.actualizarCompetidor(c);
+		} else {
+			// Lanzar una excepción, por ejemplo, RuntimeException
+			throw new Exception("El competidor no cumple con los requisitos para confirmar la inscripción");
+		}
 	}
 
-	
 	@Override
 	public void confirmarPago(Integer id) {
 		Competidor c = this.competidorRepo.buscarCompetidor(id);
 		c.setEstadoParticipacion("Pago Aceptado");
 		this.competidorRepo.actualizarCompetidor(c);
 	}
-	
+
 	@Override
 	public void negarPago(Integer id) {
 		Competidor c = this.competidorRepo.buscarCompetidor(id);
 		c.setEstadoParticipacion("Pago Denegado");
 		this.competidorRepo.actualizarCompetidor(c);
 	}
-	
+
 	@Override
 	public void aprobarFichaInscripcion(DocsCompetidoresDTO doc) {
 		Competidor c = this.competidorRepo.buscarCompetidor(doc.getIdCompetidor());
-		DocumentoCompetidores fichaF= new DocumentoCompetidores();
-		fichaF.setCompetidor(c);
-		fichaF.setExtension(doc.getExtension());
-		fichaF.setLink(doc.getLink());
-		fichaF.setNombre(doc.getNombre());
+
+		List<DocumentoCompetidores> documentosC = c.getDocumentos();
+
+		boolean tieneFichaFirmada = documentosC.stream()
+				.anyMatch(docComp -> docComp.getNombre().startsWith("inscripcion-firmada"));
+
+		if (tieneFichaFirmada) {
+
+			System.out.println("Tiene ficha----------");
+			Optional<DocumentoCompetidores> documentoFichaFirmadaOptional = documentosC.stream()
+					.filter(docComp -> docComp.getNombre().startsWith("inscripcion-firmada")).findFirst();
+
+			DocumentoCompetidores documentoFichaFirmada = documentoFichaFirmadaOptional.get();
+
+			documentoFichaFirmada.setExtension(doc.getExtension());
+			documentoFichaFirmada.setLink(doc.getLink());
+			documentoFichaFirmada.setNombre(doc.getNombre());
+
+			this.documentosCompetidoresRepo.actualizarDocumento(documentoFichaFirmada);
+
+		}else {
+			System.out.println("No tiene ficha-----------");
+			DocumentoCompetidores documentoFichaFirmada = new DocumentoCompetidores();
+			documentoFichaFirmada.setExtension(doc.getExtension());
+			documentoFichaFirmada.setLink(doc.getLink());
+			documentoFichaFirmada.setNombre(doc.getNombre());
+			documentoFichaFirmada.setCompetidor(c);
+			documentosC.add(documentoFichaFirmada);
+			c.setDocumentos(documentosC);
+		}
+
 		
-		List<DocumentoCompetidores> dcs= c.getDocumentos();
-		dcs.add(fichaF);
-		c.setDocumentos(dcs);
 		this.competidorRepo.actualizarCompetidor(c);
 	}
 
@@ -394,9 +414,9 @@ public class CompetidorServiceImpl implements ICompetidorService {
 	}
 
 	@Override
-	public List<CompetidorResTO> listaCompetidoresInscritosPorCampeonato(Integer idCampeonato) {
+	public List<CompetidorResTO> listaCompetidoresInscritosPorCampeonato(Integer idCampeonato, Integer idAsociacion) {
 
-		List<Competidor> competidores = this.competidorRepo.buscarCompetidoresInscritosPorCampeonato(idCampeonato);
+		List<Competidor> competidores = this.competidorRepo.buscarCompetidoresInscritosPorCampeonato(idCampeonato, idAsociacion);
 		List<CompetidorResTO> comps = new ArrayList<CompetidorResTO>();
 
 		if (competidores != null && !competidores.isEmpty()) {

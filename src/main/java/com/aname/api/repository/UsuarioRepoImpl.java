@@ -67,5 +67,18 @@ public class UsuarioRepoImpl implements IUsuarioRepo {
 			return null;
 		}
 	}
+	
+	@Override
+	public List<Usuario> buscarUsuariosRegistradosAsociacion(Integer idAsociacion){
+		TypedQuery<Usuario> myQuery = this.entityManager
+				.createQuery("SELECT u FROM Usuario u JOIN u.asociaciones as WHERE u.estado=:false AND as.id =:idAsociacion", Usuario.class);
+		myQuery.setParameter("idAsociacion", idAsociacion);
+		try {
+			return myQuery.getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+	
 
 }
