@@ -127,6 +127,19 @@ public class UsuarioControllerRest {
 		}
 	}
 	
+	@GetMapping("/asociacion/{idAsociacion}")
+	public ResponseEntity<?> buscarUsuariosPorAsociacion(@PathVariable Integer idAsociacion) {
+
+		try {
+	
+			return ResponseEntity.ok(this.usuarioServicio.listarUsuariosRegistradosPorAsociacion(idAsociacion));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al buscar usuarios: " + e.getMessage());
+		}
+	}
+	
+	
 	@GetMapping(path = "/roles", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public List<String> getPerfiles() {
 		return this.rolService.buscarTodosRol();
