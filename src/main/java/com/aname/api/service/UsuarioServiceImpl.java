@@ -186,7 +186,6 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
 	@Override
 	public Usuario buscarUsuarioPorEmail(String email) {
-		System.out.println("Email: " + email);
 		return this.usuarioRepo.buscarUsuarioPorNombreUsuario(email);
 	}
 
@@ -272,15 +271,12 @@ public class UsuarioServiceImpl implements IUsuarioService {
 	@Override
 	public boolean existeNombreUsuario(String email) {
 		Usuario usuario = this.usuarioRepo.buscarUsuarioPorNombreUsuario(email);
-		System.out.println(usuario != null);
 		return usuario != null;
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		System.out.println("Buscando loadbyusername-----------------------------");
 		Usuario usuario = this.usuarioRepo.buscarUsuarioPorNombreUsuario(username);
-		System.out.println("Buscando loadbyusername cccc-----------------------------");
 		if (usuario == null) {
 			System.out.println(username);
 			throw new UsernameNotFoundException("Usuario o password inválidos");
