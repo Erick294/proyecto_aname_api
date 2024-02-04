@@ -59,6 +59,21 @@ public class UsuarioControllerRest {
 					.body("Error al registrar usuario: " + e.getMessage());
 		}
 	}
+	
+	@GetMapping("/costo/asociacion/{idAsociacion}")
+	public ResponseEntity<?> buscarCostoAsociacion(@RequestBody UsuarioRegistroDTO registroDTO) {
+		System.out.println(registroDTO.getEmail());
+		try {
+			if (usuarioServicio.existeNombreUsuario(registroDTO.getEmail())) {
+				return ResponseEntity.badRequest().body("Ya existe un usuario con el mismo nombre de usuario.");
+			}
+			UsuarioRegistroDTO usuario = usuarioServicio.guardar(registroDTO);
+			return ResponseEntity.ok(usuario);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al registrar usuario: " + e.getMessage());
+		}
+	}
 
 	@PutMapping("/aprobarRegistroUsuario/{email}")
 	public ResponseEntity<?> aprobrarRegistroUsuario(@PathVariable String email) {

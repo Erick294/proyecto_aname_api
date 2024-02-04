@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.aname.api.model.Usuario;
+import com.aname.api.service.to.AsociacionCostoDTO;
 import com.aname.api.service.to.DocResponseDTO;
 import com.aname.api.service.to.UsuarioRegistroDTO;
 import com.aname.api.service.to.UsuarioResDTO;
@@ -41,6 +42,8 @@ public interface IUsuarioService extends UserDetailsService{
 	List<UsuarioResDTO> listarUsuariosRegistradosPorAsociacion(Integer idAsociacion);
 
 	void registrarPagoAsociacion(DocResponseDTO u);
+
+	AsociacionCostoDTO buscarCostoAsociacion(Integer idAsociacion);
 	
 	
 

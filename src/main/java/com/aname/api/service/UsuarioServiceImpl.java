@@ -19,6 +19,7 @@ import com.aname.api.model.DocumentoUsuarios;
 import com.aname.api.model.Rol;
 import com.aname.api.model.Usuario;
 import com.aname.api.repository.IUsuarioRepo;
+import com.aname.api.service.to.AsociacionCostoDTO;
 import com.aname.api.service.to.DocResponseDTO;
 import com.aname.api.service.to.UsuarioRegistroDTO;
 import com.aname.api.service.to.UsuarioResDTO;
@@ -100,12 +101,24 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		usuarioDTO.setRol(usuario.getRol().getCodigo());
 		usuarioDTO.setFotografia(docFR);
 		usuarioDTO.setDocumentoIdentidad(docIR);
-		//
-		// if (!usuario.getRoles().isEmpty()) {
-		// usuarioDTO.setRol(usuario.getRoles().stream().findFirst().get().getCodigo());
-		// }
+	
 
 		return usuarioDTO;
+	}
+	
+	@Override
+	public AsociacionCostoDTO buscarCostoAsociacion(Integer idAsociacion) {
+		AsociacionCostoDTO ac = new AsociacionCostoDTO();
+		AsociacionDeportiva a= this.asociacionDeportivaService.buscarAsociacionDeportiva(idAsociacion);
+		
+		ac.setCosto(a.getPrecioAsociacion().getCosto());
+		ac.setId(idAsociacion);
+		ac.setInstitucionFinanciera(a.getPrecioAsociacion().getInstitucionFinanciera());
+		ac.setNombre(a.getNombre());
+		ac.setTitular(a.getPrecioAsociacion().getTitularCuenta());
+		ac.setNumeroCuenta(a.getPrecioAsociacion().getCuentaBancaria());
+		
+		return ac;
 	}
 
 	@Override
@@ -267,6 +280,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
 		return usuariosDTO;
 	}
+	
 
 	@Override
 	public boolean existeNombreUsuario(String email) {
