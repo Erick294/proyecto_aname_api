@@ -20,7 +20,6 @@ import com.aname.api.model.Rol;
 import com.aname.api.model.Usuario;
 import com.aname.api.repository.IUsuarioRepo;
 import com.aname.api.service.to.DocResponseDTO;
-import com.aname.api.service.to.UsuarioPagoDTO;
 import com.aname.api.service.to.UsuarioRegistroDTO;
 import com.aname.api.service.to.UsuarioResDTO;
 
@@ -135,16 +134,15 @@ public class UsuarioServiceImpl implements IUsuarioService {
 	}
 
 	@Override
-	public void registrarPagoAsociacion(UsuarioPagoDTO u) {
-		Usuario usuario = this.buscarUsuarioPorEmail(u.getEmail());
+	public void registrarPagoAsociacion(DocResponseDTO u) {
+		Usuario usuario = this.buscarUsuarioPorEmail(u.getUsername());
 
 		DocumentoUsuarios doc = new DocumentoUsuarios();
-		DocResponseDTO d = u.getDocumentoPagoAsociacion();
 
 		List<DocumentoUsuarios> documentoUsuarios = usuario.getDocumentos();
-		doc.setExtension(d.getExtension());
-		doc.setLink(d.getLink());
-		doc.setNombre(d.getNombre());
+		doc.setExtension(u.getExtension());
+		doc.setLink(u.getLink());
+		doc.setNombre(u.getNombre());
 		doc.setUsuario(usuario);
 
 		documentoUsuarios.add(doc);

@@ -38,7 +38,10 @@ public class WebSecurityConfig {
 		return httpSecurity.csrf(config -> config.disable()).authorizeHttpRequests(auth -> {
 			auth.requestMatchers("/login").permitAll();
 			auth.requestMatchers("/usuario/aprobarRegistroUsuario/**", 
-					"/usuario/negarRegistroUsuario/**").hasAnyAuthority("ORG", "JUN", "ADM");
+					"/usuario/negarRegistroUsuario/**",
+					"aprobarUsuarioAsociado/**",
+					"/negarUsuarioAsociado/**")
+			.hasAnyAuthority("ORG", "JUN", "ADM");
 			auth.requestMatchers("/usuario/**").permitAll();
 			
 			auth.requestMatchers("/files/**").permitAll();

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aname.api.service.IRolService;
 import com.aname.api.service.IUsuarioService;
 import com.aname.api.service.email_service.IEmailService;
+import com.aname.api.service.to.DocResponseDTO;
 import com.aname.api.service.to.UsuarioRegistroDTO;
 import com.aname.api.service.to.email_DTO.EmailDTO;
 import com.aname.api.service.to.email_DTO.EmailFileDTO;
@@ -86,7 +87,46 @@ public class UsuarioControllerRest {
 	}
 	
 	
+	@PostMapping("/registroPagoAsociacion")
+	public ResponseEntity<?> registrarPagoAsociacion(@RequestBody DocResponseDTO u) {
 
+		try {
+
+			this.usuarioServicio.registrarPagoAsociacion(u);
+			return ResponseEntity.ok("Registro exitoso de pago de asociación");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al registrar el pago de usuario: " + e.getMessage());
+		}
+	}
+	
+	@PutMapping("/aprobarUsuarioAsociado/{email}")
+	public ResponseEntity<?> aprobarUsuarioAsociado(@PathVariable String email) {
+
+		try {
+
+			this.usuarioServicio.aprobarUsuarioAsociado(email);
+			return ResponseEntity.ok("Registro de socio denegado");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al denegar socio: " + e.getMessage());
+		}
+	}
+	
+
+	@PutMapping("/negarUsuarioAsociado/{email}")
+	public ResponseEntity<?> negarUsuarioAsociado(@PathVariable String email) {
+
+		try {
+
+			this.usuarioServicio.negarUsuarioAsociado(email);
+			return ResponseEntity.ok("Registro de socio denegado");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al denegar socio: " + e.getMessage());
+		}
+	}
+	
 	@GetMapping(path = "/roles", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public List<String> getPerfiles() {
 		return this.rolService.buscarTodosRol();
