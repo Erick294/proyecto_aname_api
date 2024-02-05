@@ -76,16 +76,18 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 	@Override
 	public List<Competidor> buscarCompetidoresInscritosPorCampeonato(Integer idCampeonato, Integer idAsociacion) {
 		TypedQuery<Competidor> myQuery = this.entityManager
-				.createQuery("SELECT c FROM Competidor c JOIN c.campeonatos ca JOIN c.asociacionDeportiva a"
+				.createQuery("SELECT c FROM Competidor c JOIN c.campeonatos ca JOIN c.asociacionDeportiva a "
 						+ "WHERE (c.estadoParticipacion=:estado1 OR c.estadoParticipacion=:estado2 "
 						+ "OR c.estadoParticipacion=:estado3) " 
 						+ "AND ca.id = :idCampeonato "
-						+ "AND a.id =: ", Competidor.class);
+						+ "AND a.id =:idAsociacion", Competidor.class);
 
 		myQuery.setParameter("estado1", "Inscrito");
 		myQuery.setParameter("estado2", "Pago Aceptado");
 		myQuery.setParameter("estado3", "Pago Denegado");
-		myQuery.setParameter("idCampeonato", idAsociacion);
+		myQuery.setParameter("idCampeonato", idCampeonato);
+
+		myQuery.setParameter("idAsociacion", idAsociacion);
 
 		return myQuery.getResultList();
 	}
