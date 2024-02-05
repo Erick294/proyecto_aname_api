@@ -71,8 +71,8 @@ public class UsuarioRepoImpl implements IUsuarioRepo {
 	@Override
 	public List<Usuario> buscarUsuariosRegistradosAsociacion(Integer idAsociacion){
 		TypedQuery<Usuario> myQuery = this.entityManager
-				.createQuery("SELECT u FROM Usuario u JOIN u.asociaciones as JOIN u.rol r "
-						+ "WHERE as.id =:idAsociacion AND r.codigo='ATL'", Usuario.class);
+				.createQuery("SELECT u FROM Usuario u JOIN FETCH u.asociaciones as JOIN FETCH u.rol r "
+						+ "WHERE as.id =:idAsociacion AND r.codigo='ATL' AND u.competidores IS EMPTY", Usuario.class);
 		myQuery.setParameter("idAsociacion", idAsociacion);
 		try {
 			return myQuery.getResultList();

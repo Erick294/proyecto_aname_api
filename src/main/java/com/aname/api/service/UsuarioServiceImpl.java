@@ -138,6 +138,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
 	}
 
 	@Override
+	@Transactional
 	public void negarRegistroUsuario(String email) {
 		Usuario usuario = this.buscarUsuarioPorEmail(email);
 
