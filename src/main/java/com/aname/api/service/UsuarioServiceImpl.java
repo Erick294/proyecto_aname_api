@@ -253,7 +253,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
 				DocumentoUsuarios documentoIdentidad = documentoIdentidadOptional.get();
 
-				usuarioDTO.setPagoAsociacion(documentoIdentidad.getLink()+tokenSAS);
+				usuarioDTO.setDocumentoIdentidad(documentoIdentidad.getLink()+tokenSAS);
 			}
 
 			
