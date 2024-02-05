@@ -21,6 +21,7 @@ public class UsuarioResDTO extends RepresentationModel<UsuarioResDTO> {
 	private String ciudad;
 	private Integer idAsociacion;
 	private Boolean socio;
+	private String pagoAsociacion;
 	
 
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.aname.api.model.AsociacionDeportiva;
+import com.aname.api.model.DocumentoCompetidores;
 import com.aname.api.model.DocumentoUsuarios;
 import com.aname.api.model.Rol;
 import com.aname.api.model.Usuario;
@@ -39,6 +41,9 @@ public class UsuarioServiceImpl implements IUsuarioService {
 	private IAsociacionDeportivaService asociacionDeportivaService;
 
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	
+	private String tokenSAS = "?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2024-03-29T22:19:13Z&st=2024-01-29T14:19:13Z&spr=https,http&sig=5n44N%2BrVDmWYMuwzu0fJDpNDg9knKZErKMN6uetY2gE%3D";
+
 
 	@Override
 	@Transactional
@@ -224,6 +229,34 @@ public class UsuarioServiceImpl implements IUsuarioService {
 			usuarioDTO.setIdAsociacion(usuario.getAsociaciones().get(0).getId());
 			usuarioDTO.setSocio(usuario.getSocio());
 
+			List<DocumentoUsuarios> documentosC = usuario.getDocumentos();
+
+			boolean tienePagoAsociacion = documentosC.stream()
+					.anyMatch(docComp -> docComp.getNombre().startsWith("pago-asociacion"));
+			
+			if(tienePagoAsociacion) {
+				Optional<DocumentoUsuarios> documentoComprobantePagoOptional = documentosC.stream()
+						.filter(docComp -> docComp.getNombre().startsWith("pago-asociacion")).findFirst();
+
+				DocumentoUsuarios documentoComprobantePago = documentoComprobantePagoOptional.get();
+
+				usuarioDTO.setPagoAsociacion(documentoComprobantePago.getLink()+tokenSAS);
+			}
+			
+
+			boolean tieneDocIdentidad = documentosC.stream()
+					.anyMatch(docComp -> docComp.getNombre().startsWith("doc-identidad"));
+			
+			if(tieneDocIdentidad) {
+				Optional<DocumentoUsuarios> documentoIdentidadOptional = documentosC.stream()
+						.filter(docComp -> docComp.getNombre().startsWith("doc-identidad")).findFirst();
+
+				DocumentoUsuarios documentoIdentidad = documentoIdentidadOptional.get();
+
+				usuarioDTO.setPagoAsociacion(documentoIdentidad.getLink()+tokenSAS);
+			}
+
+			
 			usuariosDTO.add(usuarioDTO);
 		}
 
