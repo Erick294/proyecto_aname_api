@@ -70,7 +70,7 @@ public class Usuario {
 	private Rol rol;
 	
 	
-	@ManyToMany(mappedBy = "usuarios", cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "usuarios")
 	private List<AsociacionDeportiva> asociaciones;
 
 	public Usuario() {
