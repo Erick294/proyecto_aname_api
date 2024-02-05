@@ -44,6 +44,8 @@ public interface IUsuarioService extends UserDetailsService{
 	void registrarPagoAsociacion(DocResponseDTO u);
 
 	AsociacionCostoDTO buscarCostoAsociacion(Integer idAsociacion);
+
+	Integer buscarIDAsociacionUsuario(String email);
 	
 	
 

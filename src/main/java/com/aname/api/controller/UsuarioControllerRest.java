@@ -60,6 +60,18 @@ public class UsuarioControllerRest {
 		}
 	}
 	
+	@GetMapping("/{email}/idAsociacion")
+	public ResponseEntity<?> buscarCostoAsociacion(@PathVariable String email) {
+		try {
+			
+			Integer idAsociacion = this.usuarioServicio.buscarIDAsociacionUsuario(email);
+			return ResponseEntity.ok(idAsociacion);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al buscar asociacion del usuario: " + e.getMessage());
+		}
+	}
+	
 	@GetMapping("/costo/asociacion/{idAsociacion}")
 	public ResponseEntity<?> buscarCostoAsociacion(@RequestBody UsuarioRegistroDTO registroDTO) {
 		System.out.println(registroDTO.getEmail());

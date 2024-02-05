@@ -105,7 +105,11 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
 		return usuarioDTO;
 	}
-	
+	@Override
+	public Integer buscarIDAsociacionUsuario(String email) {
+		return this.usuarioRepo.buscarUsuarioPorNombreUsuario(email).getAsociaciones().get(0).getId();
+		
+	}
 	@Override
 	public AsociacionCostoDTO buscarCostoAsociacion(Integer idAsociacion) {
 		AsociacionCostoDTO ac = new AsociacionCostoDTO();
