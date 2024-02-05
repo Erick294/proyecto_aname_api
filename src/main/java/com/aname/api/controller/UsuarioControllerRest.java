@@ -61,7 +61,7 @@ public class UsuarioControllerRest {
 	}
 	
 	@GetMapping("/{email}/idAsociacion")
-	public ResponseEntity<?> buscarCostoAsociacion(@PathVariable String email) {
+	public ResponseEntity<?> buscarAsociacionPorUsuario(@PathVariable String email) {
 		try {
 			
 			Integer idAsociacion = this.usuarioServicio.buscarIDAsociacionUsuario(email);
@@ -73,17 +73,12 @@ public class UsuarioControllerRest {
 	}
 	
 	@GetMapping("/costo/asociacion/{idAsociacion}")
-	public ResponseEntity<?> buscarCostoAsociacion(@RequestBody UsuarioRegistroDTO registroDTO) {
-		System.out.println(registroDTO.getEmail());
+	public ResponseEntity<?> buscarCostoAsociacion(@PathVariable Integer idAsociacion) {
 		try {
-			if (usuarioServicio.existeNombreUsuario(registroDTO.getEmail())) {
-				return ResponseEntity.badRequest().body("Ya existe un usuario con el mismo nombre de usuario.");
-			}
-			UsuarioRegistroDTO usuario = usuarioServicio.guardar(registroDTO);
-			return ResponseEntity.ok(usuario);
+			return ResponseEntity.ok(this.usuarioServicio.buscarCostoAsociacion(idAsociacion));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("Error al registrar usuario: " + e.getMessage());
+					.body("Error al buscar costo de asociacion: " + e.getMessage());
 		}
 	}
 

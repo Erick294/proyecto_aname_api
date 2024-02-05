@@ -39,9 +39,9 @@ public class WebSecurityConfig {
 			auth.requestMatchers("/login").permitAll();
 			auth.requestMatchers("/usuario/aprobarRegistroUsuario/**", 
 					"/usuario/negarRegistroUsuario/**",
-					"aprobarUsuarioAsociado/**",
-					"/negarUsuarioAsociado/**",
-					"/asociacion/**")
+					"/usuario/aprobarUsuarioAsociado/**",
+					"/usuario/negarUsuarioAsociado/**",
+					"/usuario/asociacion/**")
 			.hasAnyAuthority("ORG", "JUN", "ADM");
 			auth.requestMatchers("/usuario/**").permitAll();
 			
