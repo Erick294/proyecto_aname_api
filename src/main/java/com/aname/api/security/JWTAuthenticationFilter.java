@@ -78,7 +78,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 
 		UsuarioLoginResponseDTO userResponse = new UsuarioLoginResponseDTO(token, usuario.getId(), usuario.getEmail(),
-				nombreRol, usuario.getEstado(), usuario.getSocio());
+				nombreRol, usuario.getEstado(), usuario.getSocio(), usuario.getAsociaciones().get(0).getId());
 
 		httpResponse.put("Usuario", userResponse);
 		
