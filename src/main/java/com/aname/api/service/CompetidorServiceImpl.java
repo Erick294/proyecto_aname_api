@@ -120,7 +120,7 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 		// Actualizar el estado del competidor
 		if (tieneFichaInscripcion) {
-			c.setEstadoParticipacion("Inscrito");
+			c.setEstadoParticipacion("Preinscrito");
 		} else {
 			c.setEstadoParticipacion("Pendiente");
 		}
@@ -170,7 +170,7 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 		// Actualizar el estado del competidor
 		if (tieneComprobantePago) {
-			c.setEstadoParticipacion("Inscrito");
+			c.setEstadoParticipacion("Preinscrito");
 		} else {
 			c.setEstadoParticipacion("Pendiente");
 		}
@@ -188,7 +188,7 @@ public class CompetidorServiceImpl implements ICompetidorService {
 				.anyMatch(docComp -> docComp.getNombre().startsWith("inscripcion-firmada"));
 
 		if (tieneInscripcionFirmada && c.getEstadoParticipacion().equals("Pago Aceptado")) {
-			c.setEstadoParticipacion("Confirmado");
+			c.setEstadoParticipacion("Inscrito");
 			this.competidorRepo.actualizarCompetidor(c);
 		} else {
 			// Lanzar una excepción, por ejemplo, RuntimeException
