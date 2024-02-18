@@ -82,7 +82,7 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 						+ "AND ca.id = :idCampeonato "
 						+ "AND a.id =:idAsociacion", Competidor.class);
 
-		myQuery.setParameter("estado1", "Inscrito");
+		myQuery.setParameter("estado1", "Preinscrito");
 		myQuery.setParameter("estado2", "Pago Aceptado");
 		myQuery.setParameter("estado3", "Pago Denegado");
 		myQuery.setParameter("idCampeonato", idCampeonato);
