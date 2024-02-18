@@ -45,7 +45,6 @@ public class WebSecurityConfig {
 			.hasAnyAuthority("ORG", "JUN", "ADM");
 			
 			auth.requestMatchers("/usuario/costo/**").hasAnyAuthority("ORG", "JUN", "ADM", "ATL");
-
 			auth.requestMatchers("/usuario/**").permitAll();
 			
 			auth.requestMatchers("/files/**").permitAll();
