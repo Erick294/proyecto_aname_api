@@ -30,6 +30,7 @@ import com.aname.api.service.to.DocResponseDTO;
 import com.aname.api.service.to.UsuarioRegistroDTO;
 import com.aname.api.service.to.email_DTO.EmailDTO;
 import com.aname.api.service.to.email_DTO.EmailFileDTO;
+import com.aname.api.service.to.email_DTO.EmailHTMLDTO;
 
 @RestController
 @CrossOrigin
@@ -206,5 +207,15 @@ public class UsuarioControllerRest {
 			throw new RuntimeException("Error al enviar el Email con el archivo. " + e.getMessage());
 		}
 	}
+	
+	 @PostMapping("/email/enviarHTML")
+	    public ResponseEntity<String> sendEmail(@RequestBody EmailHTMLDTO request) {
+	        try {
+	            emailService.sendHtmlEmail(request.getToUser(), request.getSubject(), request.getHtmlContent());
+	            return ResponseEntity.ok("Email enviado correctamente");
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al enviar el correo electrónico: " + e.getMessage());
+	        }
+	    }
 
 }
