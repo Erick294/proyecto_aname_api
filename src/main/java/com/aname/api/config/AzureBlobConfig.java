@@ -17,6 +17,11 @@ public class AzureBlobConfig {
 	@Value("${azure.storage.container.name}")
 	private String containerName;
 
+	/*
+	* Metodo que crea un cliente BlobServiceClient.
+	* @return un cliente BlobServiceClient usado para requerimientos/respuesta a las llamadas al servicio. 
+	* Se crea bajo demanda
+	*/
 	@Bean
 	public BlobServiceClient clobServiceClient() {
 
@@ -27,6 +32,10 @@ public class AzureBlobConfig {
 
 	}
 
+	/*
+	* Metodo que crea y retorna un BlobContainerClient para el contenedor. El contenedor ya debe estar creado.
+	* @return BlobContainerClient para el contenedor.
+	*/
 	@Bean
 	public BlobContainerClient blobContainerClient() {
 

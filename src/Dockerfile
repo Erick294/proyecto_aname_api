@@ -1,3 +1,6 @@
+#Archivo Docker para generar la imagen del API
+
+#Version del JDK 17
 FROM maven:3.8.4-openjdk-17 AS build
 COPY . .
 RUN mvn clean package -DskipTests

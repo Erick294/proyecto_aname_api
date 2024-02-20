@@ -33,6 +33,11 @@ public class CampeonatoControllerRest {
 	// PATHS PARA ADM,JUN,
 	// ORG------------------------------------------------------------------------------------
 
+	/**
+	* Método responsable por registro de campeonato.
+	* @param campeonatoReqDTO - Objeto que contiene la información de los campeonatos
+	* @return Retorna un objeto ResponseEntity con el resultado del proceso de agregación o de ejecución con el error que se produce
+	*/
 	@PostMapping
 	public ResponseEntity<?> registrarCampeonato(@RequestBody CampeonatoReqDTO campeonatoReqDTO) {
 		try {
@@ -45,6 +50,11 @@ public class CampeonatoControllerRest {
 		}
 	}
 
+	/**
+	* Método que permite obtener la lista de pruebas del sistema. 
+	* Devolver un objeto ResponseEntity con el mensaje de la lista desde la base de datos
+	* @return con el mensaje de la lista de pruebas
+	*/
 	@GetMapping("/pruebas")
 	public ResponseEntity<?> obtenerListaPruebas() {
 		try {
@@ -56,6 +66,10 @@ public class CampeonatoControllerRest {
 		}
 	}
 
+	/**
+	* Método que permite obtener las asociaciones deportivas del sistema
+	* @return El contenido del listado de asociaciones deportivas del sistema desde la base de datos
+	*/
 	@GetMapping("/asociaciones")
 	public ResponseEntity<?> obtenerListaSedes() {
 		try {
@@ -67,6 +81,10 @@ public class CampeonatoControllerRest {
 		}
 	}
 
+	/**
+	* Método que permite obtener la lista de campeonatos del sistema
+	* @return El objeto ResponseEntity con el resultado del proceso de consulta de los campeonatos
+	*/
 	@GetMapping()
 	public ResponseEntity<?> obtenerListaCampeonatos() {
 		try {
@@ -81,6 +99,10 @@ public class CampeonatoControllerRest {
 	// PATHS PARA ADM,JUN, ORG Y
 	// ATL------------------------------------------------------------------------------------
 
+	/**
+	* Método que permite obtener la lista de campeonatos disponibles del sistema
+	* @return El objeto ResponseEntity con el resultado del proceso de consulta de los campeones
+	*/
 	@GetMapping("/disponibles")
 	public ResponseEntity<?> obtenerListaCampeonatosDisponibles() {
 		try {
@@ -92,6 +114,11 @@ public class CampeonatoControllerRest {
 		}
 	}
 
+	/**
+	* Método que permite obtener la lista de pruebas por campeonato del usuario
+	* @param id - Identificador del usuario a buscar
+	* @return Devolver un objeto ResponseEntity con el resultado del proceso de consulta
+	*/
 	@GetMapping("/{id}/pruebas")
 	public ResponseEntity<?> obtenerListaPruebas(@PathVariable Integer id) {
 		try {
