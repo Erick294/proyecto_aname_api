@@ -190,11 +190,10 @@ public class CompetidorControllerRest {
 
 	// PATHS PARA ADM,JUN,
 	// ORG--------------------------------------------------------------------------------
+
 	/**
-	* Método que permite obtener los registros de la base de datos.
-	* 
-	* 
-	* @return Retorna un objeto con el contenido de la lista de todos los
+	* Método que permite obtener la lista de competidores inscritos en la base de datos.
+	* @return Retorna un objeto con el contenido de la lista de competidores
 	*/
 	@GetMapping("/inscritos")
 	public ResponseEntity<?> listaCompetidoresInscritos() {
@@ -210,11 +209,9 @@ public class CompetidorControllerRest {
 	}
 
 	/**
-	* Método que permite obtener los registros de un usuario por correo electrónico.
-	* 
-	* @param email - El usuario en formato de solicitud / x - www - formulario - urlencoded.
-	* 
-	* @return Lista de competidores que tienen el usuario y el correo electrónico correspondiente
+	* Método que permite obtener los registros de competidores por correo electrónico.
+	* @param email - El email del usuario
+	* @return Lista de competidores que tienen el correo electrónico correspondiente
 	*/
 	@GetMapping("/inscritos/usuario/{email}")
 	public ResponseEntity<?> listaCompetidoresInscritosUser(@PathVariable String email) {
@@ -228,12 +225,10 @@ public class CompetidorControllerRest {
 	}
 
 	/**
-	* Método que permite obtener los inscritos de un campeonato por idCampeonato
-	* 
-	* @param idCampeonato - Identificador del pedido a buscar en la base de datos.
-	* @param idAsociacion - ¿Qué es esto?
-	* 
-	* @return Devolver un objeto ResponseEntity con el resultado del proceso de consultar la lista de inscritos de la campeona
+	* Método que permite obtener los inscritos de un campeonato por idCampeonato e idAsociacion
+	* @param idCampeonato - Identificador del campeonato a buscar
+	* @param idAsociacion - Identificador de la asociacion a buscar
+	* @return Devolver un objeto ResponseEntity con el resultado del proceso de consultar la lista de inscritos al campeonato
 	*/
 	@GetMapping("/inscritos/campeonato/{idCampeonato}")
 	public ResponseEntity<?> listaCompetidoresInscritosCampeonato(@PathVariable Integer idCampeonato, @RequestParam Integer idAsociacion) {
@@ -247,12 +242,10 @@ public class CompetidorControllerRest {
 	}
 
 	/**
-	* Método que permite obtener los inscritos de un campeonato por el usuario
-	* 
+	* Método que permite obtener los inscritos de un campeonato por el usuario e id el campeonato
 	* @param idCampeonato - Identificador del campeonato a buscar
-	* @param email - Correos electrónicos del usuario que pertenece a la que desea obtener
-	* 
-	* @return Devolver un objeto ResponseEntity con el
+	* @param email - Correo electrónico del usuario a buscar
+	* @return Devolver un objeto ResponseEntity con la lista de competidores inscritos
 	*/
 	@GetMapping("/inscritos/campeonato/{idCampeonato}/usuario/{email}")
 	public ResponseEntity<?> listaCompetidoresInscritosUserCampeonato(@PathVariable Integer idCampeonato,
@@ -269,9 +262,7 @@ public class CompetidorControllerRest {
 
 	/**
 	* Método para confirmar una inscripción en la base de datos. Solo devuelve un objeto de respuesta a la entidad con este método
-	* 
-	* @param id - Identificador del competidor a destruye
-	* 
+	* @param id - Identificador del competifor
 	* @return Retorna un objeto ResponseEntity con este método del proceso
 	*/
 	@PutMapping("/confirmarInscripcion/{id}")
@@ -288,11 +279,9 @@ public class CompetidorControllerRest {
 	}
 
 	/**
-	* Método que permite negar una inscripción del competidor. Solo realiza la que desea enviar el nuevo registro de la clase Competidor
-	* 
+	* Método que permite negar una inscripción del competidor.
 	* @param id - Identificador del competidor que desee negar
-	* 
-	* @return Un ResponderEntidad con el mensaje de texto informado en caso de error
+	* @return Un ResponseEntity con el mensaje de texto informado en caso de error
 	*/
 	@PutMapping("/negarInscripcion/{id}")
 	public ResponseEntity<?> negarInscripcion(@PathVariable Integer id) {
@@ -309,10 +298,8 @@ public class CompetidorControllerRest {
 	
 	/**
 	* Método responsable por pantalla la vista de aceptación del pago
-	* 
 	* @param idCompetidor - Identificador del competidor a realizar
-	* 
-	* @return Restituisce un objeto HttpResponse del resultado de la operación de la vista
+	* @return Un objeto HttpResponse del resultado de la operación
 	*/
 	@PutMapping("/negarPago/{idCompetidor}")
 	public ResponseEntity<?> negarPago(@PathVariable Integer idCompetidor) {
@@ -328,11 +315,9 @@ public class CompetidorControllerRest {
 	}
 	
 	/**
-	* El método que permite confirmar un pago de un competidor tiene el restaurante de la vista y devuelve un mensaje de texto con el resultado del
-	* 
-	* @param idCompetidor - Identificador del competidor a realizar.
-	* 
-	* @return Mensaje de texto con el resultado del proceso del servidor o Json con el mensaje
+	* El método que permite confirmar un pago de un competidor
+	* @param idCompetidor - Identificador del competidor
+	* @return ResponseEntity con el resultado de la operacion
 	*/
 	@PutMapping("/confirmarPago/{idCompetidor}")
 	public ResponseEntity<?> confirmarPago(@PathVariable Integer idCompetidor) {
@@ -349,10 +334,8 @@ public class CompetidorControllerRest {
 	
 	/**
 	* Método de confirmación del pago aceptado en el sistema de inscripción
-	* 
 	* @param docs - Contenido con los documentos aprobados
-	* 
-	* @return Respuesta de la información de la pago aceptada en el sistema
+	* @return Respuesta de la información del pago aceptada en el sistema
 	*/
 	@PostMapping("/aprobarInscripcion")
 	public ResponseEntity<?> confirmarPago(@RequestBody DocsCompetidoresDTO docs) {
