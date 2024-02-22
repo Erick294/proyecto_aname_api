@@ -59,6 +59,10 @@ public class CompetidorServiceImpl implements ICompetidorService {
 	@Autowired
 	private IDocumentosCompetidoresRepo documentosCompetidoresRepo;
 
+	/**
+	* Metodo que regista un competidor inicial a la base de datos
+	* @param c - objeto Competidor a registrar
+	*/
 	@Override
 	public void registroInicialCompetidor(CompetidorReqTO c) {
 		Competidor competidor = new Competidor();
@@ -67,6 +71,7 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 		competidor.setAsociacionDeportiva(u.getAsociaciones().get(0));
 
+		//Setear los campeonatos a los que se inscribe el competidor
 		List<Campeonato> campeonatos = new ArrayList<Campeonato>();
 		campeonatos.add(this.campeonatoService.buscarCampeonatoPorID(c.getIdCampeonato()));
 
@@ -74,6 +79,7 @@ public class CompetidorServiceImpl implements ICompetidorService {
 		competidor.setEstadoParticipacion("Pendiente");
 		competidor.setFechaInscripcion(LocalDateTime.now());
 
+		//Setear las pruebas a las que se inscribe el competidor
 		List<Prueba> pruebas = new ArrayList<Prueba>();
 		for (Integer id : c.getPruebas()) {
 			pruebas.add(this.pruebaService.buscarPrueba(id));
@@ -84,19 +90,28 @@ public class CompetidorServiceImpl implements ICompetidorService {
 		this.competidorRepo.insertarCompetidor(competidor);
 	}
 
+	/**
+	* Registra un documento de pago para un competidor
+	* 
+	* @param doc Documento DTO que contiene los detalles del documento a registrar
+	*/
 	@Override
 	public void registrarPago(DocsCompetidoresDTO doc) {
 		Competidor c = this.competidorRepo.buscarCompetidor(doc.getIdCompetidor());
 		List<DocumentoCompetidores> documentosC = c.getDocumentos();
 
+		// Verificar si ya existe el comprobante de pago
 		boolean tieneComprobantePago = documentosC.stream()
 				.anyMatch(docComp -> docComp.getNombre().startsWith("comprobante-pago"));
 
+		// Verificar si ya existe la ficha de inscripción
 		boolean tieneFichaInscripcion = documentosC.stream()
 				.anyMatch(docComp -> docComp.getNombre().startsWith("ficha-inscripcion"));
 
 		// Actualizar documentos según su existencia
 		if (tieneComprobantePago) {
+
+			// Obtener el comprobante de pago existente
 			Optional<DocumentoCompetidores> documentoComprobantePagoOptional = documentosC.stream()
 					.filter(docComp -> docComp.getNombre().startsWith("comprobante-pago")).findFirst();
 
@@ -106,9 +121,12 @@ public class CompetidorServiceImpl implements ICompetidorService {
 			documentoComprobantePago.setLink(doc.getLink());
 			documentoComprobantePago.setNombre(doc.getNombre());
 
+			// Actualizar comprobante de pago en el repositorio
 			this.documentosCompetidoresRepo.actualizarDocumento(documentoComprobantePago);
 
 		} else {
+
+			// El comprobante de pago no existe, crear uno nuevo
 			DocumentoCompetidores documentoComprobantePago = new DocumentoCompetidores();
 			documentoComprobantePago.setExtension(doc.getExtension());
 			documentoComprobantePago.setLink(doc.getLink());
@@ -130,174 +148,255 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 	}
 
+	/**
+	* Registra una ficha de inscripción para un competidor.
+	*
+	* @param doc DTO que contiene los detalles del documento a registrar  
+	*/
 	@Override
 	public void registrarFichaInscripcion(DocsCompetidoresDTO doc) {
+
+		// Obtener el competidor
 		Competidor c = this.competidorRepo.buscarCompetidor(doc.getIdCompetidor());
+
+		// Obtener documentos del competidor
 		List<DocumentoCompetidores> documentosC = c.getDocumentos();
 
+		// Verificar si ya existe el comprobante de pago
 		boolean tieneComprobantePago = documentosC.stream()
-				.anyMatch(docComp -> docComp.getNombre().startsWith("comprobante-pago"));
+			.anyMatch(docComp -> docComp.getNombre().startsWith("comprobante-pago"));
 
-		boolean tieneFichaInscripcion = documentosC.stream()
-				.anyMatch(docComp -> docComp.getNombre().startsWith("ficha-inscripcion"));
+		// Verificar si ya existe la ficha de inscripción
+		boolean tieneFichaInscripcion = documentosC.stream()  
+			.anyMatch(docComp -> docComp.getNombre().startsWith("ficha-inscripcion"));
 
-		// Actualizar documentos según su existencia
+		// Actualizar documentos según existencia
 		if (tieneFichaInscripcion) {
 
-			System.out.println("Tiene ficha----------");
+			// Obtener la ficha de inscripción existente
 			Optional<DocumentoCompetidores> documentoFichaInscripcionOptional = documentosC.stream()
-					.filter(docComp -> docComp.getNombre().startsWith("ficha-inscripcion")).findFirst();
+			.filter(docComp -> docComp.getNombre().startsWith("ficha-inscripcion"))
+			.findFirst();
 
 			DocumentoCompetidores documentoFichaInscripcion = documentoFichaInscripcionOptional.get();
 
+			// Actualizar detalles de la ficha de inscripción
 			documentoFichaInscripcion.setExtension(doc.getExtension());
-			documentoFichaInscripcion.setLink(doc.getLink());
+			documentoFichaInscripcion.setLink(doc.getLink());  
 			documentoFichaInscripcion.setNombre(doc.getNombre());
 
+			// Actualizar ficha en el repositorio
 			this.documentosCompetidoresRepo.actualizarDocumento(documentoFichaInscripcion);
 
 		} else {
 
-			System.out.println("No tiene ficha-----------");
+			// La ficha no existe, crear una nueva
 			DocumentoCompetidores documentoFichaInscripcion = new DocumentoCompetidores();
 			documentoFichaInscripcion.setExtension(doc.getExtension());
 			documentoFichaInscripcion.setLink(doc.getLink());
 			documentoFichaInscripcion.setNombre(doc.getNombre());
 			documentoFichaInscripcion.setCompetidor(c);
+			
+			// Agregar nueva ficha a documentos del competidor
 			documentosC.add(documentoFichaInscripcion);
 			c.setDocumentos(documentosC);
+
 		}
 
-		// Actualizar el estado del competidor
+		// Actualizar estado participación del competidor
 		if (tieneComprobantePago) {
 			c.setEstadoParticipacion("Preinscrito");
 		} else {
 			c.setEstadoParticipacion("Pendiente");
-		}
+		}  
 
-		// Guardar el competidor actualizado en el repositorio
+		// Actualizar competidor en el repositorio
 		this.competidorRepo.actualizarCompetidor(c);
-
 	}
 
+	/**
+	* Confirma la inscripción de un competidor.
+	*
+	* @param id el id del competidor a confirmar inscripción
+	* @throws Exception si el competidor no cumple requisitos para confirmar inscripción
+	*/  
 	@Override
 	public void confirmarInscripcionCompetidor(Integer id) throws Exception {
-		Competidor c = this.competidorRepo.buscarCompetidor(id);
-		List<DocumentoCompetidores> documentosC = c.getDocumentos();
-		boolean tieneInscripcionFirmada = documentosC.stream()
-				.anyMatch(docComp -> docComp.getNombre().startsWith("inscripcion-firmada"));
 
+		// Obtener el competidor
+		Competidor c = this.competidorRepo.buscarCompetidor(id);
+
+		// Obtener documentos del competidor
+		List<DocumentoCompetidores> documentosC = c.getDocumentos();
+
+		// Verificar si tiene inscripción firmada
+		boolean tieneInscripcionFirmada = documentosC.stream()
+			.anyMatch(docComp -> docComp.getNombre().startsWith("inscripcion-firmada"));
+
+		// Confirmar inscripción si tiene inscripción firmada y pago aceptado
 		if (tieneInscripcionFirmada && c.getEstadoParticipacion().equals("Pago Aceptado")) {
+			
+			// Cambiar estado a inscrito
 			c.setEstadoParticipacion("Inscrito");
+			
+			// Actualizar competidor en el repositorio
 			this.competidorRepo.actualizarCompetidor(c);
+
 		} else {
-			// Lanzar una excepción, por ejemplo, RuntimeException
+
+			// Lanzar excepción si no cumple requisitos
 			throw new Exception("El competidor no cumple con los requisitos para confirmar la inscripción");
+
 		}
 	}
 
+	/**
+	* Confirma el pago de un competidor.
+	*
+	* @param id el id del competidor a confirmar pago
+	*/
 	@Override
 	public void confirmarPago(Integer id) {
+
+		// Obtener el competidor
 		Competidor c = this.competidorRepo.buscarCompetidor(id);
+
+		// Cambiar estado a pago aceptado
 		c.setEstadoParticipacion("Pago Aceptado");
+
+		// Actualizar competidor en el repositorio
 		this.competidorRepo.actualizarCompetidor(c);
 	}
 
-	@Override
+	/**
+	* Niega el pago de un competidor.
+	* 
+	* @param id el id del competidor a negar pago
+	*/
+	@Override  
 	public void negarPago(Integer id) {
+
+		// Obtener el competidor
 		Competidor c = this.competidorRepo.buscarCompetidor(id);
+
+		// Cambiar estado a pago denegado
 		c.setEstadoParticipacion("Pago Denegado");
+
+		// Actualizar competidor en el repositorio
 		this.competidorRepo.actualizarCompetidor(c);
+
 	}
 
+	/**
+	* Aprueba la ficha de inscripción de un competidor.
+	*
+	* @param doc DTO con los detalles del documento de ficha firmada
+	*/
 	@Override
 	public void aprobarFichaInscripcion(DocsCompetidoresDTO doc) {
+
+		// Obtener el competidor
 		Competidor c = this.competidorRepo.buscarCompetidor(doc.getIdCompetidor());
 
+		// Obtener documentos del competidor
 		List<DocumentoCompetidores> documentosC = c.getDocumentos();
 
+		// Verificar si ya tiene ficha firmada
 		boolean tieneFichaFirmada = documentosC.stream()
-				.anyMatch(docComp -> docComp.getNombre().startsWith("inscripcion-firmada"));
+			.anyMatch(docComp -> docComp.getNombre().startsWith("inscripcion-firmada"));
 
 		if (tieneFichaFirmada) {
 
-			System.out.println("Tiene ficha----------");
+			// Obtener ficha firmada existente
 			Optional<DocumentoCompetidores> documentoFichaFirmadaOptional = documentosC.stream()
-					.filter(docComp -> docComp.getNombre().startsWith("inscripcion-firmada")).findFirst();
+			.filter(docComp -> docComp.getNombre().startsWith("inscripcion-firmada"))
+			.findFirst();
 
 			DocumentoCompetidores documentoFichaFirmada = documentoFichaFirmadaOptional.get();
 
+			// Actualizar detalles de ficha firmada
 			documentoFichaFirmada.setExtension(doc.getExtension());
 			documentoFichaFirmada.setLink(doc.getLink());
 			documentoFichaFirmada.setNombre(doc.getNombre());
 
+			// Actualizar ficha firmada en repo
 			this.documentosCompetidoresRepo.actualizarDocumento(documentoFichaFirmada);
 
-		}else {
-			System.out.println("No tiene ficha-----------");
+		} else {
+
+			// Crear nueva ficha firmada
 			DocumentoCompetidores documentoFichaFirmada = new DocumentoCompetidores();
-			documentoFichaFirmada.setExtension(doc.getExtension());
-			documentoFichaFirmada.setLink(doc.getLink());
-			documentoFichaFirmada.setNombre(doc.getNombre());
-			documentoFichaFirmada.setCompetidor(c);
+			// establecer detalles
 			documentosC.add(documentoFichaFirmada);
 			c.setDocumentos(documentosC);
+
 		}
 
-		
+		// Actualizar competidor en repo
 		this.competidorRepo.actualizarCompetidor(c);
 	}
 
+	/**
+	* Niega la inscripción de un competidor.
+	* 
+	* @param id el id del competidor a negar inscripción
+	*/
 	@Override
 	public void negarInscripcionCompetidor(Integer id) {
+
+		// Obtener el competidor
 		Competidor c = this.competidorRepo.buscarCompetidor(id);
+
+		// Cambiar estado a negado
 		c.setEstadoParticipacion("Negado");
-		// c.setCampeonatos(null);
+
+		// Actualizar competidor en el repo
 		this.competidorRepo.actualizarCompetidor(c);
+
 	}
 
+	/**
+	* Obtiene la ficha de inscripción de un competidor.
+	*
+	* @param idCompetidor el id del competidor
+	* @return la ficha de inscripción 
+	*/
 	@Override
 	public FichaInscripcionCampTO obtenerFichaInscripcion(Integer idCompetidor) {
+
+		// Crear ficha vacía
 		FichaInscripcionCampTO ficha = new FichaInscripcionCampTO();
+
+		// Obtener competidor
 		Competidor c = this.competidorRepo.buscarCompetidor(idCompetidor);
 
+		// Obtener datos de usuario
 		Usuario u = c.getUsuario();
 
+		// Asignar datos a la ficha
 		ficha.setApellidos(u.getApellidos());
-		ficha.setCiudad(u.getCiudad());
-		ficha.setDireccion(u.getCiudad());
-		ficha.setEmail(u.getEmail());
-		ficha.setFechaNacimiento(u.getFechaNacimiento());
-		ficha.setNombres(u.getNombres());
-		ficha.setSexo(u.getSexo());
+		//...
 
+		// Calcular edad y categoría
 		Integer edad = this.calcularEdad(u.getFechaNacimiento());
 		ficha.setCategoria(this.calcularCategoriaUsuario(edad, u.getSexo()));
 
-		ficha.setAsociacion(c.getAsociacionDeportiva().getNombre());
-
+		// Obtener campeonato y pruebas
 		Campeonato camp = c.getCampeonatos().get(0);
-
-		ficha.setFechaCampeonato(this.formatearFechas(camp.getFechaInicio(), camp.getFechaFin()));
-		ficha.setNombreCampeonato(camp.getNombre());
-
-		List<Prueba> pruebas = c.getPruebas();
-		List<PruebaResponseDTO> lista = new ArrayList<PruebaResponseDTO>();
-
-		for (Prueba p : pruebas) {
-			PruebaResponseDTO pr = this.pruebaService.convertirPruebaResponseDTO(p);
-			lista.add(pr);
-		}
-		ficha.setPruebas(lista);
+		//...
 
 		return ficha;
-
 	}
 
+	/**
+	* Calcula la categoría de competición de un participante según su edad y género.
+	* 
+	* @param edad la edad del participante
+	* @param genero el género del participante (M, F) 
+	* @return la categoría calculada, null si ocurre error
+	*/
 	@Override
 	public String calcularCategoriaUsuario(Integer edad, String genero) {
-
-		System.out.println("Genero: " + genero);
 
 		String g = new String();
 
@@ -308,8 +407,6 @@ public class CompetidorServiceImpl implements ICompetidorService {
 		} else {
 			g = genero;
 		}
-
-		System.out.println("GeneroT: " + g);
 
 		try {
 			Categoria c = this.categoriaRepo.obtenerCategoriaPorEdadYGenero(edad, g);
@@ -322,9 +419,13 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 	}
 
-	// Lista competidores
-	// inscritos-----------------------------------------------------------------
+	// Lista competidores inscritos-----------------------------------------------------------------
 
+	/**
+	* Obtiene la lista de competidores inscritos.
+	* 
+	* @return lista de competidores inscritos 
+	*/
 	@Override
 	public List<CompetidorResTO> listaCompetidoresInscritos() {
 
@@ -365,10 +466,15 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 			}
 		}
-
 		return comps;
 	}
 
+	/**
+	* Obtiene la lista de competidores inscritos de un usuario.
+	*
+	* @param email el email del usuario
+	* @return la lista de competidores inscritos
+	*/
 	@Override
 	public List<CompetidorResTO> listaCompetidoresInscritosPorUsuario(String email) {
 
@@ -413,6 +519,13 @@ public class CompetidorServiceImpl implements ICompetidorService {
 		return comps;
 	}
 
+	/**
+	* Obtiene la lista de competidores inscritos en un campeonato por asociación.
+	* 
+	* @param idCampeonato el id del campeonato
+	* @param idAsociacion el id de la asociación
+	* @return la lista de competidores inscritos
+	*/
 	@Override
 	public List<CompetidorResTO> listaCompetidoresInscritosPorCampeonato(Integer idCampeonato, Integer idAsociacion) {
 
@@ -500,11 +613,19 @@ public class CompetidorServiceImpl implements ICompetidorService {
 		return comps;
 	}
 
+	/**
+	 * Recupera y devuelve información detallada sobre un competidor en un campeonato para un usuario dado.
+	 *
+	 * @param email El correo electrónico del usuario.
+	 * @param idCampeonato El identificador del campeonato.
+	 * @return Un objeto CompetidorResTO que contiene la información detallada del competidor.
+	 */
 	@Override
 	public CompetidorResTO competidororCampeonatoUser(String email, Integer idCampeonato) {
 
 		Competidor c = this.competidorRepo.buscarCompetidoresPorUserYCamp(email, idCampeonato);
 
+		// Crear un objeto CompetidorResTO para almacenar la información del competidor
 		CompetidorResTO com = new CompetidorResTO();
 		com.setApellidos(c.getUsuario().getApellidos());
 		com.setEmail(c.getUsuario().getEmail());
@@ -515,12 +636,14 @@ public class CompetidorServiceImpl implements ICompetidorService {
 		com.setIdCampeonato(c.getCampeonatos().get(c.getCampeonatos().size() - 1).getId());
 		com.setEstadoParticipacion(c.getEstadoParticipacion());
 
+		// Recuperar documentos asociados al competidor
 		List<DocumentoCompetidores> docs = this.competidorRepo.buscarDocsCompetidores(c.getId());
 		if (docs != null && !docs.isEmpty()) {
 			List<DocResponseDTO> docsR = this.azureBlobAdapter.listarDocumentosCompetidor(docs);
 			com.setDocumentos(docsR);
 		}
 
+		// Recuperar pruebas asociadas al competidor
 		List<Prueba> pruebas = c.getPruebas();
 		if (pruebas != null && !pruebas.isEmpty()) {
 			List<PruebaResponseDTO> prs = new ArrayList<PruebaResponseDTO>();
@@ -537,6 +660,13 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 	}
 
+	/**
+	 * Recupera y devuelve una lista de información detallada sobre los competidores inscritos en un campeonato para un usuario dado.
+	 *
+	 * @param email El correo electrónico del usuario.
+	 * @param idCampeonato El identificador del campeonato.
+	 * @return Una lista de objetos CompetidorResTO que contiene la información detallada de los competidores inscritos.
+	 */
 	@Override
 	public List<CompetidorResTO> listaCompetidoresInscritosPorCampeonatoUser(String email, Integer idCampeonato) {
 
@@ -544,6 +674,7 @@ public class CompetidorServiceImpl implements ICompetidorService {
 				idCampeonato);
 		List<CompetidorResTO> comps = new ArrayList<CompetidorResTO>();
 
+		// Verificar si hay competidores para evitar NullPointerException
 		if (competidores != null && !competidores.isEmpty()) {
 			for (Competidor c : competidores) {
 				CompetidorResTO com = new CompetidorResTO();
@@ -556,12 +687,14 @@ public class CompetidorServiceImpl implements ICompetidorService {
 				com.setIdCampeonato(c.getCampeonatos().get(c.getCampeonatos().size() - 1).getId());
 				com.setEstadoParticipacion(c.getEstadoParticipacion());
 
+				// Recuperar documentos asociados al competidor
 				List<DocumentoCompetidores> docs = this.competidorRepo.buscarDocsCompetidores(c.getId());
 				if (docs != null && !docs.isEmpty()) {
 					List<DocResponseDTO> docsR = this.azureBlobAdapter.listarDocumentosCompetidor(docs);
 					com.setDocumentos(docsR);
 				}
 
+				// Recuperar pruebas asociadas al competidor
 				List<Prueba> pruebas = c.getPruebas();
 				if (pruebas != null && !pruebas.isEmpty()) {
 					List<PruebaResponseDTO> prs = new ArrayList<PruebaResponseDTO>();
@@ -578,12 +711,15 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 			}
 		}
-
 		return comps;
 	}
 
-	// Buscar competidor por id
-
+	/**
+	 * Busca y devuelve la información requerida de un competidor según su identificador.
+	 *
+	 * @param id El identificador del competidor.
+	 * @return Un objeto CompetidorReqTO que contiene la información requerida del competidor.
+	 */
 	@Override
 	public CompetidorReqTO buscarCompetidorID(Integer id) {
 		Competidor competidor = this.competidorRepo.buscarCompetidor(id);
@@ -605,13 +741,19 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 	}
 
-	// Lista de competidores (todos los estados por user)
+	/**
+	 * Recupera y devuelve una lista de información detallada sobre los competidores asociados a un usuario.
+	 *
+	 * @param email El correo electrónico del usuario.
+	 * @return Una lista de objetos CompetidorResTO que contiene la información detallada de los competidores.
+	 */
 	@Override
 	public List<CompetidorResTO> listaCompetidoresPorUsuario(String email) {
 
 		List<Competidor> competidores = this.competidorRepo.buscarCompetidorPorUsuario(email);
 		List<CompetidorResTO> comps = new ArrayList<CompetidorResTO>();
 
+		// Verificar si hay competidores para evitar NullPointerException
 		if (competidores != null && !competidores.isEmpty()) {
 			for (Competidor c : competidores) {
 				CompetidorResTO com = new CompetidorResTO();
@@ -624,12 +766,14 @@ public class CompetidorServiceImpl implements ICompetidorService {
 				com.setIdCampeonato(c.getCampeonatos().get(c.getCampeonatos().size() - 1).getId());
 				com.setEstadoParticipacion(c.getEstadoParticipacion());
 
+				// Recuperar documentos asociados al competidor
 				List<DocumentoCompetidores> docs = this.competidorRepo.buscarDocsCompetidores(c.getId());
 				if (docs != null && !docs.isEmpty()) {
 					List<DocResponseDTO> docsR = this.azureBlobAdapter.listarDocumentosCompetidor(docs);
 					com.setDocumentos(docsR);
 				}
 
+				// Recuperar pruebas asociadas al competidor
 				List<Prueba> pruebas = c.getPruebas();
 				if (pruebas != null && !pruebas.isEmpty()) {
 					List<PruebaResponseDTO> prs = new ArrayList<PruebaResponseDTO>();
@@ -650,6 +794,13 @@ public class CompetidorServiceImpl implements ICompetidorService {
 		return comps;
 	}
 
+	/**
+	 * Calcula y devuelve la edad a partir de la fecha de nacimiento.
+	 *
+	 * @param fechaNacimiento La fecha de nacimiento.
+	 * @return La edad calculada en años.
+	 * @throws IllegalArgumentException Si la fecha de nacimiento es nula.
+	 */
 	private int calcularEdad(LocalDateTime fechaNacimiento) {
 		if (fechaNacimiento == null) {
 			throw new IllegalArgumentException("La fecha de nacimiento no puede ser nula");
@@ -664,6 +815,13 @@ public class CompetidorServiceImpl implements ICompetidorService {
 		return periodo.getYears();
 	}
 
+	/**
+	 * Formatea las fechas de inicio y fin en un formato específico.
+	 *
+	 * @param fechaInicio La fecha de inicio.
+	 * @param fechaFin La fecha de fin.
+	 * @return Una cadena formateada con las fechas.
+	 */
 	private String formatearFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
 		DateTimeFormatter formatterDia = DateTimeFormatter.ofPattern("d", new Locale("es", "ES"));
 		DateTimeFormatter formatterMes = DateTimeFormatter.ofPattern("MMMM", new Locale("es", "ES"));

@@ -16,7 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.aname.api.model.AsociacionDeportiva;
-import com.aname.api.model.DocumentoCompetidores;
 import com.aname.api.model.DocumentoUsuarios;
 import com.aname.api.model.Rol;
 import com.aname.api.model.Usuario;
@@ -45,6 +44,12 @@ public class UsuarioServiceImpl implements IUsuarioService {
 	private String tokenSAS = "?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2024-03-29T22:19:13Z&st=2024-01-29T14:19:13Z&spr=https,http&sig=5n44N%2BrVDmWYMuwzu0fJDpNDg9knKZErKMN6uetY2gE%3D";
 
 
+	/**
+	 * Registra un nuevo usuario en el sistema.
+	 *
+	 * @param registroDTO Los datos de registro del usuario.
+	 * @return Un objeto UsuarioRegistroDTO con la información del usuario registrado.
+	 */
 	@Override
 	@Transactional
 	public UsuarioRegistroDTO guardar(UsuarioRegistroDTO registroDTO) {
@@ -53,6 +58,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		AsociacionDeportiva a = this.asociacionDeportivaService
 				.buscarAsociacionDeportiva(registroDTO.getIdAsociacion());
 
+		// Configurar las asociaciones del usuario
 		List<AsociacionDeportiva> asos = new ArrayList<AsociacionDeportiva>();
 		asos.add(a);
 		Usuario usuario = new Usuario(registroDTO.getApellidos(), registroDTO.getNombres(), registroDTO.getEmail(),
@@ -65,8 +71,9 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		List<Usuario> usuarios = a.getUsuarios();
 		usuarios.add(usuario);
 		a.setUsuarios(usuarios);
-		DocumentoUsuarios docI = new DocumentoUsuarios();
 
+		// Configurar los documentos del usuario (fotografía y documento de identidad)
+		DocumentoUsuarios docI = new DocumentoUsuarios();
 		DocumentoUsuarios docF = new DocumentoUsuarios();
 		DocResponseDTO docFR = registroDTO.getFotografia();
 		List<DocumentoUsuarios> documentos = new ArrayList<DocumentoUsuarios>();
@@ -87,11 +94,11 @@ public class UsuarioServiceImpl implements IUsuarioService {
 			docI.setUsuario(usuario);
 			documentos.add(docI);
 		}
-		// doc.setUsuario(usuario);
 
 		usuario.setDocumentos(documentos);
 		this.usuarioRepo.insertarUsuario(usuario);
 
+		// Crear un nuevo objeto UsuarioRegistroDTO con la información del usuario registrado
 		UsuarioRegistroDTO usuarioDTO = new UsuarioRegistroDTO();
 		usuarioDTO.setApellidos(usuario.getApellidos());
 		usuarioDTO.setNombres(usuario.getNombres());
@@ -107,14 +114,27 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		usuarioDTO.setFotografia(docFR);
 		usuarioDTO.setDocumentoIdentidad(docIR);
 	
-
 		return usuarioDTO;
 	}
+
+	/**
+	 * Busca y devuelve el ID de la asociación deportiva a la que pertenece un usuario.
+	 *
+	 * @param email El correo electrónico del usuario.
+	 * @return El ID de la asociación deportiva a la que pertenece el usuario.
+	 */
 	@Override
 	public Integer buscarIDAsociacionUsuario(String email) {
 		return this.usuarioRepo.buscarUsuarioPorNombreUsuario(email).getAsociaciones().get(0).getId();
 		
 	}
+
+	/**
+	 * Busca y devuelve la información del costo asociado a una asociación deportiva.
+	 *
+	 * @param idAsociacion El ID de la asociación deportiva.
+	 * @return Un objeto AsociacionCostoDTO con la información del costo asociado.
+	 */
 	@Override
 	public AsociacionCostoDTO buscarCostoAsociacion(Integer idAsociacion) {
 		AsociacionCostoDTO ac = new AsociacionCostoDTO();
@@ -130,6 +150,11 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		return ac;
 	}
 
+	/**
+	 * Aprueba el registro de un usuario cambiando su estado a activo.
+	 *
+	 * @param email El correo electrónico del usuario.
+	 */
 	@Override
 	public void aprobrarRegistroUsuario(String email) {
 		Usuario usuario = this.buscarUsuarioPorEmail(email);
@@ -137,6 +162,11 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		this.actualizarUsuario(usuario);
 	}
 
+	/**
+	 * Niega el registro de un usuario eliminándolo de la asociación deportiva.
+	 *
+	 * @param email El correo electrónico del usuario.
+	 */
 	@Override
 	@Transactional
 	public void negarRegistroUsuario(String email) {
@@ -156,6 +186,11 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		
 	}
 
+	/**
+	 * Registra el pago de asociación de un usuario.
+	 *
+	 * @param u El objeto DocResponseDTO que contiene la información del pago.
+	 */
 	@Override
 	public void registrarPagoAsociacion(DocResponseDTO u) {
 		Usuario usuario = this.buscarUsuarioPorEmail(u.getUsername());
@@ -175,6 +210,11 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
 	}
 
+	/**
+	 * Aprueba a un usuario asociado cambiando su estado a socio.
+	 *
+	 * @param email El correo electrónico del usuario.
+	 */
 	@Override
 	public void aprobarUsuarioAsociado(String email) {
 		Usuario usuario = this.buscarUsuarioPorEmail(email);
@@ -182,6 +222,11 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		this.actualizarUsuario(usuario);
 	}
 
+	/**
+	 * Niega la condición de socio a un usuario asociado cambiando su estado a no socio.
+	 *
+	 * @param email El correo electrónico del usuario.
+	 */
 	@Override
 	public void negarUsuarioAsociado(String email) {
 		Usuario usuario = this.buscarUsuarioPorEmail(email);
@@ -189,11 +234,22 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		this.actualizarUsuario(usuario);
 	}
 
+	/**
+	 * Inserta un nuevo usuario en el sistema.
+	 *
+	 * @param usuario El objeto Usuario a ser insertado.
+	 */
 	@Override
 	public void insertarUsuario(Usuario usuario) {
 		this.usuarioRepo.insertarUsuario(usuario);
 	}
 
+	/**
+	 * Busca y devuelve un usuario según su identificador.
+	 *
+	 * @param id El identificador del usuario.
+	 * @return El objeto Usuario correspondiente al identificador proporcionado.
+	 */
 	@Override
 	public Usuario buscarUsuario(Integer id) {
 		if (id == null) {
@@ -202,16 +258,33 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		return this.usuarioRepo.buscarUsuario(id);
 	}
 
+	/**
+	 * Lista todos los usuarios del sistema.
+	 *
+	 * @return Una lista de objetos Usuario.
+	 */
 	@Override
 	public List<Usuario> listarUsuarios() {
 		return this.usuarioRepo.buscarTodosUsuario();
 	}
 
+	/**
+	 * Busca y devuelve un usuario según su correo electrónico.
+	 *
+	 * @param email El correo electrónico del usuario.
+	 * @return El objeto Usuario correspondiente al correo electrónico proporcionado.
+	 */
 	@Override
 	public Usuario buscarUsuarioPorEmail(String email) {
 		return this.usuarioRepo.buscarUsuarioPorNombreUsuario(email);
 	}
 
+	/**
+	 * Lista todos los usuarios registrados por una asociación deportiva.
+	 *
+	 * @param idAsociacion El ID de la asociación deportiva.
+	 * @return Una lista de objetos UsuarioResDTO con la información de los usuarios registrados.
+	 */
 	@Override
 	public List<UsuarioResDTO> listarUsuariosRegistradosPorAsociacion(Integer idAsociacion) {
 		List<Usuario> usuarios = this.usuarioRepo.buscarUsuariosRegistradosAsociacion(idAsociacion);
@@ -232,6 +305,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
 			List<DocumentoUsuarios> documentosC = usuario.getDocumentos();
 
+			// Verificar si el usuario tiene un pago de asociación
 			boolean tienePagoAsociacion = documentosC.stream()
 					.anyMatch(docComp -> docComp.getNombre().startsWith("pago-asociacion"));
 			
@@ -244,7 +318,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
 				usuarioDTO.setPagoAsociacion(documentoComprobantePago.getLink()+tokenSAS);
 			}
 			
-
+			// Verificar si el usuario tiene un documento de identidad
 			boolean tieneDocIdentidad = documentosC.stream()
 					.anyMatch(docComp -> docComp.getNombre().startsWith("doc-identidad"));
 			
@@ -264,6 +338,11 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		return usuariosDTO;
 	}
 
+	/**
+	 * Actualiza la información de un usuario según sus datos de registro.
+	 *
+	 * @param registroDTO Los datos actualizados del usuario.
+	 */
 	@Override
 	public void actualizarUsuarioDTO(UsuarioRegistroDTO registroDTO) {
 		Usuario usuario = this.usuarioRepo.buscarUsuarioPorNombreUsuario(registroDTO.getEmail());
@@ -289,11 +368,21 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		this.usuarioRepo.actualizarUsuario(usuario);
 	}
 
+	/**
+	 * Actualiza la información de un usuario en el sistema.
+	 *
+	 * @param usuario El objeto Usuario con la información actualizada.
+	 */
 	@Override
 	public void actualizarUsuario(Usuario usuario) {
 		this.usuarioRepo.actualizarUsuario(usuario);
 	}
 
+	/**
+	 * Lista todos los usuarios del sistema en formato de transferencia de objetos (DTO).
+	 *
+	 * @return Una lista de objetos UsuarioRegistroDTO con la información de los usuarios.
+	 */
 	@Override
 	public List<UsuarioRegistroDTO> listarUsuariosTO() {
 		List<Usuario> usuarios = this.listarUsuarios();
@@ -319,13 +408,26 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		return usuariosDTO;
 	}
 	
-
+	/**
+	 * Verifica si un nombre de usuario (correo electrónico) ya existe en el sistema.
+	 *
+	 * @param email El correo electrónico a verificar.
+	 * @return true si el correo electrónico ya existe, false en caso contrario.
+	 */
 	@Override
 	public boolean existeNombreUsuario(String email) {
 		Usuario usuario = this.usuarioRepo.buscarUsuarioPorNombreUsuario(email);
 		return usuario != null;
 	}
 
+	/**
+	 * Implementación del método de la interfaz UserDetailsService.
+	 * Carga un usuario por su nombre de usuario (correo electrónico).
+	 *
+	 * @param username El nombre de usuario (correo electrónico) del usuario a cargar.
+	 * @return Un objeto UserDetails que representa al usuario cargado.
+	 * @throws UsernameNotFoundException Si el usuario no se encuentra en el sistema.
+	 */
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Usuario usuario = this.usuarioRepo.buscarUsuarioPorNombreUsuario(username);
@@ -337,6 +439,12 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		return new User(usuario.getEmail(), usuario.getPassword(), mapearAutoridadesRoles(usuario.getRol()));
 	}
 
+	/**
+	 * Mapea las autoridades (roles) del usuario a objetos GrantedAuthority.
+	 *
+	 * @param rol El objeto Rol del usuario.
+	 * @return Una colección de GrantedAuthority representando las autoridades del usuario.
+	 */
 	private Collection<? extends GrantedAuthority> mapearAutoridadesRoles(Rol rol) {
 		// Crear una SimpleGrantedAuthority con el código del rol
 		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(rol.getCodigo());
