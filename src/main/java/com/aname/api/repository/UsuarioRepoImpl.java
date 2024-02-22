@@ -19,12 +19,21 @@ public class UsuarioRepoImpl implements IUsuarioRepo {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	/**
+	* Insertar un usuario en la base de datos
+	* @param usuario - El objeto Usuario a insertar
+	*/
 	@Override
 	public void insertarUsuario(Usuario usuario) {
 		this.entityManager.persist(usuario);
 
 	}
 
+	/**
+	* Busca usuario en la base de datos por su id
+	* @param id - Id del usuario a buscar
+	* @return Retorna el Usuario con el id especificado o nulo si no existe
+	*/
 	@Override
 	public Usuario buscarUsuario(Integer id) {
 		try {
@@ -37,18 +46,30 @@ public class UsuarioRepoImpl implements IUsuarioRepo {
 		}
 	}
 
+	/**
+	* Busca todos los usuarios de la base de datos
+	* @return Lista de los usuarios encontrados en la base de datos
+	*/
 	@Override
 	public List<Usuario> buscarTodosUsuario() {
 		TypedQuery<Usuario> myQuery = this.entityManager.createQuery("SELECT u FROM Usuario u", Usuario.class);
 		return myQuery.getResultList();
 	}
 
+	/**
+	* Actualiza un usuario en la base de datos
+	* @param usuario - Usuario que se desea actualizar
+	*/
 	@Override
 	public void actualizarUsuario(Usuario usuario) {
 		this.entityManager.merge(usuario);
 
 	}
 
+	/**
+	* Elimina un usuario en la base de datos por el id
+	* @param id - Id del usuario a eliminar
+	*/
 	@Override
 	public void eliminarUsuario(Integer id) {
 		Usuario u = this.buscarUsuario(id);
@@ -56,6 +77,11 @@ public class UsuarioRepoImpl implements IUsuarioRepo {
 
 	}
 
+	/**
+	* Busca usuario por nombre de usuario
+	* @param nombreUsuario - Nombre de usuario a buscar
+	* @return Regresa el objeto Usuario que pertenece al nombre de usuario
+	*/
 	@Override
 	public Usuario buscarUsuarioPorNombreUsuario(String nombreUsuario) {
 		TypedQuery<Usuario> myQuery = this.entityManager
@@ -68,6 +94,11 @@ public class UsuarioRepoImpl implements IUsuarioRepo {
 		}
 	}
 	
+	/**
+	* Busca todos los usuarios registrados en una asociacion deportiva
+	* @param idAsociacion - Id de la asociacion deportiva
+	* @return Lista con los usuarios registrados por una asociación deportiva
+	*/
 	@Override
 	public List<Usuario> buscarUsuariosRegistradosAsociacion(Integer idAsociacion){
 		TypedQuery<Usuario> myQuery = this.entityManager

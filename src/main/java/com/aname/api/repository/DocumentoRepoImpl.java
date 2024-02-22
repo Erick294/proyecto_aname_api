@@ -19,17 +19,30 @@ public class DocumentoRepoImpl implements IDocumentosRepo {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	/**
+	* Método de inserción de un documento en la base de datos.
+	* @param Documento - Objeto a insertar
+	*/
 	@Override
-	public void insertarDocumento(DocumentoUsuarios Documento) {
-		this.entityManager.persist(Documento);
+	public void insertarDocumento(DocumentoUsuarios documento) {
+		this.entityManager.persist(documento);
 		
 	}
 
+	/**
+	* Busca documento de usuario por id
+	* @param id - Identificador del documento que se desea buscar
+	* @return Objeto de tipo DocumentoUsuarios correspondientes al id especificado
+	*/
 	@Override
 	public DocumentoUsuarios buscarDocumento(Integer id) {
 		return this.entityManager.find(DocumentoUsuarios.class, id);
 	}
 
+	/**
+	* Busca todos los documentos de los usuarios de la base de datos
+	* @return Lista de documentos de usuarios
+	*/
 	@Override
 	public List<DocumentoUsuarios> buscarTodosDocumento() {
 		TypedQuery<DocumentoUsuarios> myQuery = this.entityManager.createQuery("SELECT r FROM DocumentoUsuarios r", DocumentoUsuarios.class);
@@ -37,12 +50,20 @@ public class DocumentoRepoImpl implements IDocumentosRepo {
 
 	}
 
+	/**
+	* Actualiza un documento en la base de datos
+	* @param Documento - El objeto documento a actualizar
+	*/
 	@Override
-	public void actualizarDocumento(DocumentoUsuarios Documento) {
-		this.entityManager.merge(Documento);
+	public void actualizarDocumento(DocumentoUsuarios documento) {
+		this.entityManager.merge(documento);
 		
 	}
 
+	/**
+	* Eliminar un documento de la base de datos
+	* @param id - Id del documento a eliminar
+	*/
 	@Override
 	public void eliminarDocumento(Integer id) {
 		DocumentoUsuarios p = this.buscarDocumento(id);

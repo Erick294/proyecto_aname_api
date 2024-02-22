@@ -14,8 +14,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Table(name = "roles")
@@ -40,6 +38,10 @@ public class Rol implements GrantedAuthority{
 
 	
 
+	/**
+	* Metodo que retorna el codigo codigo del rol como una cadena
+	* @return String
+	*/
 	@Override
 	public String getAuthority() {
 		return this.codigo;
