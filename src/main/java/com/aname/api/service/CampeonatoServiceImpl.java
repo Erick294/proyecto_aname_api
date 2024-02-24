@@ -99,6 +99,7 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 	@Override
 	public List<CampeonatoReqDTO> listarCampeonatosDisponibles() {
 		List<Campeonato> campeonatos = this.campeonatoRepo.buscarCampeonatosDisponibles();
+		//System.out.println("Cuenta: " + campeonatos.size());
 
 		List<CampeonatoReqDTO> campsR = new ArrayList<CampeonatoReqDTO>();
 

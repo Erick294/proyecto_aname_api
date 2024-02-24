@@ -52,9 +52,14 @@ public class CampeonatoRepoImpl implements ICampeonatoRepo {
 	@Override
 	public List<Campeonato> buscarCampeonatosDisponibles() {
 
-		TypedQuery<Campeonato> myQuery = this.entityManager
-				.createQuery("SELECT c FROM Campeonato c WHERE c.inscripcionFin > :fechaActual AND c.inscripcionInicio < :fechaActual", Campeonato.class);
+		TypedQuery<Campeonato> myQuery = this.entityManager.createQuery(
+			    "SELECT c FROM Campeonato c WHERE :fechaActual >= c.inscripcionInicio AND :fechaActual <= c.inscripcionFin", 
+			    Campeonato.class);
 		myQuery.setParameter("fechaActual", LocalDateTime.now());
+
+		System.out.println("Cuenta: " + myQuery.getResultList().size());
+		System.out.print("Fecha actual: " + LocalDateTime.now());
+
 		return myQuery.getResultList();
 	}
 
