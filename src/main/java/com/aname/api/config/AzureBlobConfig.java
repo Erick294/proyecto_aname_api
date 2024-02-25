@@ -18,7 +18,7 @@ public class AzureBlobConfig {
 	private String containerName;
 
 	/*
-	* Metodo que crea un cliente BlobServiceClient.
+	* Método que crea un cliente BlobServiceClient.
 	* @return un cliente BlobServiceClient usado para requerimientos/respuesta a las llamadas al servicio. 
 	* Se crea bajo demanda
 	*/

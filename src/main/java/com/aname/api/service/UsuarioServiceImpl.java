@@ -45,8 +45,8 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
 
 	/**
-	 * Registra un nuevo usuario en el sistema.
-	 *
+	 * Registra un nuevo usuario en el sistema con estado=false hasta que un adminsitrador lo apruebe.
+	 * Y socio=false hasta que realice el pago de asociación y sea aprobado por un administrador
 	 * @param registroDTO Los datos de registro del usuario.
 	 * @return Un objeto UsuarioRegistroDTO con la información del usuario registrado.
 	 */
@@ -163,7 +163,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
 	}
 
 	/**
-	 * Niega el registro de un usuario eliminándolo de la asociación deportiva.
+	 * Niega el registro de un usuario eliminándolo.
 	 *
 	 * @param email El correo electrónico del usuario.
 	 */
@@ -211,7 +211,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
 	}
 
 	/**
-	 * Aprueba a un usuario asociado cambiando su estado a socio.
+	 * Aprueba a un usuario asociado cambiando su estado a socio (socio=true).
 	 *
 	 * @param email El correo electrónico del usuario.
 	 */
@@ -223,7 +223,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
 	}
 
 	/**
-	 * Niega la condición de socio a un usuario asociado cambiando su estado a no socio.
+	 * Niega la condición de socio a un usuario asociado cambiando su estado a no socio (socio=false).
 	 *
 	 * @param email El correo electrónico del usuario.
 	 */

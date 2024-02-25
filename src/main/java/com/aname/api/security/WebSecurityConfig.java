@@ -27,7 +27,7 @@ public class WebSecurityConfig {
 	JWTAuthorizationFilter authorizationFilter;
 
 	/**
-	* Configura el filtro de seguridad para el logeo de usuarios
+	* Configura el filtro de seguridad para el logeo de usuarios según los roles o perfiles
 	* @param httpSecurity - Objeto HTTP Security para validar ciertas configuraciones
 	* @param authenticationManager - El administrador de autenticación
 	* @return SecurityFilterChain a utilizar para las cuestiones de seguridad del sistema

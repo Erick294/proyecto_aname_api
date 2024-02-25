@@ -98,7 +98,7 @@ public class AzureBlobService {
 	}
 
 	/**
-	* Método que permite realizar una lista de documentos de competidores
+	* Método que permite realizar una lista de documentos de competidores, se envía el token de acceso para poder descargar los archivos
 	* @param docs - La lista de documentos de los competidores
 	* @return Enviar una lista de documentos de respuesta con los datos correspondientes a la información específicada
 	*/

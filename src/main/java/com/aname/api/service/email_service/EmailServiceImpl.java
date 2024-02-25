@@ -21,7 +21,7 @@ public class EmailServiceImpl implements IEmailService{
     private JavaMailSender mailSender;
 
     /**
-    * Envía un correo electrónico simple al usuario. Este método se utiliza para enviar un correo electrónico al usuario que está conectado.
+    * Envía un correo electrónico simple al usuario.
     * 
     * @param toUser - el usuario al que se envíe el correo electrónico
     * @param subject - el objeto del correo electrónico que se enviará.
@@ -69,10 +69,10 @@ public class EmailServiceImpl implements IEmailService{
 
 
     /**
-    * Metodo para enviar email simples con solo texto
+    * Metodo para enviar email a partir de un archivo html
     * @param toUser - Email al cual se va a enviar
     * @param subject - Asunto del email
-    * @param htmlContent - Mensaje que va a ser enviado
+    * @param htmlContent - Mensaje que va a ser enviado en formato html
     */
     @Override
     public void sendHtmlEmail(String toUser, String subject, String htmlContent) {

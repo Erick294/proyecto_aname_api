@@ -78,7 +78,7 @@ public class UsuarioRepoImpl implements IUsuarioRepo {
 	}
 
 	/**
-	* Busca usuario por nombre de usuario
+	* Busca usuario por nombre de usuario (email)
 	* @param nombreUsuario - Nombre de usuario a buscar
 	* @return Regresa el objeto Usuario que pertenece al nombre de usuario
 	*/

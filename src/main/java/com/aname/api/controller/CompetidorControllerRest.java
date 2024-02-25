@@ -53,7 +53,7 @@ public class CompetidorControllerRest {
 
 	/**
 	* Método para obtener los datos de ficha de inscripción del competidor
-	* @param idCompetidor - Identificador del usuario a consultar
+	* @param idCompetidor - Identificador del competidor a consultar
 	* @return Devolver un objeto ResponseEntity con el resultado del proceso de la operación
 	*/
 	@GetMapping("/fichaInscripcion/{idCompetidor}")
@@ -85,7 +85,7 @@ public class CompetidorControllerRest {
 
 	
 	/**
-	* Método responsable por el REST API de inscribir un registro de competidor
+	* Método responsable para realizar el registro inicial de un competidor
 	* @param competidor - Objeto CompetidorReqTO con los datos que se desea registrar
 	* @return Retorna un ResponseEntity con la ruta del proceso de registro de la competencia
 	*/
@@ -122,7 +122,7 @@ public class CompetidorControllerRest {
 	
 	
 	/**
-	* Método de registro de un fichero de inscripción en la base de datos.
+	* Método de registro de ficha de inscripción en la base de datos.
 	* @param docs - DTO con los documentos a registrar del competidor
 	* @return ResponseEntity con el resultado del proceso
 	*/
@@ -156,7 +156,7 @@ public class CompetidorControllerRest {
 	}
 
 	/**
-	* Método que permite obtener los competidores por usuario por correo electrónico Parámetros: correo electrónico Devolver un objeto de respuesta
+	* Método que permite obtener los competidores por email de usuario
 	* @param email - Identificador email del usuario a buscar
 	* @return Retorna un objeto con la información del competidor
 	*/
@@ -209,7 +209,7 @@ public class CompetidorControllerRest {
 	}
 
 	/**
-	* Método que permite obtener los registros de competidores por correo electrónico.
+	* Método que permite obtener los registros de competidores por usuario.
 	* @param email - El email del usuario
 	* @return Lista de competidores que tienen el correo electrónico correspondiente
 	*/
@@ -227,7 +227,7 @@ public class CompetidorControllerRest {
 	/**
 	* Método que permite obtener los inscritos de un campeonato por idCampeonato e idAsociacion
 	* @param idCampeonato - Identificador del campeonato a buscar
-	* @param idAsociacion - Identificador de la asociacion a buscar
+	* @param idAsociacion - Identificador de la asociación a buscar
 	* @return Devolver un objeto ResponseEntity con el resultado del proceso de consultar la lista de inscritos al campeonato
 	*/
 	@GetMapping("/inscritos/campeonato/{idCampeonato}")
@@ -242,7 +242,7 @@ public class CompetidorControllerRest {
 	}
 
 	/**
-	* Método que permite obtener los inscritos de un campeonato por el usuario e id el campeonato
+	* Método que permite obtener los competidores inscritos de un campeonato por el usuario e id el campeonato
 	* @param idCampeonato - Identificador del campeonato a buscar
 	* @param email - Correo electrónico del usuario a buscar
 	* @return Devolver un objeto ResponseEntity con la lista de competidores inscritos
@@ -261,7 +261,7 @@ public class CompetidorControllerRest {
 	}
 
 	/**
-	* Método para confirmar una inscripción en la base de datos. Solo devuelve un objeto de respuesta a la entidad con este método
+	* Método para confirmar una inscripción en la base de datos.
 	* @param id - Identificador del competifor
 	* @return Retorna un objeto ResponseEntity con este método del proceso
 	*/
@@ -297,9 +297,9 @@ public class CompetidorControllerRest {
 	}
 	
 	/**
-	* Método responsable por pantalla la vista de aceptación del pago
-	* @param idCompetidor - Identificador del competidor a realizar
-	* @return Un objeto HttpResponse del resultado de la operación
+	* Método que permite denegar o rechazar el pago de un competidor
+	* @param idCompetidor - Identificador del competidor
+	* @return Un ResponseEntity del resultado de la operación
 	*/
 	@PutMapping("/negarPago/{idCompetidor}")
 	public ResponseEntity<?> negarPago(@PathVariable Integer idCompetidor) {
@@ -333,9 +333,9 @@ public class CompetidorControllerRest {
 	}
 	
 	/**
-	* Método de confirmación del pago aceptado en el sistema de inscripción
+	* Método que permite aprobar la ficha de inscripción del competidor
 	* @param docs - Contenido con los documentos aprobados
-	* @return Respuesta de la información del pago aceptada en el sistema
+	* @return Respuesta de la información de la ficha aceptada en el sistema
 	*/
 	@PostMapping("/aprobarInscripcion")
 	public ResponseEntity<?> confirmarPago(@RequestBody DocsCompetidoresDTO docs) {

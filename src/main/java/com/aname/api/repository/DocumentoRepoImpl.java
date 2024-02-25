@@ -21,7 +21,7 @@ public class DocumentoRepoImpl implements IDocumentosRepo {
 
 	/**
 	* Método de inserción de un documento en la base de datos.
-	* @param Documento - Objeto a insertar
+	* @param documento - Objeto a insertar
 	*/
 	@Override
 	public void insertarDocumento(DocumentoUsuarios documento) {
@@ -52,7 +52,7 @@ public class DocumentoRepoImpl implements IDocumentosRepo {
 
 	/**
 	* Actualiza un documento en la base de datos
-	* @param Documento - El objeto documento a actualizar
+	* @param documento - El objeto documento a actualizar
 	*/
 	@Override
 	public void actualizarDocumento(DocumentoUsuarios documento) {

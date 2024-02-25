@@ -17,7 +17,7 @@ public class TokenUtils {
 	// Generar token de acceso
 
 	/**
-	* Generar un token de acceso para el email especificado. El token es válido durante 60 segundos.
+	* Generar un token de acceso para el email especificado. El token es válido durante 30 días.
 	* @param email - Email del usuario para generar un token de acceso
 	* @return String con el token generado
 	*/

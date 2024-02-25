@@ -50,7 +50,7 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 	}
 
 	/**
-	* Busca Competidor por email e id del campeonato
+	* Busca Competidor por email de usuario e id del campeonato
 	* @param email - Email del Competidor
 	* @param idCampeonato - Id del Campeonato
 	* @return Retorna un objeto Competidor de ser encontrado o nulo en caso contrario
@@ -68,7 +68,7 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 	}
 
 	/**
-	* Busca todos los competidores por email
+	* Busca todos los competidores por email de usuario
 	* @param email - Email del competidor
 	* @return Lista de competidores que contienen el email a buscar
 	*/
@@ -99,7 +99,7 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 	// Competidores inscriptos por campeonato--------------------------------------------------------------------------
 
 	/**
-	* Busca los competidores inscritos por campeonato.
+	* Busca los competidores inscritos por campeonato y asosación deportiva. (con estados: Preinscrito, Pago Aceptado y Pago Denegado)
 	* @param idCampeonato - Identificador del campeonato a buscar
 	* @param idAsociacion - Identificador de la asociacion deportiva a buscar
 	* @return Lista de competidores encontrados o nulo
@@ -127,7 +127,7 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 	// Competidores inscritos por usuario y por campeonato---------------------------------------------------------------
 
 	/**
-	* Busca competidores inscritos por el email y el id del campeonato
+	* Busca competidores inscritos por el email de usuario y el id del campeonato
 	* @param email - Email del competidor
 	* @param idCampeonato - Id del campeonato
 	* @return Lista de competidores enocntrados o nulo
@@ -150,7 +150,7 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 	//competidores todos los estados por usuario y por campeonato ----------------------------
 	
 	/**
-	* Buscar competidores por email e id del campeonato
+	* Buscar competidores por email de usuario e id del campeonato
 	* @param email - Email del competidor
 	* @param idCampeonato - Id del campeonato a buscar
 	* @return Objeto Competidor encontrado o nulo
@@ -190,7 +190,7 @@ public class CompetidorRepoImpl implements ICompetidorRepo {
 	// Competidores inscritos por usuario----------------------------------------------------------------------------------
 	
 	/**
-	* Busca todos los competidores inscritos por email
+	* Busca todos los competidores inscritos por email de usuario
 	* @param email - Email del competidor a buscar
 	* @return Lista de competidores inscritos con el email buscado
 	*/

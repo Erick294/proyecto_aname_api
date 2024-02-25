@@ -47,9 +47,9 @@ public class UsuarioControllerRest {
 	private IRolService rolService;
 
 	/**
-	* Método de registro de un usuario en la base de datos. También registra la nueva instancia de UsuarioRegistroDTO
+	* Método de registro de un usuario en la base de datos.
 	* @param registroDTO - Objeto que contiene los datos que se desea registrar
-	* @return Devuelve un objeto ResponseEntity con la respuesta a la operacion
+	* @return Devuelve un objeto ResponseEntity con la respuesta a la operación
 	*/
 	@PostMapping()
 	public ResponseEntity<?> registrarUsuario(@RequestBody UsuarioRegistroDTO registroDTO) {
@@ -68,7 +68,7 @@ public class UsuarioControllerRest {
 	}
 	
 	/**
-	* Método que busca un la asociacion deportiva de un usuario por su email en la base de datos.
+	* Método que busca la asociación deportiva de un usuario por su email en la base de datos.
 	* @param email - Email del usuario que se desea buscar
 	* @return Retorna un objeto ResponseEntity con el contenido
 	*/
@@ -118,7 +118,7 @@ public class UsuarioControllerRest {
 	}
 	
 	/**
-	* Método que permite negar un registro de usuario en la base de datos
+	* Método que permite negar un registro de usuario
 	* @param email - Email del registro de usuario
 	* @return Retorna un ResponseEntity con estado del resultado del proceso HTTP (200) o Json con el error que se produce
 	*/
@@ -136,7 +136,7 @@ public class UsuarioControllerRest {
 	}
 	
 	/**
-	* Registra un usuario en la base de datos que tiene el pago de asociación
+	* Registra el pago de asociación realizado de un usuario
 	* @param u - Objeto con los documentos del pago realizado
 	* @return Con el resultado del proceso de registro del pago de la asociación o con el error que se produzca
 	*/
@@ -154,7 +154,7 @@ public class UsuarioControllerRest {
 	}
 	
 	/**
-	* Método responsable de aprobar el registro de un usuario que cuente con una asociacion deportiva
+	* Método que permite aprobar el registro de un usuario como socio de una asociación deportiva
 	* @param email - Email del usuario
 	* @return Retorna un objeto ResponseEntity con el resultado del proceso
 	*/
@@ -172,7 +172,7 @@ public class UsuarioControllerRest {
 	}
 	
 	/**
-	* Método que permite negar un registro de usuario asociado en la base de datos
+	* Método que pertime rechazar o negar el registro de un usuario como socio de una asociación deportiva
 	* @param email - Email del usuario
 	* @return Resultado del proceso de gestión de las cuentas de registro
 	*/
@@ -191,7 +191,7 @@ public class UsuarioControllerRest {
 	
 	/**
 	* Método de búsqueda de usuarios por asociación
-	* @param idAsociacion - Identificador del asociación a buscar
+	* @param idAsociacion - Identificador de la asociación a buscar
 	* @return Devolver un objeto ResponseEntity con el resultado del proceso de búsqueda
 	*/
 	@GetMapping("/asociacion/{idAsociacion}")
@@ -235,7 +235,7 @@ public class UsuarioControllerRest {
 	}
 
 	/**
-	* Método de envío de un archivo de correo electrónico. Para el formulario de mensajes: creado por parámetro
+	* Método de envío de un archivo de correo electrónico.
 	* @param emailFileDTO - Objeto que contiene los datos del archivo de correo electrónico
 	* @return ResponseEntity con el estado del mensaje
 	*/
@@ -267,7 +267,7 @@ public class UsuarioControllerRest {
 	}
 	
 	 /**
-	 * Método de envío de un correo electrónico.
+	 * Método de envío de un correo electrónico con una plantilla HTML.
 	 * @param request - Objeto que contiene el requerimiento a enviar
 	 * @return ResponseEntity con el estado del mensaje
 	 */

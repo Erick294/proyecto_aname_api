@@ -68,7 +68,7 @@ public class CategoriaRepoImpl implements ICategoriaRepo {
 	}
 
 	/**
-	* Obtiene una categoría por edad y género
+	* Obtiene la categoría a la que pertenece un competidor por edad y género
 	* @param edad - Parametro edad por la que buscar
 	* @param genero - Parametro genero por la que buscar
 	* @return Categorías que coinciden con la edad y el género o nulo si no existen

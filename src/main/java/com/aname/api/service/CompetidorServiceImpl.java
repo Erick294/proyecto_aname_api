@@ -60,7 +60,7 @@ public class CompetidorServiceImpl implements ICompetidorService {
 	private IDocumentosCompetidoresRepo documentosCompetidoresRepo;
 
 	/**
-	* Metodo que regista un competidor inicial a la base de datos
+	* Metodo que regista un competidor a la base de datos con estado "Pendiente" (Registro Inicial)
 	* @param c - objeto Competidor a registrar
 	*/
 	@Override
@@ -92,7 +92,7 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 	/**
 	* Registra un documento de pago para un competidor
-	* 
+	* Una vez subido el pago y la ficha de inscripción el estado del competidor cambia a "Preinscrito"
 	* @param doc Documento DTO que contiene los detalles del documento a registrar
 	*/
 	@Override
@@ -150,7 +150,7 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 	/**
 	* Registra una ficha de inscripción para un competidor.
-	*
+	* Una vez subido el pago y la ficha de inscripción el estado del competidor cambia a "Preinscrito"
 	* @param doc DTO que contiene los detalles del documento a registrar  
 	*/
 	@Override
@@ -215,7 +215,7 @@ public class CompetidorServiceImpl implements ICompetidorService {
 	}
 
 	/**
-	* Confirma la inscripción de un competidor.
+	* Confirma la inscripción de un competidor, cambia el estado a "Inscrito".
 	*
 	* @param id el id del competidor a confirmar inscripción
 	* @throws Exception si el competidor no cumple requisitos para confirmar inscripción
@@ -252,7 +252,7 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 	/**
 	* Confirma el pago de un competidor.
-	*
+	* Cambia el estado d "Pago Aceptado"
 	* @param id el id del competidor a confirmar pago
 	*/
 	@Override
@@ -270,7 +270,7 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 	/**
 	* Niega el pago de un competidor.
-	* 
+	* Cambia es estado a "Pago Denegado"
 	* @param id el id del competidor a negar pago
 	*/
 	@Override  
@@ -289,7 +289,7 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 	/**
 	* Aprueba la ficha de inscripción de un competidor.
-	*
+	* Registra la inscripción firmada por un administrador
 	* @param doc DTO con los detalles del documento de ficha firmada
 	*/
 	@Override
@@ -338,7 +338,7 @@ public class CompetidorServiceImpl implements ICompetidorService {
 
 	/**
 	* Niega la inscripción de un competidor.
-	* 
+	* Cambia el estado a "Negado"
 	* @param id el id del competidor a negar inscripción
 	*/
 	@Override

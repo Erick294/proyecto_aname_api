@@ -34,7 +34,7 @@ public class CampeonatoControllerRest {
 	// ORG------------------------------------------------------------------------------------
 
 	/**
-	* Método responsable por registro de campeonato.
+	* Método responsable del registro de campeonato.
 	* @param campeonatoReqDTO - Objeto que contiene la información de los campeonatos
 	* @return Retorna un objeto ResponseEntity con el resultado del proceso de agregación o de ejecución con el error que se produce
 	*/
@@ -51,8 +51,8 @@ public class CampeonatoControllerRest {
 	}
 
 	/**
-	* Método que permite obtener la lista de pruebas del sistema. 
-	* Devolver un objeto ResponseEntity con el mensaje de la lista desde la base de datos
+	* Método que permite obtener la lista de pruebas del sistema.
+	* Devolver un objeto ResponseEntity con la lista desde la base de datos
 	* @return con el mensaje de la lista de pruebas
 	*/
 	@GetMapping("/pruebas")
@@ -101,6 +101,7 @@ public class CampeonatoControllerRest {
 
 	/**
 	* Método que permite obtener la lista de campeonatos disponibles del sistema
+	 * Cuando la fecha actual se encuentra entre las fechas de inicio de inscripción y fin de inscripción
 	* @return El objeto ResponseEntity con el resultado del proceso de consulta de los campeones
 	*/
 	@GetMapping("/disponibles")
@@ -116,7 +117,7 @@ public class CampeonatoControllerRest {
 
 	/**
 	* Método que permite obtener la lista de pruebas por campeonato del usuario
-	* @param id - Identificador del usuario a buscar
+	* @param id - Identificador del campeonato a buscar
 	* @return Devolver un objeto ResponseEntity con el resultado del proceso de consulta
 	*/
 	@GetMapping("/{id}/pruebas")

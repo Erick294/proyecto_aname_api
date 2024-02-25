@@ -21,7 +21,7 @@ public class DocumentoCompetidoresRepoImpl implements IDocumentosCompetidoresRep
 
 	/**
 	* Método de inserción de un documento de competidor en la base de datos.
-	* @param Documento - El objeto Documento a insertar
+	* @param documento - El objeto Documento a insertar
 	*/
 	@Override
 	public void insertarDocumento(DocumentoCompetidores documento) {
@@ -40,7 +40,7 @@ public class DocumentoCompetidoresRepoImpl implements IDocumentosCompetidoresRep
 	}
 
 	/**
-	* Busca todos los documentos en la base de datos
+	* Busca todos los documentos de competidores en la base de datos
 	* @return Lista de todos los documentos de la base de datos
 	*/
 	@Override
@@ -52,7 +52,7 @@ public class DocumentoCompetidoresRepoImpl implements IDocumentosCompetidoresRep
 
 	/**
 	* Actualizar un documento de competidor en la base de datos
-	* @param Documento - Objeto a actualizar
+	* @param documento - Objeto a actualizar
 	*/
 	@Override
 	public void actualizarDocumento(DocumentoCompetidores documento) {

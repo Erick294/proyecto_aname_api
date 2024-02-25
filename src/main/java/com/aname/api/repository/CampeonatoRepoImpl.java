@@ -70,7 +70,7 @@ public class CampeonatoRepoImpl implements ICampeonatoRepo {
 	}
 
 	/**
-	* Busca todos los campeonatos disponibles
+	* Busca todos los campeonatos disponibles (donde la fechaActual se encuentre entre la fecha inscripcionInicio y inscripcionFin
 	* @return lista de campeonatos disponibles
 	*/
 	@Override

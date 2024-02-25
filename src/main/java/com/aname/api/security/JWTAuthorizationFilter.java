@@ -28,10 +28,10 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 	private IUsuarioService userDetailsService;
 
 	/**
-	* Método que permite realizar el filtro de autorizacion del usuario
+	* Método que permite realizar el filtro de autorización del usuario
 	* @param request - Petición del usuario para autorizar su ingreso
-	* @param response - Tespuesta del estado http
-	* @param filterChain - Filtro de cadena de encriptacion
+	* @param response - Respuesta del estado http
+	* @param filterChain - Filtro de cadena de encriptación
 	*/
 	@Override
 	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,

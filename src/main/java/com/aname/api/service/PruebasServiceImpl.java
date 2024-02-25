@@ -54,10 +54,10 @@ public class PruebasServiceImpl implements IPruebaService {
 	}
 	
 	/**
-	 * Convierte objeto Prueba a PruebaResponseDTO.
+	 * Método que permite obtener la lista de las pruebas por campeonato y por categoría
 	*
-	* @param p la prueba
-	* @return el DTO equivalente
+	* @param idCampeonato id del campeonato
+	* @return idCategoria id de la categoría
 	*/
 	@Override
 	public List<PruebaResponseDTO> listarPruebasPorCampeonatoYCategoria(Integer idCampeonato, Integer idCategoria) {
