@@ -16,6 +16,7 @@ public class AnameApiApplication implements WebMvcConfigurer {
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
+		// Configuración CORS: Permitir solicitudes desde cualquier origen
 		registry.addMapping("/**").allowedOrigins("*") //
 				// Permitir solicitudes desde cualquier origen
 				.allowedMethods("*") // Permitir todos los métodos HTTP

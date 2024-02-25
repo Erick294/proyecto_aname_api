@@ -30,6 +30,11 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 	@Autowired
 	private IAsociacionDeportivaService asociacionDeportivaService;
 	
+	/**
+	* Método para obtener los precios de un campeonato.
+	* @param idCampeonato - Id del campeonato a obtener
+	* @return Devolver un objeto PreciosCampeonatosTO con los precios del campeonato
+	*/
 	@Override
 	public PreciosCampeonatosTO obtenerPreciosCampeonato(Integer idCampeonato) {
 		PrecioInscripcion precio = this.precioInscripcionRepo.buscarPreciosPorCampeonato(idCampeonato);
@@ -45,6 +50,10 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 		
 	}
 
+	/**
+	* Método de registro de un Campeonato en la base de datos
+	* @param campeonato - Objeto que contiene los datos del campeonato
+	*/
 	@Override
 	public void registrarCampeonato(CampeonatoReqDTO campeonato) {
 		Campeonato c = this.convertirCampeonatoReqDTO(campeonato);
@@ -69,7 +78,6 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 		AsociacionDeportiva a = this.asociacionDeportivaService.buscarAsociacionDeportiva(campeonato.getIdAsociacion());
 
 		if (a != null) {
-			
 			if (a.getCampeonatos() != null) {
 				List<Campeonato> camps = a.getCampeonatos();
 				camps.add(c);
@@ -84,18 +92,22 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 		
 		this.asociacionDeportivaService.actualizarAsociacion(a);
 		this.campeonatoRepo.actualizarCampeonato(c);
-
-		// precio.setCampeonato(c);
-
-		// this.precioInscripcionRepo.actualizarPrecioInscripcion(precio);
-
 	}
 
+	/**
+	* Busca un campeonato por id
+	* @param id - Id del campeonato a buscar
+	* @return Objeto Campeonato con la información especificada o nula si no existe
+	*/
 	@Override
 	public Campeonato buscarCampeonatoPorID(Integer id) {
 		return this.campeonatoRepo.buscarCampeonato(id);
 	}
 
+	/**
+	* Método para devolver una lista de campeonatos disponibles
+	* @return Lista de Campeonatos que haya encontrado
+	*/
 	@Override
 	public List<CampeonatoReqDTO> listarCampeonatosDisponibles() {
 		List<Campeonato> campeonatos = this.campeonatoRepo.buscarCampeonatosDisponibles();
@@ -112,6 +124,10 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 
 	}
 
+	/**
+	* Lista de todos los campeonatos que se encuentren en la base de datos
+	* @return Lista con los campeonatos de la base de datos
+	*/
 	@Override
 	public List<CampeonatoReqDTO> listarCampeonatos() {
 		List<Campeonato> campeonatos = this.campeonatoRepo.buscarTodosCampeonato();
@@ -127,9 +143,13 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 
 	}
 
+	/**
+	* Convierte un CampeonatoDTO a un objeto Campeonato
+	* @param campeonato - Objeto que contiene los datos del campeonato
+	* @return Campeonato transformado desde el DTO
+	*/
 	private Campeonato convertirCampeonatoReqDTO(CampeonatoReqDTO campeonato) {
 		Campeonato c = new Campeonato();
-		// c.setId(campeonato.getId());
 		c.setFechaFin(campeonato.getFechaFin());
 		c.setFechaInicio(campeonato.getFechaInicio());
 		c.setNombre(campeonato.getNombre());
@@ -138,6 +158,7 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 		c.setInscripcionFin(campeonato.getInscripcionFin());
 		c.setInscripcionInicio(campeonato.getInscripcionInicio());
 
+		// Setear las pruebas del campeonato
 		if (campeonato.getPruebas() != null && !campeonato.getPruebas().isEmpty()) {
 			List<Prueba> pruebas = new ArrayList<Prueba>();
 
@@ -157,6 +178,11 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 
 	}
 
+	/**
+	* Convierte un Campeonato a DTO
+	* @param campeonato - objeto que contiene la información del campeonato
+	* @return CampeonatoDTO transformado a partir de Campeonato
+	*/
 	private CampeonatoReqDTO convertirACampeonatoReqDTO(Campeonato campeonato) {
 
 		CampeonatoReqDTO c = new CampeonatoReqDTO();
@@ -169,6 +195,7 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 		c.setInscripcionFin(campeonato.getInscripcionFin());
 		c.setInscripcionInicio(campeonato.getInscripcionInicio());
 
+		// Setear las pruebas del campeonato
 		if (campeonato.getPruebas() != null && !campeonato.getPruebas().isEmpty()) {
 			List<Integer> pruebas = new ArrayList<Integer>();
 
@@ -180,6 +207,7 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 			c.setPruebas(pruebas);
 		}
 
+		// Setear los precios de inscripcion
 		if (campeonato.getPrecioInscripcion() != null) {
 			c.setCostoNoSocio(campeonato.getPrecioInscripcion().getCostoNoSocio());
 			c.setCostoPruebaAdicional(campeonato.getPrecioInscripcion().getCostoPruebaAdicional());
@@ -187,7 +215,6 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 			c.setTitularCuenta(campeonato.getPrecioInscripcion().getTitularCuenta());
 			c.setInstitucionFinanciera(campeonato.getPrecioInscripcion().getInstitucionFinanciera());
 		}
-		// PrecioInscripcion precio = new PrecioInscripcion();
 
 		return c;
 

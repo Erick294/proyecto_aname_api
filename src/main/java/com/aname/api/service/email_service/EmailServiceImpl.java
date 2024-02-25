@@ -15,11 +15,18 @@ import jakarta.mail.internet.MimeMessage;
 @Service
 public class EmailServiceImpl implements IEmailService{
 
-    private final String emailUser = "beowulfblackman@gmail.com";
+    private final String emailUser = "anamenoreply@gmail.com";
 
     @Autowired
     private JavaMailSender mailSender;
 
+    /**
+    * Envía un correo electrónico simple al usuario. Este método se utiliza para enviar un correo electrónico al usuario que está conectado.
+    * 
+    * @param toUser - el usuario al que se envíe el correo electrónico
+    * @param subject - el objeto del correo electrónico que se enviará.
+    * @param message - El mensaje del correo electrónico a enviar. Si es nulo el objeto se establece en la cadena vacía
+    */
     @Override
     public void sendSimpleEmail(String toUser, String subject, String message) {
 
@@ -33,6 +40,13 @@ public class EmailServiceImpl implements IEmailService{
         mailSender.send(mailMessage);
     }
 
+    /**
+    * Método para enviar un email con archivos adjuntos
+    * @param toUser - Email al cual se va a enviar
+    * @param subject - Asunto del email
+    * @param message - Mensaje que se desea enviar
+    * @param file - Archivo que se desea adjuntar
+    */
     @Override
     public void sendEmailArchivo(String toUser, String subject, String message, File file) {
 
@@ -54,6 +68,12 @@ public class EmailServiceImpl implements IEmailService{
     }
 
 
+    /**
+    * Metodo para enviar email simples con solo texto
+    * @param toUser - Email al cual se va a enviar
+    * @param subject - Asunto del email
+    * @param htmlContent - Mensaje que va a ser enviado
+    */
     @Override
     public void sendHtmlEmail(String toUser, String subject, String htmlContent) {
         try {

@@ -19,17 +19,30 @@ public class DocumentoCompetidoresRepoImpl implements IDocumentosCompetidoresRep
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	/**
+	* Método de inserción de un documento de competidor en la base de datos.
+	* @param Documento - El objeto Documento a insertar
+	*/
 	@Override
-	public void insertarDocumento(DocumentoCompetidores Documento) {
-		this.entityManager.persist(Documento);
+	public void insertarDocumento(DocumentoCompetidores documento) {
+		this.entityManager.persist(documento);
 		
 	}
 
+	/**
+	* Busca documento de un competidores por id
+	* @param id - Identificación del documento a buscar
+	* @return Objeto de tipo DocumentoCompetidores que contienen la información especificada
+	*/
 	@Override
 	public DocumentoCompetidores buscarDocumento(Integer id) {
 		return this.entityManager.find(DocumentoCompetidores.class, id);
 	}
 
+	/**
+	* Busca todos los documentos en la base de datos
+	* @return Lista de todos los documentos de la base de datos
+	*/
 	@Override
 	public List<DocumentoCompetidores> buscarTodosDocumento() {
 		TypedQuery<DocumentoCompetidores> myQuery = this.entityManager.createQuery("SELECT r FROM DocumentoCompetidores r", DocumentoCompetidores.class);
@@ -37,12 +50,20 @@ public class DocumentoCompetidoresRepoImpl implements IDocumentosCompetidoresRep
 
 	}
 
+	/**
+	* Actualizar un documento de competidor en la base de datos
+	* @param Documento - Objeto a actualizar
+	*/
 	@Override
-	public void actualizarDocumento(DocumentoCompetidores Documento) {
-		this.entityManager.merge(Documento);
+	public void actualizarDocumento(DocumentoCompetidores documento) {
+		this.entityManager.merge(documento);
 		
 	}
 
+	/**
+	* Elimina un documento de competidor
+	* @param id - Id del documento a eliminar
+	*/
 	@Override
 	public void eliminarDocumento(Integer id) {
 		DocumentoCompetidores p = this.buscarDocumento(id);

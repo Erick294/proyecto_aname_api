@@ -1,10 +1,8 @@
+#Servidor de archivos Azure
 azure:
   storage:
     container:
       name: 
         comprobante-pago
     connection:
-      #string: DefaultEndpointsProtocol=https;AccountName=testaname;AccountKey=ynnrnSuLoHcROgcLmsmhuLOaOBDLLCLLw4yCPbHaSWVjA5b2jL8vUGC80VMSiSRx/WJWKXiCT7Or+AStH7AqOQ==;BlobEndpoint=https://testaname.blob.core.windows.net/;QueueEndpoint=https://testaname.queue.core.windows.net/;TableEndpoint=https://testaname.table.core.windows.net/;FileEndpoint=https://testaname.file.core.windows.net/;
-      #ynnrnSuLoHcROgcLmsmhuLOaOBDLLCLLw4yCPbHaSWVjA5b2jL8vUGC80VMSiSRx/WJWKXiCT7Or+AStH7AqOQ==
-
-      string: DefaultEndpointsProtocol=https;AccountName=testaname;AccountKey=ynnrnSuLoHcROgcLmsmhuLOaOBDLLCLLw4yCPbHaSWVjA5b2jL8vUGC80VMSiSRx/WJWKXiCT7Or+AStH7AqOQ==;EndpointSuffix=core.windows.net
+       string: DefaultEndpointsProtocol=https;AccountName=testaname;AccountKey=ynnrnSuLoHcROgcLmsmhuLOaOBDLLCLLw4yCPbHaSWVjA5b2jL8vUGC80VMSiSRx/WJWKXiCT7Or+AStH7AqOQ==;EndpointSuffix=core.windows.net

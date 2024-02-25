@@ -36,6 +36,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		this.usuarioService = usuarioService;
 	}
 
+	/**
+	* Metodo que se encarga de recibir una peticion y respuesta, autenticarla y devolver un objeto Authentication que permite o no el ingreso
+	* @param request - Peticion y datos http del usuario que intenta ingresar
+	* @param response - Respuesta del estado del servidor
+	* @return Authenticator que permite el ingreso de ser valido o lo niega
+	*/
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
@@ -61,12 +67,18 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		return getAuthenticationManager().authenticate(authenticationToken);
 	}
 
+	/**
+	* Método que dar acceso al usuario si se autentificó correctamente, cuya respuesta es un objeto con el token de acceso, el rol del usuario y otra información relevante
+	* @param request - Objeto http con la petición y datos del usuario
+	* @param response - Objeto que se encarga de gestionar las peticiones
+	* @param chain - Filtro de cadena de encriptación
+	* @param authResult - Objeto athentication obtenido del método anterior
+	*/
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
 
 		User user = (User) authResult.getPrincipal();
-		System.out.println("User: " + user.getUsername());
 		String token = jwtUtils.generateAccesToken(user.getUsername());
 
 		response.addHeader("Authorization", token);
@@ -82,11 +94,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 		httpResponse.put("Usuario", userResponse);
 		
-//        httpResponse.put("token", token);
-//        httpResponse.put("Message", "Autenticacion Correcta");
-//        httpResponse.put("Username", user.getUsername());
-//        httpResponse.put("roles", httpResponse);
-
 		response.getWriter().write(new ObjectMapper().writeValueAsString(httpResponse));
 		response.setStatus(HttpStatus.OK.value());
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);

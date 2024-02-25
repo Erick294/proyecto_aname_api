@@ -15,7 +15,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.aname.api.service.IUsuarioService;
 
 @Configuration
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
 	@Autowired
@@ -27,6 +26,12 @@ public class WebSecurityConfig {
 	@Autowired
 	JWTAuthorizationFilter authorizationFilter;
 
+	/**
+	* Configura el filtro de seguridad para el logeo de usuarios
+	* @param httpSecurity - Objeto HTTP Security para validar ciertas configuraciones
+	* @param authenticationManager - El administrador de autenticación
+	* @return SecurityFilterChain a utilizar para las cuestiones de seguridad del sistema
+	*/
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager)
 			throws Exception {
@@ -69,11 +74,21 @@ public class WebSecurityConfig {
 				.addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class).build();
 	}
 
+	/**
+	* Crear e instancia de PasswordEncoder para codificar las contraseñas de los usuarios
+	* @return una instancia de BCryptPasswordEncoder
+	*/
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
+	/**
+	* Crea un Administrador de autenticación para usar con Jakarta
+	* @param httpSecurity - El HttpSecurity para utilizar para la autenticación
+	* @param passwordEncoder - La entidad para codificar la contraseña
+	* @return Un administrador de autenticación que se puede utilizar para autenticar solicitudes
+	*/
 	@Bean
 	AuthenticationManager authenticationManager(HttpSecurity httpSecurity, PasswordEncoder passwordEncoder)
 			throws Exception {

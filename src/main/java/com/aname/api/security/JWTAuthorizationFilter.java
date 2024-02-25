@@ -27,19 +27,26 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 	@Autowired
 	private IUsuarioService userDetailsService;
 
+	/**
+	* Método que permite realizar el filtro de autorizacion del usuario
+	* @param request - Petición del usuario para autorizar su ingreso
+	* @param response - Tespuesta del estado http
+	* @param filterChain - Filtro de cadena de encriptacion
+	*/
 	@Override
 	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
 			@NonNull FilterChain filterChain) throws ServletException, IOException {
 
 		String tokenHeader = request.getHeader("Authorization");
 
+		// Devuelve el token del usuario
 		if (tokenHeader != null && tokenHeader.startsWith("Bearer ")) {
 			String token = tokenHeader.substring(7);
 			String email = jwtUtils.getUsernameFromToken(token);
 			UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 			Usuario usuario = userDetailsService.buscarUsuarioPorEmail(email);
 
-			System.out.println(usuario.getEstado());
+			// Método que se encarga un token del usuario
 			if (jwtUtils.isTokenValid(token, userDetails) && usuario.getEstado()) {
 
 				UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email,

@@ -46,10 +46,16 @@ public class UsuarioControllerRest {
 	@Autowired
 	private IRolService rolService;
 
+	/**
+	* Método de registro de un usuario en la base de datos. También registra la nueva instancia de UsuarioRegistroDTO
+	* @param registroDTO - Objeto que contiene los datos que se desea registrar
+	* @return Devuelve un objeto ResponseEntity con la respuesta a la operacion
+	*/
 	@PostMapping()
 	public ResponseEntity<?> registrarUsuario(@RequestBody UsuarioRegistroDTO registroDTO) {
 		System.out.println(registroDTO.getEmail());
 		try {
+			// Método para existir nombre de usuario con el mismo nombre de usuario.
 			if (usuarioServicio.existeNombreUsuario(registroDTO.getEmail())) {
 				return ResponseEntity.badRequest().body("Ya existe un usuario con el mismo nombre de usuario.");
 			}
@@ -61,6 +67,11 @@ public class UsuarioControllerRest {
 		}
 	}
 	
+	/**
+	* Método que busca un la asociacion deportiva de un usuario por su email en la base de datos.
+	* @param email - Email del usuario que se desea buscar
+	* @return Retorna un objeto ResponseEntity con el contenido
+	*/
 	@GetMapping("/{email}/idAsociacion")
 	public ResponseEntity<?> buscarAsociacionPorUsuario(@PathVariable String email) {
 		try {
@@ -73,6 +84,11 @@ public class UsuarioControllerRest {
 		}
 	}
 	
+	/**
+	* Método de búsqueda del costo de una asociación en la base de datos.
+	* @param idAsociacion - Identificador de la asociación a buscar.
+	* @return Regresa un objeto contenido o con el mensaje de respuesta
+	*/
 	@GetMapping("/costo/asociacion/{idAsociacion}")
 	public ResponseEntity<?> buscarCostoAsociacion(@PathVariable Integer idAsociacion) {
 		try {
@@ -83,6 +99,11 @@ public class UsuarioControllerRest {
 		}
 	}
 
+	/**
+	* Método responsable por aprobación del registro de usuario
+	* @param email - Email del usuario a aprobar
+	* @return ResponseEntity con el codigo de estado de la operacion
+	*/
 	@PutMapping("/aprobarRegistroUsuario/{email}")
 	public ResponseEntity<?> aprobrarRegistroUsuario(@PathVariable String email) {
 
@@ -96,6 +117,11 @@ public class UsuarioControllerRest {
 		}
 	}
 	
+	/**
+	* Método que permite negar un registro de usuario en la base de datos
+	* @param email - Email del registro de usuario
+	* @return Retorna un ResponseEntity con estado del resultado del proceso HTTP (200) o Json con el error que se produce
+	*/
 	@PutMapping("/negarRegistroUsuario/{email}")
 	public ResponseEntity<?> negarRegistroUsuario(@PathVariable String email) {
 
@@ -109,7 +135,11 @@ public class UsuarioControllerRest {
 		}
 	}
 	
-	
+	/**
+	* Registra un usuario en la base de datos que tiene el pago de asociación
+	* @param u - Objeto con los documentos del pago realizado
+	* @return Con el resultado del proceso de registro del pago de la asociación o con el error que se produzca
+	*/
 	@PostMapping("/registroPagoAsociacion")
 	public ResponseEntity<?> registrarPagoAsociacion(@RequestBody DocResponseDTO u) {
 
@@ -123,6 +153,11 @@ public class UsuarioControllerRest {
 		}
 	}
 	
+	/**
+	* Método responsable de aprobar el registro de un usuario que cuente con una asociacion deportiva
+	* @param email - Email del usuario
+	* @return Retorna un objeto ResponseEntity con el resultado del proceso
+	*/
 	@PutMapping("/aprobarUsuarioAsociado/{email}")
 	public ResponseEntity<?> aprobarUsuarioAsociado(@PathVariable String email) {
 
@@ -136,7 +171,11 @@ public class UsuarioControllerRest {
 		}
 	}
 	
-
+	/**
+	* Método que permite negar un registro de usuario asociado en la base de datos
+	* @param email - Email del usuario
+	* @return Resultado del proceso de gestión de las cuentas de registro
+	*/
 	@PutMapping("/negarUsuarioAsociado/{email}")
 	public ResponseEntity<?> negarUsuarioAsociado(@PathVariable String email) {
 
@@ -150,6 +189,11 @@ public class UsuarioControllerRest {
 		}
 	}
 	
+	/**
+	* Método de búsqueda de usuarios por asociación
+	* @param idAsociacion - Identificador del asociación a buscar
+	* @return Devolver un objeto ResponseEntity con el resultado del proceso de búsqueda
+	*/
 	@GetMapping("/asociacion/{idAsociacion}")
 	public ResponseEntity<?> buscarUsuariosPorAsociacion(@PathVariable Integer idAsociacion) {
 
@@ -163,11 +207,20 @@ public class UsuarioControllerRest {
 	}
 	
 	
+	/**
+	* Método de búsqueda de todos los roles del sistema
+	* @return Lista todos los roles del sistema
+	*/
 	@GetMapping(path = "/roles", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public List<String> getPerfiles() {
 		return this.rolService.buscarTodosRol();
 	}
 
+	/**
+	* Método de envío de un mensaje de correo simple (Solo texto)
+	* @param emailDTO - Objeto con los datos del correo electrónico a enviar
+	* @return ResponseEntity con el estado del mensaje
+	*/
 	@PostMapping("/email/enviarSimple")
 	public ResponseEntity<?> enviarSimpleEmail(@RequestBody EmailDTO emailDTO) {
 
@@ -181,6 +234,11 @@ public class UsuarioControllerRest {
 		return ResponseEntity.ok(response);
 	}
 
+	/**
+	* Método de envío de un archivo de correo electrónico. Para el formulario de mensajes: creado por parámetro
+	* @param emailFileDTO - Objeto que contiene los datos del archivo de correo electrónico
+	* @return ResponseEntity con el estado del mensaje
+	*/
 	@PostMapping("/email/enviarArchivo")
 	public ResponseEntity<?> enviarEmailArchivo(@ModelAttribute EmailFileDTO emailFileDTO) {
 
@@ -208,6 +266,11 @@ public class UsuarioControllerRest {
 		}
 	}
 	
+	 /**
+	 * Método de envío de un correo electrónico.
+	 * @param request - Objeto que contiene el requerimiento a enviar
+	 * @return ResponseEntity con el estado del mensaje
+	 */
 	 @PostMapping("/email/enviarHTML")
 	    public ResponseEntity<String> sendEmail(@RequestBody EmailHTMLDTO request) {
 	        try {
