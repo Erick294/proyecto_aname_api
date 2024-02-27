@@ -132,7 +132,7 @@ public class CampeonatoControllerRest {
 	}
 
 
-	@GetMapping("/reporte1")
+	@GetMapping(value ="/reporte1", produces = "application/json" )
 	public ResponseEntity<?> obtenerReporte1() {
 		try {
 
@@ -143,7 +143,7 @@ public class CampeonatoControllerRest {
 		}
 	}
 
-	@GetMapping("/reporte2")
+	@GetMapping(value ="/reporte2", produces = "application/json")
 	public ResponseEntity<?> obtenerReporte2() {
 		try {
 

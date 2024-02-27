@@ -12,6 +12,7 @@ import com.aname.api.model.PrecioInscripcion;
 import com.aname.api.model.Prueba;
 import com.aname.api.repository.ICampeonatoRepo;
 import com.aname.api.repository.IPrecioInscripcionRepo;
+import com.aname.api.repository.ReportesI;
 import com.aname.api.service.to.CampeonatoReqDTO;
 import com.aname.api.service.to.DTOReporte1;
 import com.aname.api.service.to.DTOReporte2;
@@ -31,6 +32,9 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 
 	@Autowired
 	private IAsociacionDeportivaService asociacionDeportivaService;
+
+	@Autowired
+	private ReportesI reportesI;
 	
 	/**
 	* Método para obtener los precios de un campeonato.
@@ -225,7 +229,7 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 
 	@Override
 	public List<DTOReporte1> reporteUno(){
-		List<Object[]> reporte = this.campeonatoRepo.findUsuariosWithCampeonatos();
+		List<Object[]> reporte = this.reportesI.findUsuariosWithCampeonatos();
 	    List<DTOReporte1> nuevo = new ArrayList<>();
 
 		for(Object[] fila : reporte){
@@ -247,7 +251,7 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 	
 	@Override
 	public List<DTOReporte2> reporteDos(){
-		List<Object[]> reporte = this.campeonatoRepo.findPruebasCampeonatos();
+		List<Object[]> reporte = this.reportesI.findPruebasCampeonatos();
 	    List<DTOReporte2> nuevo = new ArrayList<>();
 
 		for(Object[] fila : reporte){

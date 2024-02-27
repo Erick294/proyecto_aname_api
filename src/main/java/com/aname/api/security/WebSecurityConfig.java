@@ -51,12 +51,12 @@ public class WebSecurityConfig {
 			
 			auth.requestMatchers("/usuario/costo/**").hasAnyAuthority("ORG", "JUN", "ADM", "ATL");
 			auth.requestMatchers("/usuario/**").permitAll();
-			
+			auth.requestMatchers("/campeonato/reporte1", "/campeonato/reporte2").permitAll();
 			auth.requestMatchers("/files/**").permitAll();
 			auth.requestMatchers("/campeonato/disponibles", "/campeonato/{id:[0-9]+}/pruebas").hasAnyAuthority("ORG", "JUN", "ADM", "ATL");
 			auth.requestMatchers("/campeonato/**").hasAnyAuthority("ORG", "JUN", "ADM");
 			auth.requestMatchers("/campeonato/pruebas").hasAnyAuthority("ORG", "JUN", "ADM", "ATL");
-			auth.requestMatchers("/campeonato/reporte1", "/campeonato/reporte2").permitAll();
+			
 			auth.requestMatchers("/competidor/inscritos/**", 
 					"/competidor/confirmarInscripcion/**", 
 					"/competidor/negarInscripcion/**", 

@@ -16,18 +16,6 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class CampeonatoRepoImpl implements ICampeonatoRepo {
 
-	@Override
-	public List<Object[]> findPruebasCampeonatos() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Object[]> findUsuariosWithCampeonatos() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@PersistenceContext
 	private EntityManager entityManager;
 
