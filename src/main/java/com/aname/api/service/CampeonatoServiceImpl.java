@@ -13,6 +13,8 @@ import com.aname.api.model.Prueba;
 import com.aname.api.repository.ICampeonatoRepo;
 import com.aname.api.repository.IPrecioInscripcionRepo;
 import com.aname.api.service.to.CampeonatoReqDTO;
+import com.aname.api.service.to.DTOReporte1;
+import com.aname.api.service.to.DTOReporte2;
 import com.aname.api.service.to.PreciosCampeonatosTO;
 
 @Service
@@ -218,6 +220,52 @@ public class CampeonatoServiceImpl implements ICampeonatoService {
 
 		return c;
 
+
 	}
+
+	@Override
+	public List<DTOReporte1> reporteUno(){
+		List<Object[]> reporte = this.campeonatoRepo.findUsuariosWithCampeonatos();
+	    List<DTOReporte1> nuevo = new ArrayList<>();
+
+		for(Object[] fila : reporte){
+			DTOReporte1 rd = new DTOReporte1();
+			rd.setNombres((String) fila[0]);
+			rd.setApellidos((String) fila[1]);
+			rd.setCateNombre((String) fila[2]);
+			rd.setGenero((String) fila[3]);
+			rd.setProvincia((String) fila[4]);
+			rd.setNombreCampeonato((String) fila[5]);
+			nuevo.add(rd);
+
+		}
+
+		return nuevo; 
+
+	}
+
+	
+	@Override
+	public List<DTOReporte2> reporteDos(){
+		List<Object[]> reporte = this.campeonatoRepo.findPruebasCampeonatos();
+	    List<DTOReporte2> nuevo = new ArrayList<>();
+
+		for(Object[] fila : reporte){
+			DTOReporte2 rd = new DTOReporte2();
+			rd.setCampNombre((String) fila[0]);
+			rd.setPruebaNombre((String) fila[1]);
+			rd.setUsuaNombres((String) fila[2]);
+			rd.setUsuaApellidos((String) fila[3]);
+			rd.setCateNombre((String) fila[4]);
+			rd.setAsoNombre((String) fila[5]);
+			rd.setCateGenero((String) fila[6]);
+			nuevo.add(rd);
+
+		}
+
+		return nuevo; 
+
+	}
+
 
 }

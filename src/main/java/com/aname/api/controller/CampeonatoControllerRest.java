@@ -131,4 +131,28 @@ public class CampeonatoControllerRest {
 		}
 	}
 
+
+	@GetMapping("/reporte1")
+	public ResponseEntity<?> obtenerReporte1() {
+		try {
+
+			return ResponseEntity.ok(this.campeonatoService.reporteUno());
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al buscar reporte 1: " + e.getMessage());
+		}
+	}
+
+	@GetMapping("/reporte2")
+	public ResponseEntity<?> obtenerReporte2() {
+		try {
+
+			return ResponseEntity.ok(this.campeonatoService.reporteDos());
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al buscar reporte 2: " + e.getMessage());
+		}
+	}
+
+
 }

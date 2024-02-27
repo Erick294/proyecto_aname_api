@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.aname.api.model.Campeonato;
 import com.aname.api.service.to.CampeonatoReqDTO;
+import com.aname.api.service.to.DTOReporte1;
+import com.aname.api.service.to.DTOReporte2;
 import com.aname.api.service.to.PreciosCampeonatosTO;
 
 public interface ICampeonatoService {
@@ -17,4 +19,7 @@ public interface ICampeonatoService {
 	Campeonato buscarCampeonatoPorID(Integer id);
 
 	PreciosCampeonatosTO obtenerPreciosCampeonato(Integer idCampeonato);
+
+	List<DTOReporte1> reporteUno();
+	 List<DTOReporte2> reporteDos();
 }
